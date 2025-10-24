@@ -1,0 +1,20 @@
+[
+  {
+    "districtName": "Mumbai City",
+    "talukas": [
+      "Mumbai",
+      "Mazgaon",
+      "Byculla",
+      "Fort",
+      "Malabar Hill"
+    ]
+  },
+  {
+    "districtName": "Mumbai Suburban",
+    "talukas": [
+      "Kurla",
+      "Andheri",
+      "Borivali"
+    ]
+  }
+]

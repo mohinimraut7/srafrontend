@@ -1,0 +1,19 @@
+.Alp-th{
+    text-transform: uppercase !important;
+   padding: 15px;
+   text-align: center !important;
+   margin-top: 200px !important;
+}
+
+.Alp-thead{
+background-color:#FFEDD4;
+color:#CA3500;
+font-size: 15px !important;
+height:80px !important;
+}
+
+.Alp-td{
+     text-align: center !important;
+     min-width: 180px !important;
+     height:70px !important;
+}

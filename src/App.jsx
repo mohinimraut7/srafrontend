@@ -1,0 +1,159 @@
+"use client"
+
+import { useState, useEffect } from "react"
+import Sidebar from "./components/Sidebar"
+import TopNavbar from "./components/TopNavbar"
+import LoginPage from "./pages/LoginPage"
+import DashboardPage from "./pages/DashboardPage"
+import ProfilePage from "./pages/ProfilePage"
+import SchemeSelectionPage from "./pages/SchemeSelectionPage"
+import AllApplicationsPage from "./pages/AllApplicationsPage"
+import PendingApplicationsPage from "./pages/PendingApplicationsPage"
+import EditApplicationsPage from "./pages/EditApplicationsPage"
+import ClusterMasterPage from "./pages/ClusterMasterPage"
+import SlumMasterPage from "./pages/SlumMasterPage"
+import HutMasterPage from "./pages/HutMasterPage"
+import { isAuthenticated, getUser } from "./utils/auth"
+import { Toaster } from "react-hot-toast"
+import "./App.css"
+import RegisterUser from "./pages/RegisterUser"
+import GetUsers from "./pages/GetUsersPage" 
+import OwnershipOfHut from "./pages/OwnershipOfHut"
+
+function App() {
+  const [currentPage, setCurrentPage] = useState("login")
+  const [currentMode, setCurrentMode] = useState("view")
+  const [isSidebarOpen, setSidebarOpen] = useState(false)
+  const [user, setUser] = useState(null)
+
+  useEffect(() => {
+    if (isAuthenticated()) {
+      const userData = getUser()
+      setUser(userData)
+      if (currentPage === "login") {
+        setCurrentPage("dashboard")
+      }
+    } else {
+      setCurrentPage("login")
+    }
+  }, [currentPage])
+
+  const handleNavigation = (page, mode = "view") => {
+    setCurrentPage(page)
+    setCurrentMode(mode)
+    setSidebarOpen(false)
+  }
+
+  const toggleSidebar = () => {
+    setSidebarOpen((prev) => !prev)
+  }
+
+  const renderPage = () => {
+    switch (currentPage) {
+      case "login":
+        return <LoginPage onNavigate={handleNavigation} setUser={setUser} />
+      case "scheme-selection":
+        return <SchemeSelectionPage onNavigate={handleNavigation} />
+      case "dashboard":
+        return <DashboardPage />
+      case "profile":
+        return <ProfilePage onNavigate={handleNavigation} />
+      case "registerUser" :
+        return <RegisterUser onNavigate={handleNavigation} />
+      case "getUser" :
+        return <GetUsers onNavigate={handleNavigation} />
+      case "all-applications":
+        return <AllApplicationsPage />
+      case "pending-applications":
+        return <PendingApplicationsPage />
+      case "edit-applications":
+        return <EditApplicationsPage />
+         case "cluster-master":
+        return <ClusterMasterPage />
+         case "slum-master":
+        return <SlumMasterPage />
+        case "hut-master":
+        return <HutMasterPage />
+        case "ownershipofhut":
+        return <OwnershipOfHut/>
+
+        
+        
+      default:
+        return <DashboardPage />
+    }
+  }
+
+  if (currentPage === "login") {
+    return (
+      <div className="App">
+        <Toaster position="top-right" reverseOrder={false} />
+        {renderPage()}
+      </div>
+    )
+  }
+
+  if (currentPage === "scheme-selection") {
+    return (
+      <div className="App">
+        <Toaster position="top-right" reverseOrder={false} />
+        {renderPage()}
+      </div>
+    )
+  }
+
+  if (!isAuthenticated()) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-orange-500 mx-auto"></div>
+          <p className="mt-4 text-gray-600">Loading...</p>
+        </div>
+      </div>
+    )
+  }
+
+  return (
+    <div className="App flex h-screen overflow-hidden bg-gray-50">
+      <Toaster position="top-right" reverseOrder={false} />
+
+      <div className="hidden md:flex md:flex-shrink-0">
+        <div className="flex flex-col w-64">
+          <Sidebar
+            isCollapsed={false}
+            currentPage={currentPage}
+            currentMode={currentMode}
+            onNavigate={handleNavigation}
+          />
+        </div>
+      </div>
+
+      <div className="md:hidden">
+        {isSidebarOpen && <div className="fixed inset-0 z-40 bg-black bg-opacity-50" onClick={toggleSidebar} />}
+
+        <div
+          className={`fixed inset-y-0 left-0 z-50 w-64 bg-white transform transition-transform duration-300 ease-in-out ${isSidebarOpen ? "translate-x-0" : "-translate-x-full"
+            }`}
+        >
+          <Sidebar
+            isCollapsed={false}
+            currentPage={currentPage}
+            currentMode={currentMode}
+            onNavigate={handleNavigation}
+          />
+        </div>
+      </div>
+
+      <div className="flex flex-col w-0 flex-1 overflow-hidden">
+        <TopNavbar user={user} onToggleSidebar={toggleSidebar} currentPage={currentPage}/>
+       
+        <main className="flex-1 overflow-y-auto focus:outline-none">
+          {renderPage()}
+        </main>
+
+      </div>
+    </div>
+  )
+}
+
+export default App

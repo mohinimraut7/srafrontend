@@ -1,0 +1,480 @@
+[
+  {
+    "cluster_number": "D_001",
+    "slums": [
+      {
+        "ward": "D",
+        "slum_name": "Haji Ali Slum",
+        "slum_id": "D_001_HajiAli",
+        "huts": [
+          { "hut_id": "D_001_HajiAli_001", "hut_name": "Haji Ali Hut 1" },
+          { "hut_id": "D_001_HajiAli_002", "hut_name": "Haji Ali Hut 2" },
+          { "hut_id": "D_001_HajiAli_003", "hut_name": "Haji Ali Hut 3" }
+        ]
+      },
+      {
+        "ward": "D",
+        "slum_name": "Worli Nagar",
+        "slum_id": "D_001_WorliNagar",
+        "huts": [
+          { "hut_id": "D_001_WorliNagar_001", "hut_name": "Worli Nagar Hut 1" },
+          { "hut_id": "D_001_WorliNagar_002", "hut_name": "Worli Nagar Hut 2" }
+        ]
+      }
+    ]
+  },
+  {
+    "cluster_number": "D_002",
+    "slums": [
+      {
+        "ward": "D",
+        "slum_name": "Simla Nagar",
+        "slum_id": "D_002_SimlaNagar",
+        "huts": [
+          { "hut_id": "D_002_SimlaNagar_001", "hut_name": "Simla Nagar Hut 1" },
+          { "hut_id": "D_002_SimlaNagar_002", "hut_name": "Simla Nagar Hut 2" },
+          { "hut_id": "D_002_SimlaNagar_003", "hut_name": "Simla Nagar Hut 3" }
+        ]
+      },
+      {
+        "ward": "D",
+        "slum_name": "Prabhadevi Colony",
+        "slum_id": "D_002_PrabhadeviColony",
+        "huts": [
+          { "hut_id": "D_002_PrabhadeviColony_001", "hut_name": "Prabhadevi Colony Hut 1" },
+          { "hut_id": "D_002_PrabhadeviColony_002", "hut_name": "Prabhadevi Colony Hut 2" }
+        ]
+      }
+    ]
+  },
+  {
+    "cluster_number": "D_003",
+    "slums": [
+      {
+        "ward": "D",
+        "slum_name": "Shivaji Nagar",
+        "slum_id": "D_003_ShivajiNagar",
+        "huts": [
+          { "hut_id": "D_003_ShivajiNagar_001", "hut_name": "Shivaji Nagar Hut 1" },
+          { "hut_id": "D_003_ShivajiNagar_002", "hut_name": "Shivaji Nagar Hut 2" },
+          { "hut_id": "D_003_ShivajiNagar_003", "hut_name": "Shivaji Nagar Hut 3" }
+        ]
+      },
+      {
+        "ward": "D",
+        "slum_name": "Lower Parel Camp",
+        "slum_id": "D_003_LowerParelCamp",
+        "huts": [
+          { "hut_id": "D_003_LowerParelCamp_001", "hut_name": "Lower Parel Camp Hut 1" },
+          { "hut_id": "D_003_LowerParelCamp_002", "hut_name": "Lower Parel Camp Hut 2" }
+        ]
+      }
+    ]
+  },
+  {
+    "cluster_number": "E_001",
+    "slums": [
+      {
+        "ward": "E",
+        "slum_name": "Bandra East Colony",
+        "slum_id": "E_001_BandraEast",
+        "huts": [
+          { "hut_id": "E_001_BandraEast_001", "hut_name": "Bandra East Hut 1" },
+          { "hut_id": "E_001_BandraEast_002", "hut_name": "Bandra East Hut 2" },
+          { "hut_id": "E_001_BandraEast_003", "hut_name": "Bandra East Hut 3" }
+        ]
+      },
+      {
+        "ward": "E",
+        "slum_name": "Khar Danda",
+        "slum_id": "E_001_KharDanda",
+        "huts": [
+          { "hut_id": "E_001_KharDanda_001", "hut_name": "Khar Danda Hut 1" },
+          { "hut_id": "E_001_KharDanda_002", "hut_name": "Khar Danda Hut 2" }
+        ]
+      }
+    ]
+  },
+  {
+    "cluster_number": "E_002",
+    "slums": [
+      {
+        "ward": "E",
+        "slum_name": "Kherwadi",
+        "slum_id": "E_002_Kherwadi",
+        "huts": [
+          { "hut_id": "E_002_Kherwadi_001", "hut_name": "Kherwadi Hut 1" },
+          { "hut_id": "E_002_Kherwadi_002", "hut_name": "Kherwadi Hut 2" },
+          { "hut_id": "E_002_Kherwadi_003", "hut_name": "Kherwadi Hut 3" }
+        ]
+      },
+      {
+        "ward": "E",
+        "slum_name": "Santacruz East",
+        "slum_id": "E_002_SantacruzEast",
+        "huts": [
+          { "hut_id": "E_002_SantacruzEast_001", "hut_name": "Santacruz East Hut 1" },
+          { "hut_id": "E_002_SantacruzEast_002", "hut_name": "Santacruz East Hut 2" }
+        ]
+      }
+    ]
+  },
+  {
+    "cluster_number": "E_003",
+    "slums": [
+      {
+        "ward": "E",
+        "slum_name": "Shastri Nagar",
+        "slum_id": "E_003_ShastriNagar",
+        "huts": [
+          { "hut_id": "E_003_ShastriNagar_001", "hut_name": "Shastri Nagar Hut 1" },
+          { "hut_id": "E_003_ShastriNagar_002", "hut_name": "Shastri Nagar Hut 2" },
+          { "hut_id": "E_003_ShastriNagar_003", "hut_name": "Shastri Nagar Hut 3" }
+        ]
+      },
+      {
+        "ward": "E",
+        "slum_name": "Vakola",
+        "slum_id": "E_003_Vakola",
+        "huts": [
+          { "hut_id": "E_003_Vakola_001", "hut_name": "Vakola Hut 1" },
+          { "hut_id": "E_003_Vakola_002", "hut_name": "Vakola Hut 2" }
+        ]
+      }
+    ]
+  },
+  {
+    "cluster_number": "F_001",
+    "slums": [
+      {
+        "ward": "F",
+        "slum_name": "Dharavi Sector 1",
+        "slum_id": "F_001_DharaviS1",
+        "huts": [
+          { "hut_id": "F_001_DharaviS1_001", "hut_name": "Dharavi S1 Hut 1" },
+          { "hut_id": "F_001_DharaviS1_002", "hut_name": "Dharavi S1 Hut 2" },
+          { "hut_id": "F_001_DharaviS1_003", "hut_name": "Dharavi S1 Hut 3" },
+          { "hut_id": "F_001_DharaviS1_004", "hut_name": "Dharavi S1 Hut 4" }
+        ]
+      },
+      {
+        "ward": "F",
+        "slum_name": "Dharavi Sector 2",
+        "slum_id": "F_001_DharaviS2",
+        "huts": [
+          { "hut_id": "F_001_DharaviS2_001", "hut_name": "Dharavi S2 Hut 1" },
+          { "hut_id": "F_001_DharaviS2_002", "hut_name": "Dharavi S2 Hut 2" },
+          { "hut_id": "F_001_DharaviS2_003", "hut_name": "Dharavi S2 Hut 3" }
+        ]
+      }
+    ]
+  },
+  {
+    "cluster_number": "F_002",
+    "slums": [
+      {
+        "ward": "F",
+        "slum_name": "Sion Koliwada",
+        "slum_id": "F_002_SionKoliwada",
+        "huts": [
+          { "hut_id": "F_002_SionKoliwada_001", "hut_name": "Sion Koliwada Hut 1" },
+          { "hut_id": "F_002_SionKoliwada_002", "hut_name": "Sion Koliwada Hut 2" },
+          { "hut_id": "F_002_SionKoliwada_003", "hut_name": "Sion Koliwada Hut 3" }
+        ]
+      },
+      {
+        "ward": "F",
+        "slum_name": "Wadala East",
+        "slum_id": "F_002_WadalaEast",
+        "huts": [
+          { "hut_id": "F_002_WadalaEast_001", "hut_name": "Wadala East Hut 1" },
+          { "hut_id": "F_002_WadalaEast_002", "hut_name": "Wadala East Hut 2" }
+        ]
+      }
+    ]
+  },
+  {
+    "cluster_number": "F_003",
+    "slums": [
+      {
+        "ward": "F",
+        "slum_name": "Matunga Labour Camp",
+        "slum_id": "F_003_MatungaLC",
+        "huts": [
+          { "hut_id": "F_003_MatungaLC_001", "hut_name": "Matunga LC Hut 1" },
+          { "hut_id": "F_003_MatungaLC_002", "hut_name": "Matunga LC Hut 2" },
+          { "hut_id": "F_003_MatungaLC_003", "hut_name": "Matunga LC Hut 3" }
+        ]
+      },
+      {
+        "ward": "F",
+        "slum_name": "Mahim Koliwada",
+        "slum_id": "F_003_MahimKoliwada",
+        "huts": [
+          { "hut_id": "F_003_MahimKoliwada_001", "hut_name": "Mahim Koliwada Hut 1" },
+          { "hut_id": "F_003_MahimKoliwada_002", "hut_name": "Mahim Koliwada Hut 2" }
+        ]
+      }
+    ]
+  },
+  {
+    "cluster_number": "G_001",
+    "slums": [
+      {
+        "ward": "G",
+        "slum_name": "Kurla East Camp",
+        "slum_id": "G_001_KurlaEast",
+        "huts": [
+          { "hut_id": "G_001_KurlaEast_001", "hut_name": "Kurla East Hut 1" },
+          { "hut_id": "G_001_KurlaEast_002", "hut_name": "Kurla East Hut 2" },
+          { "hut_id": "G_001_KurlaEast_003", "hut_name": "Kurla East Hut 3" }
+        ]
+      },
+      {
+        "ward": "G",
+        "slum_name": "Baiganwadi",
+        "slum_id": "G_001_Baiganwadi",
+        "huts": [
+          { "hut_id": "G_001_Baiganwadi_001", "hut_name": "Baiganwadi Hut 1" },
+          { "hut_id": "G_001_Baiganwadi_002", "hut_name": "Baiganwadi Hut 2" }
+        ]
+      }
+    ]
+  },
+  {
+    "cluster_number": "G_002",
+    "slums": [
+      {
+        "ward": "G",
+        "slum_name": "Govandi",
+        "slum_id": "G_002_Govandi",
+        "huts": [
+          { "hut_id": "G_002_Govandi_001", "hut_name": "Govandi Hut 1" },
+          { "hut_id": "G_002_Govandi_002", "hut_name": "Govandi Hut 2" },
+          { "hut_id": "G_002_Govandi_003", "hut_name": "Govandi Hut 3" },
+          { "hut_id": "G_002_Govandi_004", "hut_name": "Govandi Hut 4" }
+        ]
+      },
+      {
+        "ward": "G",
+        "slum_name": "Cheetah Camp",
+        "slum_id": "G_002_CheetahCamp",
+        "huts": [
+          { "hut_id": "G_002_CheetahCamp_001", "hut_name": "Cheetah Camp Hut 1" },
+          { "hut_id": "G_002_CheetahCamp_002", "hut_name": "Cheetah Camp Hut 2" },
+          { "hut_id": "G_002_CheetahCamp_003", "hut_name": "Cheetah Camp Hut 3" }
+        ]
+      }
+    ]
+  },
+  {
+    "cluster_number": "G_003",
+    "slums": [
+      {
+        "ward": "G",
+        "slum_name": "Mankhurd",
+        "slum_id": "G_003_Mankhurd",
+        "huts": [
+          { "hut_id": "G_003_Mankhurd_001", "hut_name": "Mankhurd Hut 1" },
+          { "hut_id": "G_003_Mankhurd_002", "hut_name": "Mankhurd Hut 2" },
+          { "hut_id": "G_003_Mankhurd_003", "hut_name": "Mankhurd Hut 3" }
+        ]
+      },
+      {
+        "ward": "G",
+        "slum_name": "Shivaji Nagar Govandi",
+        "slum_id": "G_003_ShivajiNagarGovandi",
+        "huts": [
+          { "hut_id": "G_003_ShivajiNagarGovandi_001", "hut_name": "Shivaji Nagar Govandi Hut 1" },
+          { "hut_id": "G_003_ShivajiNagarGovandi_002", "hut_name": "Shivaji Nagar Govandi Hut 2" }
+        ]
+      }
+    ]
+  },
+  {
+    "cluster_number": "H_001",
+    "slums": [
+      {
+        "ward": "H",
+        "slum_name": "Andheri East Slum",
+        "slum_id": "H_001_AndheriEast",
+        "huts": [
+          { "hut_id": "H_001_AndheriEast_001", "hut_name": "Andheri East Hut 1" },
+          { "hut_id": "H_001_AndheriEast_002", "hut_name": "Andheri East Hut 2" },
+          { "hut_id": "H_001_AndheriEast_003", "hut_name": "Andheri East Hut 3" }
+        ]
+      },
+      {
+        "ward": "H",
+        "slum_name": "Jogeshwari Camp",
+        "slum_id": "H_001_Jogeshwari",
+        "huts": [
+          { "hut_id": "H_001_Jogeshwari_001", "hut_name": "Jogeshwari Hut 1" },
+          { "hut_id": "H_001_Jogeshwari_002", "hut_name": "Jogeshwari Hut 2" }
+        ]
+      }
+    ]
+  },
+  {
+    "cluster_number": "H_002",
+    "slums": [
+      {
+        "ward": "H",
+        "slum_name": "Oshiwara",
+        "slum_id": "H_002_Oshiwara",
+        "huts": [
+          { "hut_id": "H_002_Oshiwara_001", "hut_name": "Oshiwara Hut 1" },
+          { "hut_id": "H_002_Oshiwara_002", "hut_name": "Oshiwara Hut 2" },
+          { "hut_id": "H_002_Oshiwara_003", "hut_name": "Oshiwara Hut 3" }
+        ]
+      },
+      {
+        "ward": "H",
+        "slum_name": "Versova Koliwada",
+        "slum_id": "H_002_Versova",
+        "huts": [
+          { "hut_id": "H_002_Versova_001", "hut_name": "Versova Hut 1" },
+          { "hut_id": "H_002_Versova_002", "hut_name": "Versova Hut 2" }
+        ]
+      }
+    ]
+  },
+  {
+    "cluster_number": "H_003",
+    "slums": [
+      {
+        "ward": "H",
+        "slum_name": "Goregaon East",
+        "slum_id": "H_003_GoregaonEast",
+        "huts": [
+          { "hut_id": "H_003_GoregaonEast_001", "hut_name": "Goregaon East Hut 1" },
+          { "hut_id": "H_003_GoregaonEast_002", "hut_name": "Goregaon East Hut 2" },
+          { "hut_id": "H_003_GoregaonEast_003", "hut_name": "Goregaon East Hut 3" }
+        ]
+      },
+      {
+        "ward": "H",
+        "slum_name": "Malad East Camp",
+        "slum_id": "H_003_MaladEast",
+        "huts": [
+          { "hut_id": "H_003_MaladEast_001", "hut_name": "Malad East Hut 1" },
+          { "hut_id": "H_003_MaladEast_002", "hut_name": "Malad East Hut 2" }
+        ]
+      }
+    ]
+  },
+  {
+    "cluster_number": "D_004",
+    "slums": [
+      {
+        "ward": "D",
+        "slum_name": "Worli Koliwada",
+        "slum_id": "D_004_WorliKoliwada",
+        "huts": [
+          { "hut_id": "D_004_WorliKoliwada_001", "hut_name": "Worli Koliwada Hut 1" },
+          { "hut_id": "D_004_WorliKoliwada_002", "hut_name": "Worli Koliwada Hut 2" },
+          { "hut_id": "D_004_WorliKoliwada_003", "hut_name": "Worli Koliwada Hut 3" }
+        ]
+      },
+      {
+        "ward": "D",
+        "slum_name": "Dadar TT",
+        "slum_id": "D_004_DadarTT",
+        "huts": [
+          { "hut_id": "D_004_DadarTT_001", "hut_name": "Dadar TT Hut 1" },
+          { "hut_id": "D_004_DadarTT_002", "hut_name": "Dadar TT Hut 2" }
+        ]
+      }
+    ]
+  },
+  {
+    "cluster_number": "F_004",
+    "slums": [
+      {
+        "ward": "F",
+        "slum_name": "Dharavi Sector 3",
+        "slum_id": "F_004_DharaviS3",
+        "huts": [
+          { "hut_id": "F_004_DharaviS3_001", "hut_name": "Dharavi S3 Hut 1" },
+          { "hut_id": "F_004_DharaviS3_002", "hut_name": "Dharavi S3 Hut 2" },
+          { "hut_id": "F_004_DharaviS3_003", "hut_name": "Dharavi S3 Hut 3" }
+        ]
+      },
+      {
+        "ward": "F",
+        "slum_name": "Dharavi Sector 4",
+        "slum_id": "F_004_DharaviS4",
+        "huts": [
+          { "hut_id": "F_004_DharaviS4_001", "hut_name": "Dharavi S4 Hut 1" },
+          { "hut_id": "F_004_DharaviS4_002", "hut_name": "Dharavi S4 Hut 2" }
+        ]
+      }
+    ]
+  },
+  {
+    "cluster_number": "G_004",
+    "slums": [
+      {
+        "ward": "G",
+        "slum_name": "Tilak Nagar",
+        "slum_id": "G_004_TilakNagar",
+        "huts": [
+          { "hut_id": "G_004_TilakNagar_001", "hut_name": "Tilak Nagar Hut 1" },
+          { "hut_id": "G_004_TilakNagar_002", "hut_name": "Tilak Nagar Hut 2" },
+          { "hut_id": "G_004_TilakNagar_003", "hut_name": "Tilak Nagar Hut 3" }
+        ]
+      },
+      {
+        "ward": "G",
+        "slum_name": "Kamraj Nagar",
+        "slum_id": "G_004_KamrajNagar",
+        "huts": [
+          { "hut_id": "G_004_KamrajNagar_001", "hut_name": "Kamraj Nagar Hut 1" },
+          { "hut_id": "G_004_KamrajNagar_002", "hut_name": "Kamraj Nagar Hut 2" },
+          { "hut_id": "G_004_KamrajNagar_003", "hut_name": "Kamraj Nagar Hut 3" }
+        ]
+      }
+    ]
+  },
+  {
+    "cluster_number": "D_005",
+    "slums": [
+      {
+        "ward": "D",
+        "slum_name": "Elphinstone Road",
+        "slum_id": "D_005_ElphinstoneRoad",
+        "huts": [
+          { "hut_id": "D_005_ElphinstoneRoad_001", "hut_name": "Elphinstone Road Hut 1" },
+          { "hut_id": "D_005_ElphinstoneRoad_002", "hut_name": "Elphinstone Road Hut 2" }
+        ]
+      }
+    ]
+  },
+  {
+    "cluster_number": "E_004",
+    "slums": [
+      {
+        "ward": "E",
+        "slum_name": "Kalina",
+        "slum_id": "E_004_Kalina",
+        "huts": [
+          { "hut_id": "E_004_Kalina_001", "hut_name": "Kalina Hut 1" },
+          { "hut_id": "E_004_Kalina_002", "hut_name": "Kalina Hut 2" }
+        ]
+      }
+    ]
+  },
+  {
+    "cluster_number": "H_004",
+    "slums": [
+      {
+        "ward": "H",
+        "slum_name": "Kandivali East",
+        "slum_id": "H_004_KandivaliEast",
+        "huts": [
+          { "hut_id": "H_004_KandivaliEast_001", "hut_name": "Kandivali East Hut 1" }
+        ]
+      }
+    ]
+  }
+]
