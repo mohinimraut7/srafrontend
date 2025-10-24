@@ -26,4 +26,6 @@ dist-ssr
 src/backup/
 
 Doc.text
+.env.development
+.env.production
 
