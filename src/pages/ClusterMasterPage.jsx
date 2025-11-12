@@ -1060,14 +1060,478 @@
 
 // ----------------------------------------------------------------------------------------------------------
 
+// import React, { useState, useEffect } from "react";
+// import { useFormik } from "formik";
+// import * as Yup from "yup";
+// import toast, { Toaster } from "react-hot-toast"
+// import './ClusterMasterPage.css';
+// import wardsData from "../data/wardsData.json";
+// import mumbaiDistrict from "../data/mumbaiDistrict.json";
+// import mumbaiTalukas from "../data/mumbaiTalukas.json";
+// const API_BASE_URL = import.meta.env.VITE_BASE_URL || "http://localhost:4200";
+
+// const getAuthToken = () => {
+//   if (typeof window === "undefined") return null;
+//   return localStorage.getItem("authToken");
+// };
+
+// const ClusterMasterPage = () => {
+//   const [showForm, setShowForm] = useState(false);
+//   const [clusters, setClusters] = useState([]);
+//   const [loading, setLoading] = useState(false);
+//   const [error, setError] = useState(null);
+
+//   useEffect(() => {
+//     fetchClusters();
+//   }, []);
+
+//   const fetchClusters = async () => {
+//     const token = getAuthToken();
+//     if (!token) {
+//       setError("Please login to view clusters");
+//       return;
+//     }
+
+//     try {
+//       setLoading(true);
+//       const response = await fetch(`${API_BASE_URL}/api/clusters/all`, {
+//         method: "GET",
+//         headers: {
+//           Authorization: `Bearer ${token}`,
+//         },
+//       });
+
+//       if (!response.ok) {
+//         throw new Error("Failed to fetch clusters");
+//       }
+
+//       const data = await response.json();
+//       setClusters(data || []);
+//       setError(null);
+//     } catch (err) {
+//       console.error("Error fetching clusters:", err);
+//       setError(err.message);
+//     } finally {
+//       setLoading(false);
+//     }
+//   };
+
+//   const formik = useFormik({
+//     initialValues: {
+//       cluster_number: "",
+//       cluster_name: "",
+//       district: "",
+//       taluka: "",
+//       ward: "",
+//       municipal_corporation: "BMC", // default BMC
+//     },
+//     validationSchema: Yup.object({
+//       cluster_number: Yup.string()
+//         .required("Cluster Number is required")
+//         .matches(/^[A-Za-z0-9_]+$/, "Only letters, numbers, and underscore allowed"),
+//       cluster_name: Yup.string().required("Cluster Name is required"),
+//       district: Yup.string().required("District is required"),
+//       taluka: Yup.string().required("Taluka is required"),
+//       ward: Yup.string().required("Ward is required"),
+//       municipal_corporation: Yup.string().required("Municipal Corporation is required"),
+//     }),
+//     onSubmit: async (values, { resetForm }) => {
+//       const token = getAuthToken();
+
+//       if (!token) {
+//         alert("Access token missing! Please login first.");
+//         return;
+//       }
+
+//       try {
+//         setLoading(true);
+//         const response = await fetch(`${API_BASE_URL}/api/clusters/add`, {
+//           method: "POST",
+//           headers: {
+//             "Content-Type": "application/json",
+//             Authorization: `Bearer ${token}`,
+//           },
+//           body: JSON.stringify(values),
+//         });
+
+//         const data = await response.json();
+
+//         if (!response.ok) {
+//           throw new Error(data.message || "Failed to add cluster");
+//         }
+
+//         // alert(data.message || "Cluster added successfully!");
+//         toast.success(data.message || "Cluster added successfully!"); // replaced alert
+//         resetForm();
+//         setShowForm(false);
+//         fetchClusters();
+//         setError(null);
+//       } catch (err) {
+//         console.error("Error adding cluster:", err);
+//         alert(err.message || "Something went wrong while adding cluster.");
+//         setError(err.message);
+//       } finally {
+//         setLoading(false);
+//       }
+//     },
+//   });
+
+//   return (
+//     <div className="p-6">
+//        <Toaster position="top-right" reverseOrder={false} />  {/* Add this once at the top */}
+//       <div className="flex justify-between items-center mb-6">
+//         <h2 className="text-xl font-semibold text-gray-800">CLUSTER MASTER</h2>
+//         <button
+//           onClick={() => setShowForm(!showForm)}
+//           className="bg-[#4A5565] hover:opacity-80 text-white font-medium py-2 px-4 rounded-md shadow"
+//         >
+//           {showForm ? "X" : "+ Add Cluster"}
+//         </button>
+//       </div>
+
+//       {error && (
+//         <div className="bg-red-50 border border-red-300 text-red-800 px-4 py-3 rounded-lg mb-4">
+//           {error}
+//         </div>
+//       )}
+
+//       {showForm && (
+//         <form
+//           onSubmit={formik.handleSubmit}
+//           className="bg-white p-6 rounded-lg shadow-md border border-gray-100 mb-8"
+//         >
+//           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+//             {/* Cluster Number */}
+//             <div>
+//               <label className="block text-medium font-medium text-gray-700 mb-1">
+//                 Cluster Number
+//               </label>
+//               <input
+//                 type="text"
+//                 name="cluster_number"
+//                 onChange={formik.handleChange}
+//                 onBlur={formik.handleBlur}
+//                 value={formik.values.cluster_number}
+//                 className={`w-full border ${
+//                   formik.touched.cluster_number && formik.errors.cluster_number
+//                     ? "border-red-500"
+//                     : "border-gray-300"
+//                 } rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-300`}
+//                 placeholder="Enter Cluster Number"
+//               />
+//               {formik.touched.cluster_number && formik.errors.cluster_number && (
+//                 <p className="text-red-500 text-sm mt-1">
+//                   {formik.errors.cluster_number}
+//                 </p>
+//               )}
+//             </div>
+
+//             {/* Cluster Name */}
+//             <div>
+//               <label className="block text-medium font-medium text-gray-700 mb-1">
+//                 Cluster Name
+//               </label>
+//               <input
+//                 type="text"
+//                 name="cluster_name"
+//                 onChange={formik.handleChange}
+//                 onBlur={formik.handleBlur}
+//                 value={formik.values.cluster_name}
+//                 className={`w-full border ${
+//                   formik.touched.cluster_name && formik.errors.cluster_name
+//                     ? "border-red-500"
+//                     : "border-gray-300"
+//                 } rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-300`}
+//                 placeholder="Enter Cluster Name"
+//               />
+//               {formik.touched.cluster_name && formik.errors.cluster_name && (
+//                 <p className="text-red-500 text-sm mt-1">
+//                   {formik.errors.cluster_name}
+//                 </p>
+//               )}
+//             </div>
+
+//             {/* District */}
+//             {/* <div>
+//               <label className="block text-medium font-medium text-gray-700 mb-1">
+//                 District
+//               </label>
+//               <input
+//                 type="text"
+//                 name="district"
+//                 onChange={formik.handleChange}
+//                 onBlur={formik.handleBlur}
+//                 value={formik.values.district}
+//                 className={`w-full border ${
+//                   formik.touched.district && formik.errors.district
+//                     ? "border-red-500"
+//                     : "border-gray-300"
+//                 } rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-300`}
+//                 placeholder="Enter District"
+//               />
+//               {formik.touched.district && formik.errors.district && (
+//                 <p className="text-red-500 text-sm mt-1">
+//                   {formik.errors.district}
+//                 </p>
+//               )}
+//             </div> */}
+
+// {/* District */}
+// <div>
+//   <label className="block text-medium font-medium text-gray-700 mb-1">
+//     District
+//   </label>
+//   <select
+//     name="district"
+//     onChange={formik.handleChange}
+//     onBlur={formik.handleBlur}
+//     value={formik.values.district}
+//     className={`w-full border ${
+//       formik.touched.district && formik.errors.district
+//         ? "border-red-500"
+//         : "border-gray-300"
+//     } rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-300`}
+//   >
+//     <option value="">Select District</option>
+//     {mumbaiDistrict.map((district, index) => (
+//       <option key={index} value={district.districtName}>
+//         {district.districtName}
+//       </option>
+//     ))}
+//   </select>
+
+//   {formik.touched.district && formik.errors.district && (
+//     <p className="text-red-500 text-sm mt-1">{formik.errors.district}</p>
+//   )}
+// </div>
+
+
+//             {/* Taluka */}
+//             {/* <div>
+//               <label className="block text-medium font-medium text-gray-700 mb-1">
+//                 Taluka
+//               </label>
+//               <input
+//                 type="text"
+//                 name="taluka"
+//                 onChange={formik.handleChange}
+//                 onBlur={formik.handleBlur}
+//                 value={formik.values.taluka}
+//                 className={`w-full border ${
+//                   formik.touched.taluka && formik.errors.taluka
+//                     ? "border-red-500"
+//                     : "border-gray-300"
+//                 } rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-300`}
+//                 placeholder="Enter Taluka"
+//               />
+//               {formik.touched.taluka && formik.errors.taluka && (
+//                 <p className="text-red-500 text-sm mt-1">
+//                   {formik.errors.taluka}
+//                 </p>
+//               )}
+//             </div> */}
+            
+//             {/* ------------------------------------------------ */}
+
+//             {/* Taluka */}
+// <div>
+//   <label className="block text-medium font-medium text-gray-700 mb-1">
+//     Taluka
+//   </label>
+
+//   <select
+//     name="taluka"
+//     onChange={formik.handleChange}
+//     onBlur={formik.handleBlur}
+//     value={formik.values.taluka}
+//     disabled={!formik.values.district} // disable until district selected
+//     className={`w-full border ${
+//       formik.touched.taluka && formik.errors.taluka
+//         ? "border-red-500"
+//         : "border-gray-300"
+//     } rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-300`}
+//   >
+//     <option value="">Select Taluka</option>
+//     {mumbaiTalukas
+//       .find((d) => d.districtName === formik.values.district)
+//       ?.talukas.map((taluka, index) => (
+//         <option key={index} value={taluka}>
+//           {taluka}
+//         </option>
+//       ))}
+//   </select>
+
+//   {formik.touched.taluka && formik.errors.taluka && (
+//     <p className="text-red-500 text-sm mt-1">{formik.errors.taluka}</p>
+//   )}
+// </div>
+
+
+//             {/* Ward */}
+
+
+
+
+//             {/* <div>
+//               <label className="block text-medium font-medium text-gray-700 mb-1">
+//                 Ward
+//               </label>
+//               <input
+//                 type="text"
+//                 name="ward"
+//                 onChange={formik.handleChange}
+//                 onBlur={formik.handleBlur}
+//                 value={formik.values.ward}
+//                 className={`w-full border ${
+//                   formik.touched.ward && formik.errors.ward
+//                     ? "border-red-500"
+//                     : "border-gray-300"
+//                 } rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-300`}
+//                 placeholder="Enter Ward"
+//               />
+//               {formik.touched.ward && formik.errors.ward && (
+//                 <p className="text-red-500 text-sm mt-1">
+//                   {formik.errors.ward}
+//                 </p>
+//               )}
+//             </div> */}
+
+// {/* ------------------------------------------------------------------------------------ */}
+
+// <div>
+//   <label className="block text-medium font-medium text-gray-700 mb-1">
+//     Ward
+//   </label>
+
+//   <select
+//     name="ward"
+//     onChange={formik.handleChange}
+//     onBlur={formik.handleBlur}
+//     value={formik.values.ward}
+//     className={`w-full border ${
+//       formik.touched.ward && formik.errors.ward
+//         ? "border-red-500"
+//         : "border-gray-300"
+//     } rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-300`}
+//   >
+//     <option value="">Select Ward</option>
+//     {wardsData.map((ward, index) => (
+//       <option key={index} value={ward.wardName}>
+//         {ward.wardName}
+//       </option>
+//     ))}
+//   </select>
+
+//   {formik.touched.ward && formik.errors.ward && (
+//     <p className="text-red-500 text-sm mt-1">{formik.errors.ward}</p>
+//   )}
+// </div>
+
+
+
+
+
+//             {/* Municipal Corporation */}
+//             <div>
+//               <label className="block text-medium font-medium text-gray-700 mb-1">
+//                 Municipal Corporation
+//               </label>
+//               <input
+//                 type="text"
+//                 name="municipal_corporation"
+//                 onChange={formik.handleChange}
+//                 onBlur={formik.handleBlur}
+//                 value={formik.values.municipal_corporation}
+//                 className={`w-full border ${
+//                   formik.touched.municipal_corporation &&
+//                   formik.errors.municipal_corporation
+//                     ? "border-red-500"
+//                     : "border-gray-300"
+//                 } rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-300`}
+//                 placeholder="Enter Municipal Corporation"
+//               />
+//               {formik.touched.municipal_corporation &&
+//                 formik.errors.municipal_corporation && (
+//                   <p className="text-red-500 text-sm mt-1">
+//                     {formik.errors.municipal_corporation}
+//                   </p>
+//                 )}
+//             </div>
+//           </div>
+
+//           <div className="mt-6 flex justify-end">
+//             <button
+//               type="submit"
+//               disabled={loading}
+//               className="bg-[#018740] hover:opacity-80 text-white font-medium py-2 px-4 rounded-md shadow disabled:opacity-50"
+//             >
+//               {loading ? "Saving..." : "Save Cluster"}
+//             </button>
+//           </div>
+//         </form>
+//       )}
+
+//       <div className="bg-white rounded-lg shadow-md border border-gray-100">
+//         {loading && clusters.length === 0 ? (
+//           <div className="text-center py-8">
+//             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto"></div>
+//             <p className="text-gray-500 mt-2">Loading clusters...</p>
+//           </div>
+//         ) : (
+//           <table className="min-w-full divide-y divide-gray-200">
+//             <thead className="bg-gray-100">
+//               <tr>
+//                 <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">SR. NO.</th>
+//                 <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">CLUSTER NUMBER</th>
+//                 <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">CLUSTER NAME</th>
+//                 <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">DISTRICT</th>
+//                 <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">TALUKA</th>
+//                 <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">WARD</th>
+//                 <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">MUNICIPAL CORPORATION</th>
+//               </tr>
+//             </thead>
+//             <tbody className="divide-y divide-gray-100">
+//               {clusters.length === 0 ? (
+//                 <tr>
+//                   <td colSpan="7" className="text-center py-6 text-gray-500 italic">
+//                     No clusters added yet
+//                   </td>
+//                 </tr>
+//               ) : (
+//                 clusters.map((cluster, index) => (
+//                   <tr key={cluster.id} className="hover:bg-blue-50 transition-colors duration-200">
+//                     <td className="px-6 py-3 text-sm text-gray-700">{index + 1}</td>
+//                     <td className="px-6 py-3 text-sm font-medium text-gray-800">{cluster.cluster_number ? cluster.cluster_number : "-"}</td>
+//                     <td className="px-6 py-3 text-sm text-gray-700">{cluster.cluster_name ? cluster.cluster_name:"-"}</td>
+//                     <td className="px-6 py-3 text-sm text-gray-700">{cluster.district ? cluster.district:"-"}</td>
+//                     <td className="px-6 py-3 text-sm text-gray-700">{cluster.taluka ? cluster.taluka:"-"}</td>
+//                     <td className="px-6 py-3 text-sm text-gray-700">{cluster.ward?cluster.ward:"-"}</td>
+//                     <td className="px-6 py-3 text-sm text-gray-700">{cluster.municipal_corporation?cluster.municipal_corporation:"-"}</td>
+//                   </tr>
+//                 ))
+//               )}
+//             </tbody>
+//           </table>
+//         )}
+//       </div>
+//     </div>
+//   );
+// };
+
+// export default ClusterMasterPage;
+
+// ====================================================================================================================
+
 import React, { useState, useEffect } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import toast, { Toaster } from "react-hot-toast"
+import toast, { Toaster } from "react-hot-toast";
 import './ClusterMasterPage.css';
 import wardsData from "../data/wardsData.json";
 import mumbaiDistrict from "../data/mumbaiDistrict.json";
 import mumbaiTalukas from "../data/mumbaiTalukas.json";
+import { Edit, Loader2, X, Plus } from "lucide-react";
+
 const API_BASE_URL = import.meta.env.VITE_BASE_URL || "http://localhost:4200";
 
 const getAuthToken = () => {
@@ -1077,6 +1541,8 @@ const getAuthToken = () => {
 
 const ClusterMasterPage = () => {
   const [showForm, setShowForm] = useState(false);
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [editingCluster, setEditingCluster] = useState(null);
   const [clusters, setClusters] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -1096,15 +1562,10 @@ const ClusterMasterPage = () => {
       setLoading(true);
       const response = await fetch(`${API_BASE_URL}/api/clusters/all`, {
         method: "GET",
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
+        headers: { Authorization: `Bearer ${token}` },
       });
 
-      if (!response.ok) {
-        throw new Error("Failed to fetch clusters");
-      }
-
+      if (!response.ok) throw new Error("Failed to fetch clusters");
       const data = await response.json();
       setClusters(data || []);
       setError(null);
@@ -1116,6 +1577,39 @@ const ClusterMasterPage = () => {
     }
   };
 
+  // Fetch single cluster by ID
+  const fetchClusterById = async (id) => {
+    const token = getAuthToken();
+    if (!token) return toast.error("Authentication required");
+
+    try {
+      setLoading(true);
+      const response = await fetch(`${API_BASE_URL}/api/clusters/cluster/${id}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      if (!response.ok) throw new Error("Failed to fetch cluster");
+      const data = await response.json();
+
+      setEditingCluster(data);
+      setShowEditModal(true);
+
+      // Pre-fill edit form
+      editFormik.setValues({
+        cluster_number: data.cluster_number || "",
+        cluster_name: data.cluster_name || "",
+        district: data.district || "",
+        taluka: data.taluka || "",
+        ward: data.ward || "",
+        municipal_corporation: data.municipal_corporation || "BMC",
+      });
+    } catch (err) {
+      toast.error(err.message || "Failed to load cluster data");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Add Cluster Formik
   const formik = useFormik({
     initialValues: {
       cluster_number: "",
@@ -1123,7 +1617,7 @@ const ClusterMasterPage = () => {
       district: "",
       taluka: "",
       ward: "",
-      municipal_corporation: "BMC", // default BMC
+      municipal_corporation: "BMC",
     },
     validationSchema: Yup.object({
       cluster_number: Yup.string()
@@ -1137,11 +1631,7 @@ const ClusterMasterPage = () => {
     }),
     onSubmit: async (values, { resetForm }) => {
       const token = getAuthToken();
-
-      if (!token) {
-        alert("Access token missing! Please login first.");
-        return;
-      }
+      if (!token) return toast.error("Access token missing! Please login first.");
 
       try {
         setLoading(true);
@@ -1155,21 +1645,65 @@ const ClusterMasterPage = () => {
         });
 
         const data = await response.json();
+        if (!response.ok) throw new Error(data.message || "Failed to add cluster");
 
-        if (!response.ok) {
-          throw new Error(data.message || "Failed to add cluster");
-        }
-
-        // alert(data.message || "Cluster added successfully!");
-        toast.success(data.message || "Cluster added successfully!"); // replaced alert
+        toast.success(data.message || "Cluster added successfully!");
         resetForm();
         setShowForm(false);
         fetchClusters();
-        setError(null);
       } catch (err) {
-        console.error("Error adding cluster:", err);
-        alert(err.message || "Something went wrong while adding cluster.");
-        setError(err.message);
+        toast.error(err.message || "Something went wrong while adding cluster.");
+      } finally {
+        setLoading(false);
+      }
+    },
+  });
+
+  // Edit Cluster Formik
+  const editFormik = useFormik({
+    enableReinitialize: true,
+    initialValues: {
+      cluster_number: "",
+      cluster_name: "",
+      district: "",
+      taluka: "",
+      ward: "",
+      municipal_corporation: "BMC",
+    },
+    validationSchema: Yup.object({
+      cluster_number: Yup.string()
+        .required("Cluster Number is required")
+        .matches(/^[A-Za-z0-9_]+$/, "Only letters, numbers, and underscore allowed"),
+      cluster_name: Yup.string().required("Cluster Name is required"),
+      district: Yup.string().required("District is required"),
+      taluka: Yup.string().required("Taluka is required"),
+      ward: Yup.string().required("Ward is required"),
+      municipal_corporation: Yup.string().required("Municipal Corporation is required"),
+    }),
+    onSubmit: async (values) => {
+      const token = getAuthToken();
+      if (!token) return toast.error("Authentication required");
+
+      try {
+        setLoading(true);
+        const response = await fetch(`${API_BASE_URL}/api/clusters/update/${editingCluster.id}`, {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify(values),
+        });
+
+        const data = await response.json();
+        if (!response.ok) throw new Error(data.message || "Failed to update cluster");
+
+        toast.success(data.message || "Cluster updated successfully!");
+        setShowEditModal(false);
+        setEditingCluster(null);
+        fetchClusters();
+      } catch (err) {
+        toast.error(err.message || "Failed to update cluster");
       } finally {
         setLoading(false);
       }
@@ -1178,14 +1712,16 @@ const ClusterMasterPage = () => {
 
   return (
     <div className="p-6">
-       <Toaster position="top-right" reverseOrder={false} />  {/* Add this once at the top */}
+      <Toaster position="top-right" reverseOrder={false} />
+
       <div className="flex justify-between items-center mb-6">
         <h2 className="text-xl font-semibold text-gray-800">CLUSTER MASTER</h2>
         <button
           onClick={() => setShowForm(!showForm)}
-          className="bg-[#4A5565] hover:opacity-80 text-white font-medium py-2 px-4 rounded-md shadow"
+          className="bg-[#4A5565] hover:opacity-80 text-white font-medium py-2 px-4 rounded-md shadow flex items-center gap-2"
         >
-          {showForm ? "X" : "+ Add Cluster"}
+          {showForm ? <X size={18} /> : <Plus size={18} />}
+          {showForm ? "Cancel" : "Add Cluster"}
         </button>
       </div>
 
@@ -1195,267 +1731,118 @@ const ClusterMasterPage = () => {
         </div>
       )}
 
+      {/* Add Cluster Form */}
       {showForm && (
-        <form
-          onSubmit={formik.handleSubmit}
-          className="bg-white p-6 rounded-lg shadow-md border border-gray-100 mb-8"
-        >
+        <form onSubmit={formik.handleSubmit} className="bg-white p-6 rounded-lg shadow-md border border-gray-100 mb-8">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+
             {/* Cluster Number */}
             <div>
-              <label className="block text-medium font-medium text-gray-700 mb-1">
-                Cluster Number
-              </label>
+              <label className="block text-medium font-medium text-gray-700 mb-1">Cluster Number</label>
               <input
                 type="text"
                 name="cluster_number"
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
                 value={formik.values.cluster_number}
-                className={`w-full border ${
-                  formik.touched.cluster_number && formik.errors.cluster_number
-                    ? "border-red-500"
-                    : "border-gray-300"
-                } rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-300`}
+                className={`w-full border ${formik.touched.cluster_number && formik.errors.cluster_number ? "border-red-500" : "border-gray-300"} rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-300`}
                 placeholder="Enter Cluster Number"
               />
               {formik.touched.cluster_number && formik.errors.cluster_number && (
-                <p className="text-red-500 text-sm mt-1">
-                  {formik.errors.cluster_number}
-                </p>
+                <p className="text-red-500 text-sm mt-1">{formik.errors.cluster_number}</p>
               )}
             </div>
 
             {/* Cluster Name */}
             <div>
-              <label className="block text-medium font-medium text-gray-700 mb-1">
-                Cluster Name
-              </label>
+              <label className="block text-medium font-medium text-gray-700 mb-1">Cluster Name</label>
               <input
                 type="text"
                 name="cluster_name"
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
                 value={formik.values.cluster_name}
-                className={`w-full border ${
-                  formik.touched.cluster_name && formik.errors.cluster_name
-                    ? "border-red-500"
-                    : "border-gray-300"
-                } rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-300`}
+                className={`w-full border ${formik.touched.cluster_name && formik.errors.cluster_name ? "border-red-500" : "border-gray-300"} rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-300`}
                 placeholder="Enter Cluster Name"
               />
               {formik.touched.cluster_name && formik.errors.cluster_name && (
-                <p className="text-red-500 text-sm mt-1">
-                  {formik.errors.cluster_name}
-                </p>
+                <p className="text-red-500 text-sm mt-1">{formik.errors.cluster_name}</p>
               )}
             </div>
 
             {/* District */}
-            {/* <div>
-              <label className="block text-medium font-medium text-gray-700 mb-1">
-                District
-              </label>
-              <input
-                type="text"
+            <div>
+              <label className="block text-medium font-medium text-gray-700 mb-1">District</label>
+              <select
                 name="district"
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
                 value={formik.values.district}
-                className={`w-full border ${
-                  formik.touched.district && formik.errors.district
-                    ? "border-red-500"
-                    : "border-gray-300"
-                } rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-300`}
-                placeholder="Enter District"
-              />
+                className={`w-full border ${formik.touched.district && formik.errors.district ? "border-red-500" : "border-gray-300"} rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-300`}
+              >
+                <option value="">Select District</option>
+                {mumbaiDistrict.map((district, index) => (
+                  <option key={index} value={district.districtName}>{district.districtName}</option>
+                ))}
+              </select>
               {formik.touched.district && formik.errors.district && (
-                <p className="text-red-500 text-sm mt-1">
-                  {formik.errors.district}
-                </p>
+                <p className="text-red-500 text-sm mt-1">{formik.errors.district}</p>
               )}
-            </div> */}
-
-{/* District */}
-<div>
-  <label className="block text-medium font-medium text-gray-700 mb-1">
-    District
-  </label>
-  <select
-    name="district"
-    onChange={formik.handleChange}
-    onBlur={formik.handleBlur}
-    value={formik.values.district}
-    className={`w-full border ${
-      formik.touched.district && formik.errors.district
-        ? "border-red-500"
-        : "border-gray-300"
-    } rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-300`}
-  >
-    <option value="">Select District</option>
-    {mumbaiDistrict.map((district, index) => (
-      <option key={index} value={district.districtName}>
-        {district.districtName}
-      </option>
-    ))}
-  </select>
-
-  {formik.touched.district && formik.errors.district && (
-    <p className="text-red-500 text-sm mt-1">{formik.errors.district}</p>
-  )}
-</div>
-
+            </div>
 
             {/* Taluka */}
-            {/* <div>
-              <label className="block text-medium font-medium text-gray-700 mb-1">
-                Taluka
-              </label>
-              <input
-                type="text"
+            <div>
+              <label className="block text-medium font-medium text-gray-700 mb-1">Taluka</label>
+              <select
                 name="taluka"
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
                 value={formik.values.taluka}
-                className={`w-full border ${
-                  formik.touched.taluka && formik.errors.taluka
-                    ? "border-red-500"
-                    : "border-gray-300"
-                } rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-300`}
-                placeholder="Enter Taluka"
-              />
+                disabled={!formik.values.district}
+                className={`w-full border ${formik.touched.taluka && formik.errors.taluka ? "border-red-500" : "border-gray-300"} rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-300`}
+              >
+                <option value="">Select Taluka</option>
+                {mumbaiTalukas
+                  .find((d) => d.districtName === formik.values.district)
+                  ?.talukas.map((taluka, index) => (
+                    <option key={index} value={taluka}>{taluka}</option>
+                  ))}
+              </select>
               {formik.touched.taluka && formik.errors.taluka && (
-                <p className="text-red-500 text-sm mt-1">
-                  {formik.errors.taluka}
-                </p>
+                <p className="text-red-500 text-sm mt-1">{formik.errors.taluka}</p>
               )}
-            </div> */}
-            
-            {/* ------------------------------------------------ */}
-
-            {/* Taluka */}
-<div>
-  <label className="block text-medium font-medium text-gray-700 mb-1">
-    Taluka
-  </label>
-
-  <select
-    name="taluka"
-    onChange={formik.handleChange}
-    onBlur={formik.handleBlur}
-    value={formik.values.taluka}
-    disabled={!formik.values.district} // disable until district selected
-    className={`w-full border ${
-      formik.touched.taluka && formik.errors.taluka
-        ? "border-red-500"
-        : "border-gray-300"
-    } rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-300`}
-  >
-    <option value="">Select Taluka</option>
-    {mumbaiTalukas
-      .find((d) => d.districtName === formik.values.district)
-      ?.talukas.map((taluka, index) => (
-        <option key={index} value={taluka}>
-          {taluka}
-        </option>
-      ))}
-  </select>
-
-  {formik.touched.taluka && formik.errors.taluka && (
-    <p className="text-red-500 text-sm mt-1">{formik.errors.taluka}</p>
-  )}
-</div>
-
+            </div>
 
             {/* Ward */}
-
-
-
-
-            {/* <div>
-              <label className="block text-medium font-medium text-gray-700 mb-1">
-                Ward
-              </label>
-              <input
-                type="text"
+            <div>
+              <label className="block text-medium font-medium text-gray-700 mb-1">Ward</label>
+              <select
                 name="ward"
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
                 value={formik.values.ward}
-                className={`w-full border ${
-                  formik.touched.ward && formik.errors.ward
-                    ? "border-red-500"
-                    : "border-gray-300"
-                } rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-300`}
-                placeholder="Enter Ward"
-              />
+                className={`w-full border ${formik.touched.ward && formik.errors.ward ? "border-red-500" : "border-gray-300"} rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-300`}
+              >
+                <option value="">Select Ward</option>
+                {wardsData.map((ward, index) => (
+                  <option key={index} value={ward.wardName}>{ward.wardName}</option>
+                ))}
+              </select>
               {formik.touched.ward && formik.errors.ward && (
-                <p className="text-red-500 text-sm mt-1">
-                  {formik.errors.ward}
-                </p>
+                <p className="text-red-500 text-sm mt-1">{formik.errors.ward}</p>
               )}
-            </div> */}
-
-{/* ------------------------------------------------------------------------------------ */}
-
-<div>
-  <label className="block text-medium font-medium text-gray-700 mb-1">
-    Ward
-  </label>
-
-  <select
-    name="ward"
-    onChange={formik.handleChange}
-    onBlur={formik.handleBlur}
-    value={formik.values.ward}
-    className={`w-full border ${
-      formik.touched.ward && formik.errors.ward
-        ? "border-red-500"
-        : "border-gray-300"
-    } rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-300`}
-  >
-    <option value="">Select Ward</option>
-    {wardsData.map((ward, index) => (
-      <option key={index} value={ward.wardName}>
-        {ward.wardName}
-      </option>
-    ))}
-  </select>
-
-  {formik.touched.ward && formik.errors.ward && (
-    <p className="text-red-500 text-sm mt-1">{formik.errors.ward}</p>
-  )}
-</div>
-
-
-
-
+            </div>
 
             {/* Municipal Corporation */}
             <div>
-              <label className="block text-medium font-medium text-gray-700 mb-1">
-                Municipal Corporation
-              </label>
+              <label className="block text-medium font-medium text-gray-700 mb-1">Municipal Corporation</label>
               <input
                 type="text"
                 name="municipal_corporation"
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
                 value={formik.values.municipal_corporation}
-                className={`w-full border ${
-                  formik.touched.municipal_corporation &&
-                  formik.errors.municipal_corporation
-                    ? "border-red-500"
-                    : "border-gray-300"
-                } rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-300`}
-                placeholder="Enter Municipal Corporation"
+                readOnly
+                className="w-full border border-gray-300 rounded-md px-3 py-2 bg-gray-100 text-gray-700"
               />
-              {formik.touched.municipal_corporation &&
-                formik.errors.municipal_corporation && (
-                  <p className="text-red-500 text-sm mt-1">
-                    {formik.errors.municipal_corporation}
-                  </p>
-                )}
             </div>
           </div>
 
@@ -1471,6 +1858,7 @@ const ClusterMasterPage = () => {
         </form>
       )}
 
+      {/* Clusters Table */}
       <div className="bg-white rounded-lg shadow-md border border-gray-100">
         {loading && clusters.length === 0 ? (
           <div className="text-center py-8">
@@ -1488,12 +1876,13 @@ const ClusterMasterPage = () => {
                 <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">TALUKA</th>
                 <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">WARD</th>
                 <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">MUNICIPAL CORPORATION</th>
+                <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">ACTION</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-100">
               {clusters.length === 0 ? (
                 <tr>
-                  <td colSpan="7" className="text-center py-6 text-gray-500 italic">
+                  <td colSpan="8" className="text-center py-6 text-gray-500 italic">
                     No clusters added yet
                   </td>
                 </tr>
@@ -1501,12 +1890,26 @@ const ClusterMasterPage = () => {
                 clusters.map((cluster, index) => (
                   <tr key={cluster.id} className="hover:bg-blue-50 transition-colors duration-200">
                     <td className="px-6 py-3 text-sm text-gray-700">{index + 1}</td>
-                    <td className="px-6 py-3 text-sm font-medium text-gray-800">{cluster.cluster_number ? cluster.cluster_number : "-"}</td>
-                    <td className="px-6 py-3 text-sm text-gray-700">{cluster.cluster_name ? cluster.cluster_name:"-"}</td>
-                    <td className="px-6 py-3 text-sm text-gray-700">{cluster.district ? cluster.district:"-"}</td>
-                    <td className="px-6 py-3 text-sm text-gray-700">{cluster.taluka ? cluster.taluka:"-"}</td>
-                    <td className="px-6 py-3 text-sm text-gray-700">{cluster.ward?cluster.ward:"-"}</td>
-                    <td className="px-6 py-3 text-sm text-gray-700">{cluster.municipal_corporation?cluster.municipal_corporation:"-"}</td>
+                    <td className="px-6 py-3 text-sm font-medium text-gray-800">{cluster.cluster_number || "-"}</td>
+                    <td className="px-6 py-3 text-sm text-gray-700">{cluster.cluster_name || "-"}</td>
+                    <td className="px-6 py-3 text-sm text-gray-700">{cluster.district || "-"}</td>
+                    <td className="px-6 py-3 text-sm text-gray-700">{cluster.taluka || "-"}</td>
+                    <td className="px-6 py-3 text-sm text-gray-700">{cluster.ward || "-"}</td>
+                    <td className="px-6 py-3 text-sm text-gray-700">{cluster.municipal_corporation || "-"}</td>
+                    <td className="px-6 py-3">
+                      <button
+                        onClick={() => fetchClusterById(cluster.id)}
+                        className="text-orange-600 hover:text-orange-900 transition-colors"
+                        title="Edit Cluster"
+                        disabled={loading}
+                      >
+                        {loading && editingCluster?.id === cluster.id ? (
+                          <Loader2 size={20} className="animate-spin" />
+                        ) : (
+                          <Edit size={20} />
+                        )}
+                      </button>
+                    </td>
                   </tr>
                 ))
               )}
@@ -1514,6 +1917,172 @@ const ClusterMasterPage = () => {
           </table>
         )}
       </div>
+
+      {/* Edit Modal */}
+      {showEditModal && editingCluster && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-lg shadow-xl max-w-4xl w-full max-h-screen overflow-y-auto">
+            <div className="p-6 border-b border-gray-200">
+              <div className="flex justify-between items-center">
+                <h3 className="text-xl font-semibold text-gray-800">Edit Cluster</h3>
+                <button
+                  onClick={() => {
+                    setShowEditModal(false);
+                    setEditingCluster(null);
+                    editFormik.resetForm();
+                  }}
+                  className="text-gray-500 hover:text-gray-700"
+                >
+                  <X size={24} />
+                </button>
+              </div>
+            </div>
+
+            <form onSubmit={editFormik.handleSubmit} className="p-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+                {/* Cluster Number */}
+                <div>
+                  <label className="block text-medium font-medium text-gray-700 mb-1">Cluster Number</label>
+                  <input
+                    type="text"
+                    name="cluster_number"
+                    onChange={editFormik.handleChange}
+                    onBlur={editFormik.handleBlur}
+                    value={editFormik.values.cluster_number}
+                    className={`w-full border ${editFormik.touched.cluster_number && editFormik.errors.cluster_number ? "border-red-500" : "border-gray-300"} rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-300`}
+                  />
+                  {editFormik.touched.cluster_number && editFormik.errors.cluster_number && (
+                    <p className="text-red-500 text-sm mt-1">{editFormik.errors.cluster_number}</p>
+                  )}
+                </div>
+
+                {/* Cluster Name */}
+                <div>
+                  <label className="block text-medium font-medium text-gray-700 mb-1">Cluster Name</label>
+                  <input
+                    type="text"
+                    name="cluster_name"
+                    onChange={editFormik.handleChange}
+                    onBlur={editFormik.handleBlur}
+                    value={editFormik.values.cluster_name}
+                    className={`w-full border ${editFormik.touched.cluster_name && editFormik.errors.cluster_name ? "border-red-500" : "border-gray-300"} rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-300`}
+                  />
+                  {editFormik.touched.cluster_name && editFormik.errors.cluster_name && (
+                    <p className="text-red-500 text-sm mt-1">{editFormik.errors.cluster_name}</p>
+                  )}
+                </div>
+
+                {/* District */}
+                <div>
+                  <label className="block text-medium font-medium text-gray-700 mb-1">District</label>
+                  <select
+                    name="district"
+                    onChange={(e) => {
+                      editFormik.handleChange(e);
+                      editFormik.setFieldValue("taluka", "");
+                    }}
+                    onBlur={editFormik.handleBlur}
+                    value={editFormik.values.district}
+                    className={`w-full border ${editFormik.touched.district && editFormik.errors.district ? "border-red-500" : "border-gray-300"} rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-300`}
+                  >
+                    <option value="">Select District</option>
+                    {mumbaiDistrict.map((district, index) => (
+                      <option key={index} value={district.districtName}>{district.districtName}</option>
+                    ))}
+                  </select>
+                  {editFormik.touched.district && editFormik.errors.district && (
+                    <p className="text-red-500 text-sm mt-1">{editFormik.errors.district}</p>
+                  )}
+                </div>
+
+                {/* Taluka */}
+                <div>
+                  <label className="block text-medium font-medium text-gray-700 mb-1">Taluka</label>
+                  <select
+                    name="taluka"
+                    onChange={editFormik.handleChange}
+                    onBlur={editFormik.handleBlur}
+                    value={editFormik.values.taluka}
+                    disabled={!editFormik.values.district}
+                    className={`w-full border ${editFormik.touched.taluka && editFormik.errors.taluka ? "border-red-500" : "border-gray-300"} rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-300`}
+                  >
+                    <option value="">Select Taluka</option>
+                    {mumbaiTalukas
+                      .find((d) => d.districtName === editFormik.values.district)
+                      ?.talukas.map((taluka, index) => (
+                        <option key={index} value={taluka}>{taluka}</option>
+                      ))}
+                  </select>
+                  {editFormik.touched.taluka && editFormik.errors.taluka && (
+                    <p className="text-red-500 text-sm mt-1">{editFormik.errors.taluka}</p>
+                  )}
+                </div>
+
+                {/* Ward */}
+                <div>
+                  <label className="block text-medium font-medium text-gray-700 mb-1">Ward</label>
+                  <select
+                    name="ward"
+                    onChange={editFormik.handleChange}
+                    onBlur={editFormik.handleBlur}
+                    value={editFormik.values.ward}
+                    className={`w-full border ${editFormik.touched.ward && editFormik.errors.ward ? "border-red-500" : "border-gray-300"} rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-300`}
+                  >
+                    <option value="">Select Ward</option>
+                    {wardsData.map((ward, index) => (
+                      <option key={index} value={ward.wardName}>{ward.wardName}</option>
+                    ))}
+                  </select>
+                  {editFormik.touched.ward && editFormik.errors.ward && (
+                    <p className="text-red-500 text-sm mt-1">{editFormik.errors.ward}</p>
+                  )}
+                </div>
+
+                {/* Municipal Corporation */}
+                <div>
+                  <label className="block text-medium font-medium text-gray-700 mb-1">Municipal Corporation</label>
+                  <input
+                    type="text"
+                    name="municipal_corporation"
+                    value={editFormik.values.municipal_corporation}
+                    readOnly
+                    className="w-full border border-gray-300 rounded-md px-3 py-2 bg-gray-100 text-gray-700"
+                  />
+                </div>
+              </div>
+
+              <div className="mt-6 flex justify-end gap-3">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setShowEditModal(false);
+                    setEditingCluster(null);
+                    editFormik.resetForm();
+                  }}
+                  className="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  disabled={loading}
+                  className="bg-[#018740] hover:opacity-80 text-white font-medium py-2 px-4 rounded-md shadow disabled:opacity-50 flex items-center gap-2"
+                >
+                  {loading ? (
+                    <>
+                      <Loader2 size={18} className="animate-spin" />
+                      Updating...
+                    </>
+                  ) : (
+                    "Update Cluster"
+                  )}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

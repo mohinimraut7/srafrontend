@@ -1,0 +1,8 @@
+[
+    { "value":"","label": "Select Role" },
+    { "value":"admin","label":"Admin"},
+    { "value":"surveyor","label":"Surveyor" },
+    { "value":"surveyor admin","label":"Surveyor admin" },
+    { "value":"editor","label":"Editor" }
+  ]
+

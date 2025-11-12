@@ -7,7 +7,7 @@ import { isAuthenticated, setAuthToken, removeAuthToken } from "../utils/auth"
 
 
 // const LOGIN_URL = import.meta.env.VITE_BASE_URL || "http://13.203.251.59:4200"
-const LOGIN_URL = import.meta.env.VITE_BASE_URL || "https://sra.saavi.co.in"
+const BASE_URL = import.meta.env.VITE_BASE_URL || "https://sra.saavi.co.in"
 
 
 export default function LoginPage({ onNavigate, setUser }) {
@@ -33,7 +33,7 @@ export default function LoginPage({ onNavigate, setUser }) {
     try {
       const response = await axios.post(
         
-        `${LOGIN_URL}/api/auth/login`,
+        `${BASE_URL}/api/auth/login`,
         {
           email: email.trim(),
           password: password.trim(),

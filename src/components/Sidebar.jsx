@@ -30,7 +30,7 @@ const Sidebar = ({ isCollapsed, currentPage, currentMode, onNavigate }) => {
   const navigationItems = [
     { id: "dashboard", label: "Dashboard", icon: LayoutDashboard },
      { id: "all-applications", label: "All Applications", icon: FileText },
-        { id: "edit-  ", label: "Edit Applications", icon: Edit3 },
+        // { id: "edit-  ", label: "Edit Applications", icon: Edit3 },
        { id: "cluster-master", label: "Cluster Master", icon: Edit3 },
         { id: "slum-master", label: "Slum Master", icon: Edit3 },
     { id: "profile", label: "Profile", icon: User },

@@ -1,12 +1,16 @@
 import React, { useState } from 'react';
 import { User, Mail, Phone, Lock, UserCheck, MapPin, Building, X, Check,Eye, EyeOff } from 'lucide-react';
-import {getAuthToken} from "../utils/auth.js"
+import {getAuthToken} from "../utils/auth.js";
+import roles from "../data/rolesData.json";
+import talukasDistrict from "../data/mumbaiTalukas.json";
+import toast, { Toaster } from "react-hot-toast"
 
 const RegisterUser = ({onNavigate}) => {
     const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({
     name: '',
     email: '',
+    mobileNumber: "",
     password: '',
     role: '',
     district: '',
@@ -15,17 +19,19 @@ const RegisterUser = ({onNavigate}) => {
 
   const [errors, setErrors] = useState({});
   const [isLoading, setIsLoading] = useState(false);
+  const [talukas, setTalukas] = useState([]);
+
 
   const getAuthToken = () => {
     if (typeof window === "undefined") return null;
     return localStorage.getItem("authToken");
   };
 
-  const roles = [
-    { value: '', label: 'Select Role' },
-    { value: 'admin', label: 'Admin' },
-    { value: 'surveyor', label: 'Surveyor' },
-  ];
+  // const roles = [
+  //   { value: '', label: 'Select Role' },
+  //   { value: 'admin', label: 'Admin' },
+  //   { value: 'surveyor', label: 'Surveyor' },
+  // ];
 
 
   const validateForm = () => {
@@ -39,6 +45,10 @@ const RegisterUser = ({onNavigate}) => {
       newErrors.email = 'Email is required';
     } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
       newErrors.email = 'Email is invalid';
+    }
+
+     if (!formData.mobileNumber) {
+      newErrors.mobileNumber = 'Mobile Number is required';
     }
 
 
@@ -90,9 +100,12 @@ const RegisterUser = ({onNavigate}) => {
   const token = getAuthToken();
 
   try {
-    const BASE_URL = import.meta.env.VITE_BASE_URL;
+    // const BASE_URL = import.meta.env.VITE_BASE_URL;
+    
+const BASE_URL = import.meta.env.VITE_BASE_URL || "https://sra.saavi.co.in"
 
-    const response = await fetch(`${BASE_URL}/auth/register`, {
+
+    const response = await fetch(`${BASE_URL}/api/auth/register`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -101,6 +114,7 @@ const RegisterUser = ({onNavigate}) => {
       body: JSON.stringify({
         name: formData.name,   // backend expects `name`, map from fullName
         email: formData.email,
+        mobileNumber: formData.mobileNumber,
         password: formData.password,
         role: formData.role,
         district: formData.district,
@@ -120,13 +134,15 @@ const RegisterUser = ({onNavigate}) => {
     setFormData({
       name: "",
       email: "",
+      mobilNumber:"",
       password: "",
       role: "",
       district: "",
       taluka: ""
     });
 
-    alert("User registered successfully!");
+    // alert("User registered successfully!");
+      toast.success(data.message || "User registered successfully!"); // replaced alert
   } catch (error) {
     console.error("Registration error:", error);
     alert(error.message || "Failed to register user. Please try again.");
@@ -148,12 +164,13 @@ const RegisterUser = ({onNavigate}) => {
     setErrors({});
   };
 
-  const getCurrentTalukas = () => {
-    return talukas[formData.district] || talukas.default;
-  };
+  // const getCurrentTalukas = () => {
+  //   return talukas[formData.district] || talukas.default;
+  // };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-orange-50 via-red-50 to-white p-4">
+      <Toaster position="top-right" reverseOrder={false} />
       <div className="max-w-2xl mx-auto">
         {/* Header */}
         <div className="text-center mb-8">
@@ -190,31 +207,8 @@ const RegisterUser = ({onNavigate}) => {
               )}
             </div>
 
-            {/* Email */}
-            <div>
-              <label className="block text-slate-700 font-medium mb-2">
-                <Mail className="inline w-4 h-4 mr-2" />
-                Email Address
-              </label>
-              <input
-                type="email"
-                name="email"
-                value={formData.email}
-                onChange={handleInputChange}
-                className={`w-full px-4 py-3 rounded-lg border-2 transition-colors duration-200 focus:outline-none ${
-                  errors.email 
-                    ? 'border-red-300 focus:border-red-500' 
-                    : 'border-gray-200 focus:border-orange-400'
-                }`}
-                placeholder="Enter email address"
-              />
-              {errors.email && (
-                <p className="text-red-500 text-sm mt-1 flex items-center">
-                  <X className="w-4 h-4 mr-1" />
-                  {errors.email}
-                </p>
-              )}
-            </div>
+          
+          
 
 
             {/* Password */}
@@ -254,6 +248,61 @@ const RegisterUser = ({onNavigate}) => {
   )}
 </div>
 
+  {/* Email */}
+  <div>
+              <label className="block text-slate-700 font-medium mb-2">
+                <Mail className="inline w-4 h-4 mr-2" />
+                Email Address
+              </label>
+              <input
+                type="email"
+                name="email"
+                value={formData.email}
+                onChange={handleInputChange}
+                className={`w-full px-4 py-3 rounded-lg border-2 transition-colors duration-200 focus:outline-none ${
+                  errors.email 
+                    ? 'border-red-300 focus:border-red-500' 
+                    : 'border-gray-200 focus:border-orange-400'
+                }`}
+                placeholder="Enter email address"
+              />
+              {errors.email && (
+                <p className="text-red-500 text-sm mt-1 flex items-center">
+                  <X className="w-4 h-4 mr-1" />
+                  {errors.email}
+                </p>
+              )}
+  </div>
+
+ {/* Email */}
+  <div>
+              <label className="block text-slate-700 font-medium mb-2">
+                <Phone className="inline w-4 h-4 mr-2" />
+                Mobile Number
+              </label>
+              <input
+                type="text"
+                name="mobileNumber"
+                value={formData.mobileNumber}
+                maxLength="10"
+                onChange={handleInputChange}
+                className={`w-full px-4 py-3 rounded-lg border-2 transition-colors duration-200 focus:outline-none ${
+                  errors.mobileNumber
+                    ? 'border-red-300 focus:border-red-500' 
+                    : 'border-gray-200 focus:border-orange-400'
+                }`}
+                placeholder="Enter Mobile Number"
+              />
+              {errors.mobileNumber && (
+                <p className="text-red-500 text-sm mt-1 flex items-center">
+                  <X className="w-4 h-4 mr-1" />
+                  {errors.mobileNumber}
+                </p>
+              )}
+  </div>
+
+
+
             {/* Role */}
             <div>
               <label className="block text-slate-700 font-medium mb-2">
@@ -284,8 +333,8 @@ const RegisterUser = ({onNavigate}) => {
               )}
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {/* District */}
+            {/* <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+         
               <div>
                 <label className="block text-slate-700 font-medium mb-2">
                   <Building className="inline w-4 h-4 mr-2" />
@@ -310,8 +359,7 @@ const RegisterUser = ({onNavigate}) => {
                   </p>
                 )}
               </div>
-
-              {/* Taluka */}
+           
               <div>
                 <label className="block text-slate-700 font-medium mb-2">
                   <MapPin className="inline w-4 h-4 mr-2" />
@@ -336,7 +384,91 @@ const RegisterUser = ({onNavigate}) => {
                   </p>
                 )}
               </div>
-            </div>
+            </div> */}
+
+<div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+  {/* District Dropdown */}
+  <div>
+    <label className="block text-slate-700 font-medium mb-2">
+      <Building className="inline w-4 h-4 mr-2" />
+      District
+    </label>
+
+    <select
+      name="district"
+      value={formData.district}
+      onChange={(e) => {
+        handleInputChange(e); // first update district
+        const selectedDistrict = talukasDistrict.find(
+          (d) => d.districtName === e.target.value
+        );
+        setFormData({
+          ...formData,
+          district: e.target.value,
+          taluka: "" // reset taluka on district change
+        });
+        setTalukas(selectedDistrict ? selectedDistrict.talukas : []);
+      }}
+      className={`w-full px-4 py-3 rounded-lg border-2 transition-colors duration-200 focus:outline-none ${
+        errors.district 
+          ? 'border-red-300 focus:border-red-500' 
+          : 'border-gray-200 focus:border-orange-400'
+      }`}
+    >
+      <option value="">Select District</option>
+      {talukasDistrict.map((item) => (
+        <option key={item.districtName} value={item.districtName}>
+          {item.districtName}
+        </option>
+      ))}
+    </select>
+
+    {errors.district && (
+      <p className="text-red-500 text-sm mt-1 flex items-center">
+        <X className="w-4 h-4 mr-1" />
+        {errors.district}
+      </p>
+    )}
+  </div>
+
+  {/* Taluka Dropdown */}
+  <div>
+    <label className="block text-slate-700 font-medium mb-2">
+      <MapPin className="inline w-4 h-4 mr-2" />
+      Taluka
+    </label>
+
+    <select
+      name="taluka"
+      value={formData.taluka}
+      onChange={handleInputChange}
+      disabled={!formData.district} // Disable until district selected
+      className={`w-full px-4 py-3 rounded-lg border-2 transition-colors duration-200 focus:outline-none ${
+        errors.taluka 
+          ? 'border-red-300 focus:border-red-500' 
+          : 'border-gray-200 focus:border-orange-400'
+      }`}
+    >
+      <option value="">Select Taluka</option>
+      {talukas?.map((taluka) => (
+        <option key={taluka} value={taluka}>
+          {taluka}
+        </option>
+      ))}
+    </select>
+
+    {errors.taluka && (
+      <p className="text-red-500 text-sm mt-1 flex items-center">
+        <X className="w-4 h-4 mr-1" />
+        {errors.taluka}
+      </p>
+    )}
+  </div>
+</div>
+
+
+
 
             {/* Action Buttons */}
             <div className="flex flex-col md:flex-row gap-4 pt-6">
