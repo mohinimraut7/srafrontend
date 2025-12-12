@@ -981,7 +981,7 @@ const SlumMasterPage = () => {
 
   // Taluka list based on district
   const talukaOptions = {
-    "Mumbai City": ["Fort", "Colaba", "Byculla", "Malabar Hill", "Tardeo"],
+    "Mumbai City": ["Mumbai City"],
     "Mumbai Suburban": ["Andheri", "Bandra", "Borivali", "Kurla", "Chembur"],
   };
 
