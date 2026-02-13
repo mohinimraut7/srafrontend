@@ -62,7 +62,9 @@ const Sidebar = ({ isCollapsed, currentPage, currentMode, onNavigate }) => {
               </div>
               <div>
                 <h2 className="text-sm font-bold text-gray-900">MHADA</h2>
+                
               </div>
+              {/* <div><button>X</button></div> */}
             </div>
           )}
         </div>
