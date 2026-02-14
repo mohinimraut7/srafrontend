@@ -6750,48 +6750,48 @@ const fetchAndSetUserProfile = async () => {
 }
 
 const validationSchemas = {
-  1: Yup.object({
-    slum_id: Yup.string().required('Slum ID is required'),
-    // name_of_slum_area: Yup.string().required('Hut name is required'),
-    municipal_corporation: Yup.string().required('Municipal Corporation is required'),
-    ward: Yup.string().required('Ward is required'),
-    district: Yup.string().required('District is required'),
-    taluka: Yup.string().required('Taluka is required'),
-  }),
-  2: Yup.object({
-    first_name: Yup.string().matches(/^[A-Za-z\s]+$/, "Only alphabets are allowed").required('First name is required'),
-    middle_name: Yup.string().matches(/^[A-Za-z\s]+$/, "Only alphabets are allowed").required('Middle name is required'),
-    last_name: Yup.string().matches(/^[A-Za-z\s]+$/, "Only alphabets are allowed").required('Last name is required'),
-    gender: Yup.string().required('Gender is required'),
+  // 1: Yup.object({
+  //   slum_id: Yup.string().required('Slum ID is required'),
+  //   // name_of_slum_area: Yup.string().required('Hut name is required'),
+  //   municipal_corporation: Yup.string().required('Municipal Corporation is required'),
+  //   ward: Yup.string().required('Ward is required'),
+  //   district: Yup.string().required('District is required'),
+  //   taluka: Yup.string().required('Taluka is required'),
+  // }),
+  // 2: Yup.object({
+  //   first_name: Yup.string().matches(/^[A-Za-z\s]+$/, "Only alphabets are allowed").required('First name is required'),
+  //   middle_name: Yup.string().matches(/^[A-Za-z\s]+$/, "Only alphabets are allowed").required('Middle name is required'),
+  //   last_name: Yup.string().matches(/^[A-Za-z\s]+$/, "Only alphabets are allowed").required('Last name is required'),
+  //   gender: Yup.string().required('Gender is required'),
     
-      aadhaar_number: Yup.string()
-      .required('Aadhaar number is required')
-      .test(
-        'is-valid-aadhaar',
-        'Enter a valid Aadhaar number',
-        (value) => isValidAadhaar(value)
-      ),
-    aadhaar_mobile_number: Yup.string()
-    .matches(/^[6-9]\d{9}$/, 'Enter a valid 10-digit mobile number')
-      .matches(/^[0-9]+$/, 'Only numbers are allowed') // ✅ फक्त numbers
-      .matches(/^[0-9]{10}$/, 'Mobile number must be exactly 10 digits')
-      .required('Mobile number is required'),
-    user_email: Yup.string().email('Invalid email format'),
-  }),
-  3: Yup.object({
-    current_address: Yup.string().required('Current address is required'),
-    current_mobile_number: Yup.string()
-     .matches(/^[6-9]\d{9}$/, 'Enter a valid 10-digit mobile number')
-    .matches(/^[0-9]+$/, 'Only numbers are allowed') // ✅ फक्त numbers
-      .matches(/^[0-9]{10}$/, 'Mobile number must be exactly 10 digits')
-      .required('Mobile number is required'),
-    current_pincode: Yup.string()
-      .matches(/^[0-9]{6}$/, 'Pincode must be exactly 6 digits'),
-    aadhaar_pincode: Yup.string()
-      .matches(/^[0-9]{6}$/, 'Pincode must be exactly 6 digits'),
-    voter_card_number: Yup.string()
-      .matches(/^[A-Z0-9]{10}$/, 'Voter card number must be exactly 10 digits'),
-  }),
+  //     aadhaar_number: Yup.string()
+  //     .required('Aadhaar number is required')
+  //     .test(
+  //       'is-valid-aadhaar',
+  //       'Enter a valid Aadhaar number',
+  //       (value) => isValidAadhaar(value)
+  //     ),
+  //   aadhaar_mobile_number: Yup.string()
+  //   .matches(/^[6-9]\d{9}$/, 'Enter a valid 10-digit mobile number')
+  //     .matches(/^[0-9]+$/, 'Only numbers are allowed') // ✅ फक्त numbers
+  //     .matches(/^[0-9]{10}$/, 'Mobile number must be exactly 10 digits')
+  //     .required('Mobile number is required'),
+  //   user_email: Yup.string().email('Invalid email format'),
+  // }),
+  // 3: Yup.object({
+  //   current_address: Yup.string().required('Current address is required'),
+  //   current_mobile_number: Yup.string()
+  //    .matches(/^[6-9]\d{9}$/, 'Enter a valid 10-digit mobile number')
+  //   .matches(/^[0-9]+$/, 'Only numbers are allowed') // ✅ फक्त numbers
+  //     .matches(/^[0-9]{10}$/, 'Mobile number must be exactly 10 digits')
+  //     .required('Mobile number is required'),
+  //   current_pincode: Yup.string()
+  //     .matches(/^[0-9]{6}$/, 'Pincode must be exactly 6 digits'),
+  //   aadhaar_pincode: Yup.string()
+  //     .matches(/^[0-9]{6}$/, 'Pincode must be exactly 6 digits'),
+  //   voter_card_number: Yup.string()
+  //     .matches(/^[A-Z0-9]{10}$/, 'Voter card number must be exactly 10 digits'),
+  // }),
   // 4: Yup.object({
   //   residency_since: Yup.string()
   //     .required('Residency since is required'),
@@ -6812,8 +6812,8 @@ const validationSchemas = {
 
 
 //   }),
-  6: Yup.object({}),
-  7: Yup.object({}),
+  // 6: Yup.object({}),
+  // 7: Yup.object({}),
 }
 
 
