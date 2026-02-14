@@ -6705,6 +6705,8 @@ import jsPDF from 'jspdf'
 import isValidAadhaar from '../utils/aadhaarValidator';
 import clusterData from "../data/clusterdata.json";
 import wardsData from "../data/wardsData.json";
+import { saveDraftToDB } from "../utils/draftDB"
+
 
 const API_BASE_URL = import.meta.env.VITE_BASE_URL;
 
@@ -6747,52 +6749,52 @@ const fetchAndSetUserProfile = async () => {
 }
 
 const validationSchemas = {
-//   1: Yup.object({
-//     slum_id: Yup.string().required('Slum ID is required'),
-//     // name_of_slum_area: Yup.string().required('Hut name is required'),
-//     municipal_corporation: Yup.string().required('Municipal Corporation is required'),
-//     ward: Yup.string().required('Ward is required'),
-//     district: Yup.string().required('District is required'),
-//     taluka: Yup.string().required('Taluka is required'),
-//   }),
-//   2: Yup.object({
-//     first_name: Yup.string().matches(/^[A-Za-z\s]+$/, "Only alphabets are allowed").required('First name is required'),
-//     middle_name: Yup.string().matches(/^[A-Za-z\s]+$/, "Only alphabets are allowed").required('Middle name is required'),
-//     last_name: Yup.string().matches(/^[A-Za-z\s]+$/, "Only alphabets are allowed").required('Last name is required'),
-//     gender: Yup.string().required('Gender is required'),
+  1: Yup.object({
+    slum_id: Yup.string().required('Slum ID is required'),
+    // name_of_slum_area: Yup.string().required('Hut name is required'),
+    municipal_corporation: Yup.string().required('Municipal Corporation is required'),
+    ward: Yup.string().required('Ward is required'),
+    district: Yup.string().required('District is required'),
+    taluka: Yup.string().required('Taluka is required'),
+  }),
+  2: Yup.object({
+    first_name: Yup.string().matches(/^[A-Za-z\s]+$/, "Only alphabets are allowed").required('First name is required'),
+    middle_name: Yup.string().matches(/^[A-Za-z\s]+$/, "Only alphabets are allowed").required('Middle name is required'),
+    last_name: Yup.string().matches(/^[A-Za-z\s]+$/, "Only alphabets are allowed").required('Last name is required'),
+    gender: Yup.string().required('Gender is required'),
     
-//       aadhaar_number: Yup.string()
-//       .required('Aadhaar number is required')
-//       .test(
-//         'is-valid-aadhaar',
-//         'Enter a valid Aadhaar number',
-//         (value) => isValidAadhaar(value)
-//       ),
-//     aadhaar_mobile_number: Yup.string()
-//     .matches(/^[6-9]\d{9}$/, 'Enter a valid 10-digit mobile number')
-//       .matches(/^[0-9]+$/, 'Only numbers are allowed') // ✅ फक्त numbers
-//       .matches(/^[0-9]{10}$/, 'Mobile number must be exactly 10 digits')
-//       .required('Mobile number is required'),
-//     user_email: Yup.string().email('Invalid email format'),
-//   }),
-//   3: Yup.object({
-//     current_address: Yup.string().required('Current address is required'),
-//     current_mobile_number: Yup.string()
-//      .matches(/^[6-9]\d{9}$/, 'Enter a valid 10-digit mobile number')
-//     .matches(/^[0-9]+$/, 'Only numbers are allowed') // ✅ फक्त numbers
-//       .matches(/^[0-9]{10}$/, 'Mobile number must be exactly 10 digits')
-//       .required('Mobile number is required'),
-//     current_pincode: Yup.string()
-//       .matches(/^[0-9]{6}$/, 'Pincode must be exactly 6 digits'),
-//     aadhaar_pincode: Yup.string()
-//       .matches(/^[0-9]{6}$/, 'Pincode must be exactly 6 digits'),
-//     voter_card_number: Yup.string()
-//       .matches(/^[A-Z0-9]{10}$/, 'Voter card number must be exactly 10 digits'),
-//   }),
-//   4: Yup.object({
-//     residency_since: Yup.string()
-//       .required('Residency since is required'),
-//   }),
+      aadhaar_number: Yup.string()
+      .required('Aadhaar number is required')
+      .test(
+        'is-valid-aadhaar',
+        'Enter a valid Aadhaar number',
+        (value) => isValidAadhaar(value)
+      ),
+    aadhaar_mobile_number: Yup.string()
+    .matches(/^[6-9]\d{9}$/, 'Enter a valid 10-digit mobile number')
+      .matches(/^[0-9]+$/, 'Only numbers are allowed') // ✅ फक्त numbers
+      .matches(/^[0-9]{10}$/, 'Mobile number must be exactly 10 digits')
+      .required('Mobile number is required'),
+    user_email: Yup.string().email('Invalid email format'),
+  }),
+  3: Yup.object({
+    current_address: Yup.string().required('Current address is required'),
+    current_mobile_number: Yup.string()
+     .matches(/^[6-9]\d{9}$/, 'Enter a valid 10-digit mobile number')
+    .matches(/^[0-9]+$/, 'Only numbers are allowed') // ✅ फक्त numbers
+      .matches(/^[0-9]{10}$/, 'Mobile number must be exactly 10 digits')
+      .required('Mobile number is required'),
+    current_pincode: Yup.string()
+      .matches(/^[0-9]{6}$/, 'Pincode must be exactly 6 digits'),
+    aadhaar_pincode: Yup.string()
+      .matches(/^[0-9]{6}$/, 'Pincode must be exactly 6 digits'),
+    voter_card_number: Yup.string()
+      .matches(/^[A-Z0-9]{10}$/, 'Voter card number must be exactly 10 digits'),
+  }),
+  // 4: Yup.object({
+  //   residency_since: Yup.string()
+  //     .required('Residency since is required'),
+  // }),
 //   5: Yup.object({
 //     num_family_members: Yup.number()
 //       .min(1, 'At least 1 family member is required')
@@ -6809,10 +6811,25 @@ const validationSchemas = {
 
 
 //   }),
-//   6: Yup.object({}),
-//   7: Yup.object({}),
+  6: Yup.object({}),
+  7: Yup.object({}),
 }
 
+const handleSaveDraft = async (values) => {
+  try {
+    await saveDraftToDB(values, files)
+
+    setSuccess("Draft saved successfully (Offline) ✅")
+
+    setTimeout(() => {
+      setSuccess(null)
+      onSuccess?.("draft")   // redirect
+    }, 1000)
+
+  } catch (err) {
+    setError("Draft save failed")
+  }
+}
 
 
 const ApplicationForm = ({ onClose, onSuccess }) => {
@@ -7760,14 +7777,30 @@ const ApplicationForm = ({ onClose, onSuccess }) => {
                     <span className="text-2xl mr-2">{icon}</span>
                     <h4 className="font-semibold text-gray-800">{label}</h4>
                   </div>
-                  <input
+                  {/* <input
                     type="file"
                     name={name}
                     onChange={handleFileChange}
                     accept={accept}
                     multiple={multiple}
                     className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
-                  />
+                  /> */}
+                  <input
+  type="file"
+  name={name}
+  onChange={handleFileChange}
+  accept={accept}
+  multiple={multiple}
+  capture={
+    accept?.includes("image")
+      ? "environment"   // 📸 Back camera for images
+      : accept?.includes("video")
+      ? "environment"   // 🎥 Back camera for video
+      : undefined
+  }
+  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
+/>
+
                   {files[name] && (
                     <div className="mt-2 p-2 bg-green-50 rounded">
                       {Array.isArray(files[name]) ? (
@@ -7891,6 +7924,14 @@ const ApplicationForm = ({ onClose, onSuccess }) => {
                       Next <ChevronRight size={20} />
                     </button>
                   ) : (
+ <div className="flex gap-4">
+                        <button
+      type="button"
+      onClick={() => handleSaveDraft(formik.values)}
+      className="flex items-center gap-3 px-8 py-4 bg-gradient-to-r from-yellow-500 to-orange-500 text-white rounded-xl font-semibold shadow-lg hover:shadow-xl"
+    >
+      <Save size={20} /> Save Draft
+    </button>
                     <button
                       type="submit"
                       disabled={loading || !formik.isValid}
@@ -7906,6 +7947,7 @@ const ApplicationForm = ({ onClose, onSuccess }) => {
                         <><Save size={20} /> Submit & Generate PDFs</>
                       )}
                     </button>
+                    </div>
                   )}
                 </div>
               </Form>

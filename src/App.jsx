@@ -19,6 +19,8 @@ import "./App.css"
 import RegisterUser from "./pages/RegisterUser"
 import GetUsers from "./pages/GetUsersPage" 
 import OwnershipOfHut from "./pages/OwnershipOfHut"
+import DraftPage from "./pages/DraftPage"
+
 
 function App() {
   const [currentPage, setCurrentPage] = useState("login")
@@ -76,6 +78,9 @@ function App() {
         return <HutMasterPage />
         case "ownershipofhut":
         return <OwnershipOfHut/>
+        case "draft":
+      return <DraftPage onNavigate={handleNavigation} />
+
 
         
         
