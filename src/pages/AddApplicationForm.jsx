@@ -6873,6 +6873,7 @@ const ApplicationForm = ({ onClose, onSuccess }) => {
     }
   }
 
+  
   const fetchSlums = async () => {
     const token = getAuthToken()
     if (!token) {
