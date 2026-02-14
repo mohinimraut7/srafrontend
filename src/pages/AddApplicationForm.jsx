@@ -6706,6 +6706,7 @@ import isValidAadhaar from '../utils/aadhaarValidator';
 import clusterData from "../data/clusterdata.json";
 import wardsData from "../data/wardsData.json";
 import { saveDraftToDB } from "../utils/draftDB"
+import { getDraftById } from "../utils/draftDB"
 
 
 const API_BASE_URL = import.meta.env.VITE_BASE_URL;
@@ -6832,7 +6833,7 @@ const handleSaveDraft = async (values) => {
 }
 
 
-const ApplicationForm = ({ onClose, onSuccess }) => {
+const ApplicationForm = ({ onClose, onSuccess,draftId  }) => {
   const [currentStep, setCurrentStep] = useState(1)
   const [files, setFiles] = useState({})
   const [loading, setLoading] = useState(false)
@@ -6847,12 +6848,28 @@ const ApplicationForm = ({ onClose, onSuccess }) => {
   const [huts, setHuts] = useState([])
   const [selectedSlum, setSelectedSlum] = useState("")
   const [clusters, setClusters] = useState([])
-  
+  const [loadedDraft, setLoadedDraft] = useState(null)
+
 
   useEffect(() => {
     fetchClusters()
     fetchSlums()
   }, [])
+
+  useEffect(() => {
+  if (draftId) {
+    loadDraft()
+  }
+}, [draftId])
+
+const loadDraft = async () => {
+  const draft = await getDraftById(draftId)
+  if (draft) {
+    setLoadedDraft(draft)
+    setFiles(draft.fileData || {})
+  }
+}
+
 
   const fetchClusterDetails = async (cluster_number, formik) => {
     if (!cluster_number) return
@@ -6873,7 +6890,7 @@ const ApplicationForm = ({ onClose, onSuccess }) => {
     }
   }
 
-  
+
   const fetchSlums = async () => {
     const token = getAuthToken()
     if (!token) {
@@ -7876,7 +7893,9 @@ const ApplicationForm = ({ onClose, onSuccess }) => {
           )}
 
           <Formik
-            initialValues={initialValues}
+          enableReinitialize
+            // initialValues={initialValues}
+            initialValues={loadedDraft?.formData || initialValues}
             validationSchema={validationSchemas[currentStep]}
             onSubmit={handleSubmit}
           >

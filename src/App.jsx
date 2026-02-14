@@ -20,6 +20,7 @@ import RegisterUser from "./pages/RegisterUser"
 import GetUsers from "./pages/GetUsersPage" 
 import OwnershipOfHut from "./pages/OwnershipOfHut"
 import DraftPage from "./pages/DraftPage"
+import ApplicationForm from "./pages/AddApplicationForm"
 
 
 function App() {
@@ -27,6 +28,8 @@ function App() {
   const [currentMode, setCurrentMode] = useState("view")
   const [isSidebarOpen, setSidebarOpen] = useState(false)
   const [user, setUser] = useState(null)
+  const [selectedDraftId, setSelectedDraftId] = useState(null)
+
 
   useEffect(() => {
     if (isAuthenticated()) {
@@ -40,15 +43,28 @@ function App() {
     }
   }, [currentPage])
 
-  const handleNavigation = (page, mode = "view") => {
-    setCurrentPage(page)
-    setCurrentMode(mode)
-    setSidebarOpen(false)
-  }
+  // const handleNavigation = (page, mode = "view") => {
+  //   setCurrentPage(page)
+  //   setCurrentMode(mode)
+  //   setSidebarOpen(false)
+  // }
+
+
+
+const handleNavigation = (page, mode = null) => {
+  setCurrentPage(page)
+  setSelectedDraftId(mode)
+  setSidebarOpen(false)
+}
+
+
+
 
   const toggleSidebar = () => {
     setSidebarOpen((prev) => !prev)
   }
+
+  
 
   const renderPage = () => {
     switch (currentPage) {
@@ -78,7 +94,11 @@ function App() {
         return <HutMasterPage />
         case "ownershipofhut":
         return <OwnershipOfHut/>
-        case "draft":
+     case "draft":
+  return <DraftPage navigateToEdit={handleNavigation} />
+        case "edit-draft":
+  return <ApplicationForm draftId={selectedDraftId} onSuccess={handleNavigation} />
+
       return <DraftPage onNavigate={handleNavigation} />
 
 

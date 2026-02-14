@@ -226,13 +226,13 @@ const DraftPage = ({ navigateToEdit }) => {
 
                     {/* Actions */}
                     <td className="px-6 py-4 text-center space-x-4">
+<button
+  onClick={() => navigateToEdit?.("edit-draft", draft.id)}
+  className="text-orange-600 hover:text-orange-800"
+>
+  <Pencil size={18} />
+</button>
 
-                      <button
-                        onClick={() => navigateToEdit?.(draft.id)}
-                        className="text-blue-600 hover:text-blue-800"
-                      >
-                        <Eye size={18} />
-                      </button>
 
                       <button
                         onClick={() => navigateToEdit?.(draft.id)}

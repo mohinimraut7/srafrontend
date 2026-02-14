@@ -25,5 +25,10 @@ export const getAllDrafts = async () => {
   return db.getAll("drafts")
 }
 
+export const getDraftById = async (id) => {
+  const db = await initDB()
+  return db.get("drafts", id)
+}
+
 
 
