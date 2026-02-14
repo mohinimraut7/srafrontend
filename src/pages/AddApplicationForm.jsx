@@ -6706,7 +6706,10 @@ import isValidAadhaar from '../utils/aadhaarValidator';
 import clusterData from "../data/clusterdata.json";
 import wardsData from "../data/wardsData.json";
 import { saveDraftToDB } from "../utils/draftDB"
-import { getDraftById } from "../utils/draftDB"
+import { getDraftById,updateDraftInDB } from "../utils/draftDB"
+import Webcam from "react-webcam";
+import { useRef } from "react"
+
 
 
 const API_BASE_URL = import.meta.env.VITE_BASE_URL;
@@ -6835,6 +6838,8 @@ const ApplicationForm = ({ onClose, onSuccess,draftId  }) => {
   const [selectedSlum, setSelectedSlum] = useState("")
   const [clusters, setClusters] = useState([])
   const [loadedDraft, setLoadedDraft] = useState(null)
+const [activeCamera, setActiveCamera] = useState(null)
+const webcamRef = useRef(null)
 
 
   useEffect(() => {
@@ -6846,15 +6851,28 @@ const ApplicationForm = ({ onClose, onSuccess,draftId  }) => {
   if (draftId) {
     loadDraft()
   }
-}, [draftId])
+}, [draftId]) 
+
+
 
 const loadDraft = async () => {
   const draft = await getDraftById(Number(draftId))
 
+  // if (draft) {
+  //   setLoadedDraft(draft)
+  //   setFiles(draft.fileData || {})
+  // }
+
+
   if (draft) {
-    setLoadedDraft(draft)
-    setFiles(draft.fileData || {})
+  setLoadedDraft(draft)
+  setFiles(draft.fileData || {})
+
+  if (draft.formData?._currentStep) {
+    setCurrentStep(draft.formData._currentStep)
   }
+}
+
 }
 
 
@@ -6928,27 +6946,71 @@ const loadDraft = async () => {
     }
   }
 
-  const handleSaveDraft = async (values) => {
+//   const handleSaveDraft = async (values) => {
+//   try {
+//     // await saveDraftToDB(values, files)
+
+// //     await saveDraftToDB(
+// //   values,
+// //   JSON.parse(JSON.stringify(files))
+// // )
+
+
+// await saveDraftToDB(
+//   {
+//     ...values,
+//     _currentStep: currentStep   // 👈 VERY IMPORTANT
+//   },
+//   JSON.parse(JSON.stringify(files))
+// )
+
+
+
+
+//     setSuccess("Draft saved successfully (Offline) ✅")
+
+//     setTimeout(() => {
+//       setSuccess(null)
+//       onSuccess?.("draft")   // redirect
+//     }, 1000)
+
+//   } catch (err) {
+//     setError("Draft save failed")
+//   }
+// }
+
+
+const handleSaveDraft = async (values) => {
   try {
-    // await saveDraftToDB(values, files)
+    const draftData = {
+      ...values,
+      _currentStep: currentStep
+    }
 
-    await saveDraftToDB(
-  values,
-  JSON.parse(JSON.stringify(files))
-)
+    if (draftId) {
+      await updateDraftInDB(
+        Number(draftId),
+        draftData,
+        JSON.parse(JSON.stringify(files))
+      )
+    } else {
+      await saveDraftToDB(
+        draftData,
+        JSON.parse(JSON.stringify(files))
+      )
+    }
 
-
-    setSuccess("Draft saved successfully (Offline) ✅")
+    setSuccess("Draft saved successfully ✅")
 
     setTimeout(() => {
-      setSuccess(null)
-      onSuccess?.("draft")   // redirect
+      onSuccess?.("draft")
     }, 1000)
 
   } catch (err) {
     setError("Draft save failed")
   }
 }
+
 
   const handleClusterChange = (e, form) => {
     const cluster = e.target.value
@@ -6963,6 +7025,27 @@ const loadDraft = async () => {
     form.setFieldValue("hut_name", "")
   }
 
+
+//   const capturePhoto = (fieldName) => {
+//   const imageSrc = webcamRef.current.getScreenshot()
+
+//   if (imageSrc) {
+//     fetch(imageSrc)
+//       .then(res => res.blob())
+//       .then(blob => {
+//         const file = new File([blob], `${fieldName}.jpg`, { type: "image/jpeg" })
+
+//         setFiles(prev => ({
+//           ...prev,
+//           [fieldName]: file
+//         }))
+
+//         setActiveCamera(null)
+//       })
+//   }
+// }
+
+
   // const handleSlumChange = (e, form) => {
   //   const slumId = e.target.value
   //   setSelectedSlum(slumId)
@@ -6971,6 +7054,26 @@ const loadDraft = async () => {
   //   form.setFieldValue("slum_id", slumId)
   //   form.setFieldValue("hut_name", "")
   // }
+
+
+
+  const capturePhoto = async (fieldName) => {
+  const imageSrc = webcamRef.current?.getScreenshot()
+  if (!imageSrc) return
+
+  const blob = await (await fetch(imageSrc)).blob()
+  const file = new File([blob], `${fieldName}.jpg`, {
+    type: "image/jpeg"
+  })
+
+  setFiles(prev => ({
+    ...prev,
+    [fieldName]: file
+  }))
+
+  setActiveCamera(null)
+}
+
 
 
   const handleSlumChange = (e, form) => {
@@ -7812,7 +7915,10 @@ const loadDraft = async () => {
                     multiple={multiple}
                     className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
                   /> */}
-                  <input
+
+{/* -------------------------------------------------------------------------- */}
+
+                  {/* <input
   type="file"
   name={name}
   onChange={handleFileChange}
@@ -7826,7 +7932,114 @@ const loadDraft = async () => {
       : undefined
   }
   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
+/> */}
+
+
+
+
+
+<input
+  type="file"
+  name={name}
+  onChange={handleFileChange}
+  accept={accept}
+  multiple={multiple}
+  // capture={
+  //   accept?.includes("image")
+  //     ? "environment"
+  //     : accept?.includes("video")
+  //     ? "environment"
+  //     : undefined
+  // }
+  capture={
+  /Mobi|Android/i.test(navigator.userAgent)
+    ? "environment"
+    : undefined
+}
+
+  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
 />
+
+{/* CAMERA BUTTON ONLY FOR IMAGE */}
+{accept?.includes("image") && (
+  <button
+    type="button"
+    onClick={() => setActiveCamera(name)}
+    className="mt-2 w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700"
+  >
+    Open Camera
+  </button>
+)}
+
+{/* WEBCAM MODAL */}
+{activeCamera === name && (
+  <div className="mt-4 p-4 border rounded-lg bg-gray-100">
+    {/* <Webcam
+      ref={webcamRef}
+      screenshotFormat="image/jpeg"
+      className="w-full rounded-lg"
+      // videoConstraints={{ facingMode: "environment" }}
+
+      videoConstraints={{ facingMode: "user" }}
+
+    /> */}
+
+    {/* -------------------------- */}
+
+    {/* <Webcam
+  ref={webcamRef}
+  screenshotFormat="image/jpeg"
+  audio={false}
+  className="w-full rounded-lg"
+  videoConstraints={{
+    facingMode: "user"
+  }}
+  onUserMediaError={(err) => {
+    console.error("Camera Error:", err)
+    alert("Camera Error: " + err.name)
+  }}
+/> */}
+
+
+
+<Webcam
+  ref={webcamRef}
+  screenshotFormat="image/jpeg"
+  audio={false}
+  className="w-full rounded-lg"
+  videoConstraints={{
+    facingMode: /Mobi|Android/i.test(navigator.userAgent)
+      ? { exact: "environment" }   // Mobile → Back camera
+      : "user"                     // Desktop → Front camera
+  }}
+  onUserMediaError={(err) => {
+    console.error("Camera Error:", err)
+    alert("Camera Error: " + err.message)
+  }}
+/>
+
+
+
+    <div className="flex gap-4 mt-3">
+      <button
+        type="button"
+        onClick={() => capturePhoto(name)}
+        className="bg-green-600 text-white px-4 py-2 rounded-lg"
+      >
+        Capture
+      </button>
+
+      <button
+        type="button"
+        onClick={() => setActiveCamera(null)}
+        className="bg-red-500 text-white px-4 py-2 rounded-lg"
+      >
+        Cancel
+      </button>
+    </div>
+  </div>
+)}
+
 
                   {files[name] && (
                     <div className="mt-2 p-2 bg-green-50 rounded">
@@ -7912,7 +8125,7 @@ const loadDraft = async () => {
               <Form>
                 {renderStepContent(formik)}
 
-                <div className="flex justify-between items-center mt-10 pt-8 border-t border-gray-200">
+                {/* <div className="flex justify-between items-center mt-10 pt-8 border-t border-gray-200">
                   <button
                     type="button"
                     onClick={prevStep}
@@ -7954,13 +8167,16 @@ const loadDraft = async () => {
                     </button>
                   ) : (
  <div className="flex gap-4">
-                        <button
-      type="button"
-      onClick={() => handleSaveDraft(formik.values)}
-      className="flex items-center gap-3 px-8 py-4 bg-gradient-to-r from-yellow-500 to-orange-500 text-white rounded-xl font-semibold shadow-lg hover:shadow-xl"
-    >
-      <Save size={20} /> Save Draft
-    </button>
+                        
+
+
+    <button
+    type="button"
+    onClick={() => handleSaveDraft(formik.values)}
+    className="flex items-center gap-3 px-6 py-3 bg-yellow-500 text-white rounded-xl"
+  >
+    <Save size={18} /> Save Draft
+  </button>
                     <button
                       type="submit"
                       disabled={loading || !formik.isValid}
@@ -7978,7 +8194,55 @@ const loadDraft = async () => {
                     </button>
                     </div>
                   )}
-                </div>
+                </div> */}
+
+
+                <div className="flex justify-between items-center mt-10 pt-8 border-t border-gray-200">
+
+  {/* Previous */}
+  <button
+    type="button"
+    onClick={prevStep}
+    disabled={currentStep === 1}
+    className={`flex items-center gap-3 px-6 py-3 rounded-xl font-semibold ${
+      currentStep === 1
+        ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
+        : 'bg-gray-200 text-gray-700'
+    }`}
+  >
+    <ChevronLeft size={18} /> Previous
+  </button>
+
+  {/* Center Save Draft Button */}
+  <button
+    type="button"
+    onClick={() => handleSaveDraft(formik.values)}
+    className="flex items-center gap-3 px-6 py-3 bg-yellow-500 text-white rounded-xl hover:bg-yellow-600"
+  >
+    <Save size={18} /> Save Draft
+  </button>
+
+  {/* Next OR Submit */}
+  {currentStep < steps.length ? (
+    <button
+      type="button"
+      onClick={() => nextStep(formik)}
+      className="flex items-center gap-3 px-6 py-3 bg-blue-600 text-white rounded-xl hover:bg-blue-700"
+    >
+      Next <ChevronRight size={18} />
+    </button>
+  ) : (
+    <button
+      type="submit"
+      disabled={loading || !formik.isValid}
+      className="flex items-center gap-3 px-6 py-3 bg-green-600 text-white rounded-xl hover:bg-green-700"
+    >
+      <Save size={18} /> Submit
+    </button>
+  )}
+
+</div>
+
               </Form>
             )}
           </Formik>

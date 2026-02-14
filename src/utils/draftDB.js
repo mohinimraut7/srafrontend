@@ -30,5 +30,15 @@ export const getDraftById = async (id) => {
   return db.get("drafts", id)
 }
 
+export const updateDraftInDB = async (id, values, files) => {
+  const db = await initDB()
+
+  await db.put("drafts", {
+    id: id,
+    formData: values,
+    fileData: files,
+    savedAt: new Date().toISOString(),
+  })
+}
 
 
