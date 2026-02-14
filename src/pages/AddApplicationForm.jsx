@@ -6816,21 +6816,7 @@ const validationSchemas = {
   7: Yup.object({}),
 }
 
-const handleSaveDraft = async (values) => {
-  try {
-    await saveDraftToDB(values, files)
 
-    setSuccess("Draft saved successfully (Offline) ✅")
-
-    setTimeout(() => {
-      setSuccess(null)
-      onSuccess?.("draft")   // redirect
-    }, 1000)
-
-  } catch (err) {
-    setError("Draft save failed")
-  }
-}
 
 
 const ApplicationForm = ({ onClose, onSuccess,draftId  }) => {
@@ -6863,7 +6849,8 @@ const ApplicationForm = ({ onClose, onSuccess,draftId  }) => {
 }, [draftId])
 
 const loadDraft = async () => {
-  const draft = await getDraftById(draftId)
+  const draft = await getDraftById(Number(draftId))
+
   if (draft) {
     setLoadedDraft(draft)
     setFiles(draft.fileData || {})
@@ -6940,6 +6927,28 @@ const loadDraft = async () => {
       setLoading(false)
     }
   }
+
+  const handleSaveDraft = async (values) => {
+  try {
+    // await saveDraftToDB(values, files)
+
+    await saveDraftToDB(
+  values,
+  JSON.parse(JSON.stringify(files))
+)
+
+
+    setSuccess("Draft saved successfully (Offline) ✅")
+
+    setTimeout(() => {
+      setSuccess(null)
+      onSuccess?.("draft")   // redirect
+    }, 1000)
+
+  } catch (err) {
+    setError("Draft save failed")
+  }
+}
 
   const handleClusterChange = (e, form) => {
     const cluster = e.target.value
