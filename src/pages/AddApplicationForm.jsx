@@ -6755,52 +6755,52 @@ const fetchAndSetUserProfile = async () => {
 
 
 const validationSchemas = {
-  1: Yup.object({
-    // slum_id: Yup.string().required('Slum ID is required'),
-    // name_of_slum_area: Yup.string().required('Hut name is required'),
-    municipal_corporation: Yup.string().required('Municipal Corporation is required'),
-    ward: Yup.string().required('Ward is required'),
-    district: Yup.string().required('District is required'),
-    taluka: Yup.string().required('Taluka is required'),
-  }),
-  2: Yup.object({
-    first_name: Yup.string().matches(/^[A-Za-z\s]+$/, "Only alphabets are allowed").required('First name is required'),
-    middle_name: Yup.string().matches(/^[A-Za-z\s]+$/, "Only alphabets are allowed").required('Middle name is required'),
-    last_name: Yup.string().matches(/^[A-Za-z\s]+$/, "Only alphabets are allowed").required('Last name is required'),
-    gender: Yup.string().required('Gender is required'),
+  // 1: Yup.object({
+  //   // slum_id: Yup.string().required('Slum ID is required'),
+  //   // name_of_slum_area: Yup.string().required('Hut name is required'),
+  //   municipal_corporation: Yup.string().required('Municipal Corporation is required'),
+  //   ward: Yup.string().required('Ward is required'),
+  //   district: Yup.string().required('District is required'),
+  //   taluka: Yup.string().required('Taluka is required'),
+  // }),
+  // 2: Yup.object({
+  //   first_name: Yup.string().matches(/^[A-Za-z\s]+$/, "Only alphabets are allowed").required('First name is required'),
+  //   middle_name: Yup.string().matches(/^[A-Za-z\s]+$/, "Only alphabets are allowed").required('Middle name is required'),
+  //   last_name: Yup.string().matches(/^[A-Za-z\s]+$/, "Only alphabets are allowed").required('Last name is required'),
+  //   gender: Yup.string().required('Gender is required'),
     
-      aadhaar_number: Yup.string()
-      .required('Aadhaar number is required')
-      .test(
-        'is-valid-aadhaar',
-        'Enter a valid Aadhaar number',
-        (value) => isValidAadhaar(value)
-      ),
-    aadhaar_mobile_number: Yup.string()
-    .matches(/^[6-9]\d{9}$/, 'Enter a valid 10-digit mobile number')
-      .matches(/^[0-9]+$/, 'Only numbers are allowed') // ✅ फक्त numbers
-      .matches(/^[0-9]{10}$/, 'Mobile number must be exactly 10 digits')
-      .required('Mobile number is required'),
-    user_email: Yup.string().email('Invalid email format'),
-  }),
-  3: Yup.object({
-    current_address: Yup.string().required('Current address is required'),
-    current_mobile_number: Yup.string()
-     .matches(/^[6-9]\d{9}$/, 'Enter a valid 10-digit mobile number')
-    .matches(/^[0-9]+$/, 'Only numbers are allowed') // ✅ फक्त numbers
-      .matches(/^[0-9]{10}$/, 'Mobile number must be exactly 10 digits')
-      .required('Mobile number is required'),
-    current_pincode: Yup.string()
-      .matches(/^[0-9]{6}$/, 'Pincode must be exactly 6 digits'),
-    aadhaar_pincode: Yup.string()
-      .matches(/^[0-9]{6}$/, 'Pincode must be exactly 6 digits'),
-    voter_card_number: Yup.string()
-      .matches(/^[A-Z0-9]{10}$/, 'Voter card number must be exactly 10 digits'),
-  }),
-  4: Yup.object({
-    residency_since: Yup.string()
-      .required('Residency since is required'),
-  }),
+  //     aadhaar_number: Yup.string()
+  //     .required('Aadhaar number is required')
+  //     .test(
+  //       'is-valid-aadhaar',
+  //       'Enter a valid Aadhaar number',
+  //       (value) => isValidAadhaar(value)
+  //     ),
+  //   aadhaar_mobile_number: Yup.string()
+  //   .matches(/^[6-9]\d{9}$/, 'Enter a valid 10-digit mobile number')
+  //     .matches(/^[0-9]+$/, 'Only numbers are allowed') // ✅ फक्त numbers
+  //     .matches(/^[0-9]{10}$/, 'Mobile number must be exactly 10 digits')
+  //     .required('Mobile number is required'),
+  //   user_email: Yup.string().email('Invalid email format'),
+  // }),
+  // 3: Yup.object({
+  //   current_address: Yup.string().required('Current address is required'),
+  //   current_mobile_number: Yup.string()
+  //    .matches(/^[6-9]\d{9}$/, 'Enter a valid 10-digit mobile number')
+  //   .matches(/^[0-9]+$/, 'Only numbers are allowed') // ✅ फक्त numbers
+  //     .matches(/^[0-9]{10}$/, 'Mobile number must be exactly 10 digits')
+  //     .required('Mobile number is required'),
+  //   current_pincode: Yup.string()
+  //     .matches(/^[0-9]{6}$/, 'Pincode must be exactly 6 digits'),
+  //   aadhaar_pincode: Yup.string()
+  //     .matches(/^[0-9]{6}$/, 'Pincode must be exactly 6 digits'),
+  //   voter_card_number: Yup.string()
+  //     .matches(/^[A-Z0-9]{10}$/, 'Voter card number must be exactly 10 digits'),
+  // }),
+  // 4: Yup.object({
+  //   residency_since: Yup.string()
+  //     .required('Residency since is required'),
+  // }),
 //   5: Yup.object({
 //     num_family_members: Yup.number()
 //       .min(1, 'At least 1 family member is required')
@@ -6820,6 +6820,73 @@ const validationSchemas = {
 //   6: Yup.object({}),
 //   7: Yup.object({}),
 }
+
+// const base64ToFile = (base64, filename, mimeType) => {
+//   const arr = base64.split(",");
+//   const bstr = atob(arr[1]);
+//   let n = bstr.length;
+//   const u8arr = new Uint8Array(n);
+
+//   while (n--) {
+//     u8arr[n] = bstr.charCodeAt(n);
+//   }
+
+//   return new File([u8arr], filename, { type: mimeType });
+// };
+
+
+
+
+
+const base64ToFile = (base64, filename, mimeType) => {
+  const arr = base64.split(",");
+  const bstr = atob(arr[1]);
+  let n = bstr.length;
+  const u8arr = new Uint8Array(n);
+
+  while (n--) {
+    u8arr[n] = bstr.charCodeAt(n);
+  }
+
+  return new File([u8arr], filename, { type: mimeType });
+};
+
+
+
+// 🔥 ADD THESE FUNCTIONS HERE 🔥
+
+const fileToBase64Object = (file) => {
+  return new Promise((resolve) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = () => {
+      resolve({
+        name: file.name,
+        type: file.type,
+        data: reader.result
+      });
+    };
+  });
+};
+
+const convertFilesToBase64 = async (filesObj) => {
+  const converted = {};
+
+  for (const key in filesObj) {
+    const file = filesObj[key];
+
+    if (Array.isArray(file)) {
+      converted[key] = await Promise.all(
+        file.map(f => fileToBase64Object(f))
+      );
+    } else if (file instanceof File) {
+      converted[key] = await fileToBase64Object(file);
+    }
+  }
+
+  return converted;
+};
+
 
 
 
@@ -6866,14 +6933,37 @@ const loadDraft = async () => {
   // }
 
 
-  if (draft) {
-  setLoadedDraft(draft)
-  setFiles(draft.fileData || {})
+//   if (draft) {
+//   setLoadedDraft(draft)
+//   setFiles(draft.fileData || {})
 
-  if (draft.formData?._currentStep) {
-    setCurrentStep(draft.formData._currentStep)
-  }
+//   if (draft.formData?._currentStep) {
+//     setCurrentStep(draft.formData._currentStep)
+//   }
+// }
+
+
+
+if (draft) {
+  setLoadedDraft(draft);
+
+  const restoredFiles = {};
+
+  Object.keys(draft.fileData || {}).forEach((key) => {
+    const fileObj = draft.fileData[key];
+
+    if (fileObj?.data) {
+      restoredFiles[key] = base64ToFile(
+        fileObj.data,
+        fileObj.name,
+        fileObj.type
+      );
+    }
+  });
+
+  setFiles(restoredFiles);
 }
+
 
 }
 
@@ -6982,6 +7072,45 @@ const loadDraft = async () => {
 // }
 
 
+// const handleSaveDraft = async (values) => {
+//   try {
+//     const draftData = {
+//       ...values,
+//       _currentStep: currentStep
+//     }
+
+//     if (draftId) {
+//       await updateDraftInDB(
+//         Number(draftId),
+//         draftData,
+//         JSON.parse(JSON.stringify(files))
+//       )
+//     } else {
+//       await saveDraftToDB(
+//         draftData,
+//         JSON.parse(JSON.stringify(files))
+//       )
+//     }
+
+//     setSuccess("Draft saved successfully ✅")
+
+//     setTimeout(() => {
+//       onSuccess?.("draft")
+//     }, 1000)
+
+//   } catch (err) {
+//     setError("Draft save failed")
+//   }
+// }
+
+
+
+
+
+
+
+
+
 const handleSaveDraft = async (values) => {
   try {
     const draftData = {
@@ -6989,16 +7118,19 @@ const handleSaveDraft = async (values) => {
       _currentStep: currentStep
     }
 
+    // 🔥 Convert Files to Base64 before saving
+    const base64Files = await convertFilesToBase64(files)
+
     if (draftId) {
       await updateDraftInDB(
         Number(draftId),
         draftData,
-        JSON.parse(JSON.stringify(files))
+        base64Files
       )
     } else {
       await saveDraftToDB(
         draftData,
-        JSON.parse(JSON.stringify(files))
+        base64Files
       )
     }
 
@@ -7229,15 +7361,33 @@ const handleSaveDraft = async (values) => {
         }
       })
 
+      // Object.keys(files).forEach(key => {
+      //   if (files[key]) {
+      //     if (Array.isArray(files[key])) {
+      //       files[key].forEach(file => formDataToSend.append(key, file))
+      //     } else {
+      //       formDataToSend.append(key, files[key])
+      //     }
+      //   }
+      // })
+
+
       Object.keys(files).forEach(key => {
-        if (files[key]) {
-          if (Array.isArray(files[key])) {
-            files[key].forEach(file => formDataToSend.append(key, file))
-          } else {
-            formDataToSend.append(key, files[key])
-          }
+  if (files[key]) {
+    if (Array.isArray(files[key])) {
+      files[key].forEach(file => {
+        if (file instanceof File) {
+          formDataToSend.append(key, file);
         }
-      })
+      });
+    } else {
+      if (files[key] instanceof File) {
+        formDataToSend.append(key, files[key]);
+      }
+    }
+  }
+});
+
 
       const response = await fetch(`${API_BASE_URL}/api/sra-logs/submit-log`, {
         method: 'POST',
@@ -8199,9 +8349,9 @@ const handleSaveDraft = async (values) => {
                 </div> */}
 
 
-                <div className="flex justify-between items-center mt-10 pt-8 border-t border-gray-200">
+{/* <div className="flex justify-between items-center mt-10 pt-8 border-t border-gray-200">
 
-  {/* Previous */}
+  
   <button
     type="button"
     onClick={prevStep}
@@ -8215,7 +8365,7 @@ const handleSaveDraft = async (values) => {
     <ChevronLeft size={18} /> Previous
   </button>
 
-  {/* Center Save Draft Button */}
+ 
   <button
     type="button"
     onClick={() => handleSaveDraft(formik.values)}
@@ -8224,7 +8374,7 @@ const handleSaveDraft = async (values) => {
     <Save size={18} /> Save Draft
   </button>
 
-  {/* Next OR Submit */}
+ 
   {currentStep < steps.length ? (
     <button
       type="button"
@@ -8243,7 +8393,55 @@ const handleSaveDraft = async (values) => {
     </button>
   )}
 
+</div> */}
+
+<div className="flex flex-col sm:flex-row justify-between items-center gap-4 mt-10 pt-8 border-t border-gray-200">
+
+  {/* Previous */}
+  <button
+    type="button"
+    onClick={prevStep}
+    disabled={currentStep === 1}
+    className={`w-full sm:w-auto flex items-center justify-center gap-3 px-6 py-3 rounded-xl font-semibold ${
+      currentStep === 1
+        ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
+        : 'bg-gray-200 text-gray-700'
+    }`}
+  >
+    <ChevronLeft size={18} /> Previous
+  </button>
+
+  {/* Save Draft */}
+  <button
+    type="button"
+    onClick={() => handleSaveDraft(formik.values)}
+    className="w-full sm:w-auto flex items-center justify-center gap-3 px-6 py-3 bg-yellow-500 text-white rounded-xl hover:bg-yellow-600"
+  >
+    <Save size={18} /> Save Draft
+  </button>
+
+  {/* Next / Submit */}
+  {currentStep < steps.length ? (
+    <button
+      type="button"
+      onClick={() => nextStep(formik)}
+      className="w-full sm:w-auto flex items-center justify-center gap-3 px-6 py-3 bg-blue-600 text-white rounded-xl hover:bg-blue-700"
+    >
+      Next <ChevronRight size={18} />
+    </button>
+  ) : (
+    <button
+      type="submit"
+      disabled={loading || !formik.isValid}
+      className="w-full sm:w-auto flex items-center justify-center gap-3 px-6 py-3 bg-green-600 text-white rounded-xl hover:bg-green-700"
+    >
+      <Save size={18} /> Submit
+    </button>
+  )}
+
 </div>
+
+
 
               </Form>
             )}
