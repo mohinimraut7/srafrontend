@@ -7253,6 +7253,8 @@ const handleSaveDraft = async (values) => {
     doc_front_view: null,
     biometric:null,
     same_as_aadhaar: false,
+    same_pincode_as_aadhaar: false,
+
 
 
   }
@@ -7803,7 +7805,7 @@ const handleSaveDraft = async (values) => {
 
 </div>
 
-              <div>
+              {/* <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">आधार पिनकोड (६ अंक) *</label>
                 <Field type="text" name="aadhaar_pincode" maxLength="6" placeholder="400001" className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500" />
                 <ErrorMessage name="aadhaar_pincode" component="div" className="text-red-500 text-sm mt-1 font-medium" />
@@ -7812,7 +7814,77 @@ const handleSaveDraft = async (values) => {
                 <label className="block text-sm font-medium text-gray-700 mb-2">सध्याचा पिनकोड (६ अंक) *</label>
                 <Field type="text" name="current_pincode" maxLength="6" placeholder="400001" className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500" />
                 <ErrorMessage name="current_pincode" component="div" className="text-red-500 text-sm mt-1 font-medium" />
-              </div>
+              </div> */}
+              {/* Aadhaar Pincode */}
+<div>
+  <label className="block text-sm font-medium text-gray-700 mb-2">
+    आधार पिनकोड (६ अंक) *
+  </label>
+  <Field
+    type="text"
+    name="aadhaar_pincode"
+    maxLength="6"
+    placeholder="400001"
+    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+  />
+  <ErrorMessage
+    name="aadhaar_pincode"
+    component="div"
+    className="text-red-500 text-sm mt-1 font-medium"
+  />
+</div>
+
+{/* Current Pincode */}
+<div>
+  <label className="block text-sm font-medium text-gray-700 mb-2">
+    सध्याचा पिनकोड (६ अंक) *
+  </label>
+
+  <Field
+    type="text"
+    name="current_pincode"
+    maxLength="6"
+    placeholder="400001"
+    readOnly={formik.values.same_pincode_as_aadhaar}
+    className={`w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 ${
+      formik.values.same_pincode_as_aadhaar
+        ? "bg-gray-100 cursor-not-allowed"
+        : ""
+    }`}
+  />
+
+  {/* Checkbox */}
+  <div className="flex items-center mt-2">
+    <input
+      type="checkbox"
+      checked={formik.values.same_pincode_as_aadhaar}
+      onChange={(e) => {
+        const checked = e.target.checked
+        formik.setFieldValue("same_pincode_as_aadhaar", checked)
+
+        if (checked) {
+          formik.setFieldValue(
+            "current_pincode",
+            formik.values.aadhaar_pincode
+          )
+        } else {
+          formik.setFieldValue("current_pincode", "")
+        }
+      }}
+      className="h-4 w-4 text-blue-600"
+    />
+    <label className="ml-2 text-sm text-gray-700">
+      आधार पिनकोड आणि सध्याचा पिनकोड एकच आहे
+    </label>
+  </div>
+
+  <ErrorMessage
+    name="current_pincode"
+    component="div"
+    className="text-red-500 text-sm mt-1 font-medium"
+  />
+</div>
+
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">सध्याचा मोबाइल क्रमांक (१० अंक) *</label>
                 <Field type="tel" name="current_mobile_number" maxLength="10" placeholder="9876543210" className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500" />
