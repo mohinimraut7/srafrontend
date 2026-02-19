@@ -14720,7 +14720,7 @@ const generateJodpatra4 = async (data) => {
               <option value="Social">Social</option>
               <option value="Devotional">Devotional</option>
               <option value="Educational">Educational</option>
-              <option value="Residential / Commercial">Residential / Commercial</option>
+              {/* <option value="Residential / Commercial">Residential / Commercial</option> */}
             </select>
           </div>
 
@@ -14734,10 +14734,12 @@ const generateJodpatra4 = async (data) => {
               className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent bg-white"
             >
               <option value="">All Statuses</option>
-              <option value="Pending">Pending</option>
-              <option value="Completed">Completed</option>
-              <option value="Ready For Survey">Ready For Survey</option>
+              {/* <option value="Pending">Pending</option>
+              <option value="Completed">Completed</option> */}
+              {/* <option value="Ready For Survey">Ready For Survey</option> */}
+               <option value="readytosurvey">Ready To Survey</option>
               <option value="Hut Appose">Hut Appose</option>
+                <option value="Hut Denied">Hut Denied</option>
             </select>
           </div>
 

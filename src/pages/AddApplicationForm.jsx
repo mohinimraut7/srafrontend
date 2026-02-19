@@ -7251,7 +7251,9 @@ const handleSaveDraft = async (values) => {
     doc_before_2000: false, after_2000_proof_submitted: false,
     timestamp: '', created_date: '', submittedBy: '', sale_agreement: [],
     doc_front_view: null,
-    biometric:null
+    biometric:null,
+    same_as_aadhaar: false,
+
 
   }
 
@@ -7741,11 +7743,66 @@ const handleSaveDraft = async (values) => {
                 <label className="block text-sm font-medium text-gray-700 mb-2">आधार पत्ता *</label>
                 <Field as="textarea" name="aadhaar_address" rows="3" className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500" />
               </div>
-              <div>
+              {/* <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">सध्याचा पत्ता *</label>
                 <Field as="textarea" name="current_address" rows="3" className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500" />
                 <ErrorMessage name="current_address" component="div" className="text-red-500 text-sm mt-1 font-medium" />
-              </div>
+              </div> */}
+
+           
+
+{/* Current Address */}
+<div>
+<div>
+  <label className="block text-sm font-medium text-gray-700 mb-2">
+    सध्याचा पत्ता *
+  </label>
+  <Field
+    as="textarea"
+    name="current_address"
+    rows="3"
+    readOnly={formik.values.same_as_aadhaar}
+    className={`w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 ${
+      formik.values.same_as_aadhaar
+        ? "bg-gray-100 cursor-not-allowed"
+        : ""
+    }`}
+  />
+  <ErrorMessage
+    name="current_address"
+    component="div"
+    className="text-red-500 text-sm mt-1 font-medium"
+  />
+</div>
+
+   {/* Same As Aadhaar Checkbox */}
+<div className="flex items-center mb-3">
+  <Field
+    type="checkbox"
+    name="same_as_aadhaar"
+    checked={formik.values.same_as_aadhaar}
+    onChange={(e) => {
+      const checked = e.target.checked
+      formik.setFieldValue("same_as_aadhaar", checked)
+
+      if (checked) {
+        formik.setFieldValue(
+          "current_address",
+          formik.values.aadhaar_address
+        )
+      } else {
+        formik.setFieldValue("current_address", "")
+      }
+    }}
+    className="h-4 w-4 text-blue-600"
+  />
+  <label className="ml-2 text-sm text-gray-700">
+    आधार पत्ता आणि सध्याचा पत्ता एकच आहे
+  </label>
+</div>
+
+</div>
+
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">आधार पिनकोड (६ अंक) *</label>
                 <Field type="text" name="aadhaar_pincode" maxLength="6" placeholder="400001" className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500" />
