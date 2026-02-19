@@ -6709,6 +6709,8 @@ import { saveDraftToDB } from "../utils/draftDB"
 import { getDraftById,updateDraftInDB } from "../utils/draftDB"
 import Webcam from "react-webcam";
 import { useRef } from "react"
+import DatePicker from "react-datepicker"
+import "react-datepicker/dist/react-datepicker.css"
 
 
 
@@ -7239,7 +7241,7 @@ const handleSaveDraft = async (values) => {
     current_mobile_number: '', voter_card_type: '', voter_card_number: '',
     biometric_lat: '', biometric_long: '',
     bank_name: '', account_number: '', ifsc_code: '',
-    length: '', width: '', area_sq_m: '', residency_since: '',
+    length: '', width: '', area_sq_m: '', residency_since:null,
     num_family_members: 1,
     family_member1_name: '', family_member1_age: '', family_member1_relation: '', family_member1_gender: '', family_member1_aadhaar: '',
     family_member2_name: '', family_member2_age: '', family_member2_relation: '', family_member2_gender: '', family_member2_aadhaar: '',
@@ -7355,7 +7357,22 @@ const handleSaveDraft = async (values) => {
       if (!currentUser) currentUser = await fetchAndSetUserProfile()
 
       const formDataToSend = new FormData()
-      const updatedValues = { ...values, submittedBy: currentUser?.user_id || "N/A" }
+       const {
+      same_as_aadhaar,
+      same_pincode_as_aadhaar,
+      residency_since,
+      ...cleanValues
+    } = values
+
+let formattedResidency = ""
+
+if (residency_since instanceof Date) {
+  formattedResidency = `${String(residency_since.getDate()).padStart(2, "0")}-${String(
+    residency_since.getMonth() + 1
+  ).padStart(2, "0")}-${residency_since.getFullYear()}`
+}
+
+      const updatedValues = {...cleanValues,residency_since: formattedResidency,submittedBy: currentUser?.user_id || "N/A" }
 
       Object.keys(updatedValues).forEach(key => {
         if (updatedValues[key] !== null && updatedValues[key] !== undefined && updatedValues[key] !== '') {
@@ -8071,7 +8088,7 @@ const handleSaveDraft = async (values) => {
                     placeholder="Auto-calculated"
                   />
                 </div>
-                <div>
+                {/* <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">राहणीमान सुरु पासून *</label>
                   <Field
                     type="date"
@@ -8099,7 +8116,101 @@ const handleSaveDraft = async (values) => {
                       </p>
                     </div>
                   )}
-                </div>
+                </div> */}
+  {/* <div>
+  <label className="block text-sm font-medium text-gray-700 mb-2">
+    राहणीमान सुरु पासून *
+  </label>
+
+  <DatePicker
+    selected={
+      formik.values.residency_since
+        ? new Date(
+            formik.values.residency_since.split("-").reverse().join("-")
+          )
+        : null
+    }
+    onChange={(date) => {
+      if (!date) return
+
+      const formatted = `${String(date.getDate()).padStart(2, "0")}-${String(
+        date.getMonth() + 1
+      ).padStart(2, "0")}-${date.getFullYear()}`
+
+      formik.setFieldValue("residency_since", formatted)
+    }}
+    dateFormat="dd-MM-yyyy"
+    placeholderText="dd-mm-yyyy"
+    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+    showMonthDropdown
+    showYearDropdown
+    dropdownMode="select"
+    isClearable
+  />
+
+  {formik.values.residency_since && (
+    <div className="mt-2 p-2 rounded-md bg-blue-50 border border-blue-200">
+      <p className="text-xs font-medium">
+        {(() => {
+          const [day, month, year] =
+            formik.values.residency_since.split("-")
+
+          const selectedDate = new Date(year, month - 1, day)
+          const cutoffDate = new Date(2000, 0, 1)
+
+          return selectedDate <= cutoffDate ? (
+            <span className="text-green-600">
+              01-01-2000 किंवा त्याआधी - Jodpatra-3 तयार होईल
+            </span>
+          ) : (
+            <span className="text-blue-600">
+              01-01-2000 नंतर - Jodpatra-4 तयार होईल
+            </span>
+          )
+        })()}
+      </p>
+    </div>
+  )}
+</div> */}
+
+
+<div>
+  <label className="block text-sm font-medium text-gray-700 mb-2">
+    राहणीमान सुरु पासून *
+  </label>
+
+  <DatePicker
+    selected={formik.values.residency_since}
+    onChange={(date) => {
+      formik.setFieldValue("residency_since", date)
+    }}
+    dateFormat="dd-MM-yyyy"
+    placeholderText="dd-mm-yyyy"
+    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+    showMonthDropdown
+    showYearDropdown
+    dropdownMode="select"
+    isClearable
+  />
+
+  {formik.values.residency_since && (
+    <div className="mt-2 p-2 rounded-md bg-blue-50 border border-blue-200">
+      <p className="text-xs font-medium">
+        {formik.values.residency_since <= new Date(2000, 0, 1) ? (
+          <span className="text-green-600">
+            01-01-2000 किंवा त्याआधी - Jodpatra-3 तयार होईल
+          </span>
+        ) : (
+          <span className="text-blue-600">
+            01-01-2000 नंतर - Jodpatra-4 तयार होईल
+          </span>
+        )}
+      </p>
+    </div>
+  )}
+</div>
+
+
               </div>
             </div>
           </div>
@@ -8207,14 +8318,19 @@ const handleSaveDraft = async (values) => {
                   // { name: 'adivashihutimage', label: 'Hut Image', accept: 'image/*,.pdf', icon: 'Home' },
                     { name: 'video_inside', label: 'Inside Video', accept: 'video/*', icon: '📹' },
 
-                ...(formik.values.residency_since && new Date(formik.values.residency_since.split('-').reverse().join('-')) <= new Date('2000-01-01')
+                // ...(formik.values.residency_since && new Date(formik.values.residency_since.split('-').reverse().join('-')) <= new Date('2000-01-01')
+                ...(formik.values.residency_since &&
+  formik.values.residency_since <= new Date(2000, 0, 1)
+  
                   ? [
                       { name: 'doc_before_2000', label: 'Hut Owner Document Before 2000 Proof', accept: 'image/*,.pdf,.doc,.docx', icon: '' },
                       // { name: 'submitted_docs_before_2000', label: 'Hut Owner Document Before 2000 Proof', accept: 'image/*,.pdf', icon: '' }
                     ]
                   : []
                 ),
-                ...(formik.values.residency_since && new Date(formik.values.residency_since.split('-').reverse().join('-')) > new Date('2000-01-01')
+                // ...(formik.values.residency_since && new Date(formik.values.residency_since.split('-').reverse().join('-')) > new Date('2000-01-01')
+                ...(formik.values.residency_since &&
+  formik.values.residency_since > new Date(2000, 0, 1)
                   ? [{ name: 'after_2000_proof_submitted', label: 'Hut Owner Document After 2000 Proof', accept: 'image/*,.pdf', icon: '' }]
                   : []
                 ),
