@@ -31,6 +31,18 @@ function App() {
   const [selectedDraftId, setSelectedDraftId] = useState(null)
 
 
+  // useEffect(() => {
+  //   if (isAuthenticated()) {
+  //     const userData = getUser()
+  //     setUser(userData)
+  //     if (currentPage === "login") {
+  //       setCurrentPage("dashboard")
+  //     }
+  //   } else {
+  //     setCurrentPage("login")
+  //   }
+  // }, [currentPage])
+
   useEffect(() => {
     if (isAuthenticated()) {
       const userData = getUser()
@@ -41,7 +53,7 @@ function App() {
     } else {
       setCurrentPage("login")
     }
-  }, [currentPage])
+  }, [])
 
   // const handleNavigation = (page, mode = "view") => {
   //   setCurrentPage(page)
@@ -127,7 +139,8 @@ const handleNavigation = (page, mode = null) => {
     )
   }
 
-  if (!isAuthenticated()) {
+  // if (!isAuthenticated()) {
+    if (!isAuthenticated() && currentPage !== "login" && currentPage !== "registerUser") {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">

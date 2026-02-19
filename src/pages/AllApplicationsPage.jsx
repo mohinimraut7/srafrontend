@@ -14650,9 +14650,9 @@ const generateJodpatra4 = async (data) => {
       {/* Header */}
       <div className="mb-9 flex justify-between items-center">
         <div>
-          <h1 style={{color:'#4A5565',textTransform:'uppercase'}} className="text-xl font-bold mb-2">MHADA Applications</h1>
+          <h1 style={{color:'#4A5565',textTransform:'uppercase'}} className="text-xl font-bold mb-2">BMC Applications</h1>
           <p className="text-gray-600 text-lg">
-            Complete view of MHADA applications ({applications.length} total records)
+            Complete view of BMC applications ({applications.length} total records)
           </p>
         </div>
 
@@ -15184,7 +15184,7 @@ const generateJodpatra4 = async (data) => {
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
           <div className="bg-white rounded-lg max-w-7xl w-full max-h-[95vh] overflow-y-auto">
             <div className="sticky top-0 bg-white border-b p-6 flex justify-between items-center z-10">
-              <h2 className="text-3xl font-bold">Add New SRA Application</h2>
+              <h2 className="text-3xl font-bold">Application Form</h2>
               <button
                 onClick={() => setShowAddForm(false)}
                 className="text-gray-500 hover:text-gray-700"

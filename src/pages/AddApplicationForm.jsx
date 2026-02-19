@@ -7257,7 +7257,7 @@ const handleSaveDraft = async (values) => {
 
   const steps = [
     { id: 1, title: 'Basic Information', icon: 'Building' },
-    { id: 2, title: 'Personal Details', icon: 'User' },
+    { id: 2, title: 'Owner Details', icon: 'User' },
     { id: 3, title: 'Address Contact', icon: 'MapPin' },
     { id: 4, title: 'Bank and Slum Details', icon: 'Bank' },
     { id: 5, title: 'Family Members', icon: 'Users' },
@@ -7477,7 +7477,7 @@ const handleSaveDraft = async (values) => {
               </div> */}
 
               <div>
-  <label className="block text-sm font-medium text-gray-700 mb-2">झोपडपट्टी क्रमांक *</label>
+  <label className="block text-sm font-medium text-gray-700 mb-2">सेक्टर क्रमांक *</label>
   <select
     name="slum_id"
     onChange={(e) => handleSlumChange(e, formik)}
@@ -7487,7 +7487,7 @@ const handleSaveDraft = async (values) => {
     className={`w-full border rounded-md px-3 py-2 focus:ring-2 focus:ring-blue-300 ${!formik.values.cluster_number ? "bg-gray-100 cursor-not-allowed" : ""}`}
   >
     <option value="">
-      {formik.values.cluster_number ? "झोपडपट्टी क्रमांक निवडा" : "प्रथम क्लस्टर निवडा"}
+      {formik.values.cluster_number ? "सेक्टर क्रमांक निवडा" : "प्रथम क्लस्टर निवडा"}
     </option>
     {slums
       .filter((slum) => slum.cluster_number === formik.values.cluster_number)
@@ -7585,7 +7585,7 @@ const handleSaveDraft = async (values) => {
               </div>
 
 
-              <div>
+              {/* <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">झोपडीचे नाव *</label>
                 <Field
                   type="text"
@@ -7593,7 +7593,7 @@ const handleSaveDraft = async (values) => {
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
                 />
                 <ErrorMessage name="hut_name" component="div" className="text-red-500 text-sm mt-1 font-medium" />
-              </div> 
+              </div>  */}
 
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">झोपडीचा मजला *</label>
@@ -7627,7 +7627,7 @@ const handleSaveDraft = async (values) => {
                   <option value="Social">Social</option>
                   <option value="Devotional">Devotional</option>
                   <option value="Educational">Educational</option>
-                  <option value="Residential / Commercial">Residential / Commercial</option>
+                  {/* <option value="Residential / Commercial">Residential / Commercial</option> */}
                 </Field>
               </div>
 
@@ -7658,10 +7658,11 @@ const handleSaveDraft = async (values) => {
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
                 >
                   <option value="">सर्वेक्षण स्थिती</option>
-                  <option value="Pending">Pending</option>
+                  {/* <option value="Pending">Pending</option> */}
                   <option value="Hut Appose">Hut Appose</option>
                   <option value="Hut Denied">Hut Denied</option>
-                  <option value="Completed">Completed</option>
+                   <option value="readytosurvey">Ready To Survey</option>
+                  {/* <option value="Completed">Completed</option> */}
                 </Field>
               </div>
             </div>
@@ -7682,7 +7683,7 @@ const handleSaveDraft = async (values) => {
       case 2:
         return (
           <div className="space-y-6">
-            <h3 className="text-2xl font-bold text-gray-900 mb-6">Personal Details</h3>
+            <h3 className="text-2xl font-bold text-gray-900 mb-6">Owner Details</h3>
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">नाव *</label>
@@ -7768,11 +7769,53 @@ const handleSaveDraft = async (values) => {
                   <option value="EPIC 14 Digit">EPIC 14 Digit</option>
                 </Field>
               </div>
-              <div>
+              {/* <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">मतदार ओळख क्रमांक (१० अंक) *</label>
                 <Field type="text" name="voter_card_number" maxLength="10" placeholder="ABC1234567" className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500" />
                 <ErrorMessage name="voter_card_number" component="div" className="text-red-500 text-sm mt-1 font-medium" />
-              </div>
+              </div> */}
+{/* Dynamic Voter Card Number Field */}
+{formik.values.voter_card_type === "EPIC 10 Digit" && (
+  <div>
+    <label className="block text-sm font-medium text-gray-700 mb-2">
+      मतदार ओळख क्रमांक (१० अंक) *
+    </label>
+    <Field
+      type="text"
+      name="voter_card_number"
+      maxLength="10"
+      placeholder="ABC1234567"
+      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+    />
+    <ErrorMessage
+      name="voter_card_number"
+      component="div"
+      className="text-red-500 text-sm mt-1 font-medium"
+    />
+  </div>
+)}
+
+{formik.values.voter_card_type === "EPIC 14 Digit" && (
+  <div>
+    <label className="block text-sm font-medium text-gray-700 mb-2">
+      मतदार ओळख क्रमांक (१४ अंक) *
+    </label>
+    <Field
+      type="text"
+      name="voter_card_number"
+      maxLength="14"
+      placeholder="ABC12345678901"
+      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+    />
+    <ErrorMessage
+      name="voter_card_number"
+      component="div"
+      className="text-red-500 text-sm mt-1 font-medium"
+    />
+  </div>
+)}
+
+
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2"><MapPin className="inline w-4 h-4 mr-1" /> अक्षांश *</label>
                 <Field type="text" name="biometric_lat" placeholder="19.0760" className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500" />
@@ -7830,15 +7873,15 @@ const handleSaveDraft = async (values) => {
               </h4>
               <div className="grid md:grid-cols-3 gap-6">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">बँकेचे नाव *</label>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">बँकेचे नाव </label>
                   <Field type="text" name="bank_name" className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500" />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">खाते क्रमांक *</label>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">खाते क्रमांक </label>
                   <Field type="text" name="account_number" className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500" />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">IFSC कोड *</label>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">IFSC कोड </label>
                   <Field type="text" name="ifsc_code" className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500" />
                 </div>
               </div>
@@ -8029,28 +8072,31 @@ const handleSaveDraft = async (values) => {
               {[
                 { name: 'photo_self', label: 'Self Photo', accept: 'image/*', icon: '📷' },
                 { name: 'photo_family', label: 'Family Photo', accept: 'image/*', icon: '👨‍👩‍👧‍👦' },
-                { name: 'doc_side_view', label: 'Doc Side View', accept: 'image/*', icon: '🏗️' },
-                { name: 'doc_front_view', label: 'Doc Front View', accept: 'image/*', icon: '🏗️' },
-                  { name: 'adivashihutimage', label: 'Hut Image', accept: 'image/*,.pdf', icon: 'Home' },
+                { name: 'doc_side_view', label: 'Side View', accept: 'image/*', icon: '🏗️' },
+                { name: 'doc_front_view', label: 'Front View', accept: 'image/*', icon: '🏗️' },
+
+                  // { name: 'adivashihutimage', label: 'Hut Image', accept: 'image/*,.pdf', icon: 'Home' },
+                    { name: 'video_inside', label: 'Inside Video', accept: 'video/*', icon: '📹' },
+
                 ...(formik.values.residency_since && new Date(formik.values.residency_since.split('-').reverse().join('-')) <= new Date('2000-01-01')
                   ? [
-                      { name: 'doc_before_2000', label: 'Docs before or till 1-1-2000', accept: 'image/*,.pdf,.doc,.docx', icon: 'FileText' },
-                      { name: 'submitted_docs_before_2000', label: 'Submitted Docs Before 2000', accept: 'image/*,.pdf', icon: 'FileCheck' }
+                      { name: 'doc_before_2000', label: 'Hut Owner Document Before 2000 Proof', accept: 'image/*,.pdf,.doc,.docx', icon: '' },
+                      // { name: 'submitted_docs_before_2000', label: 'Hut Owner Document Before 2000 Proof', accept: 'image/*,.pdf', icon: '' }
                     ]
                   : []
                 ),
                 ...(formik.values.residency_since && new Date(formik.values.residency_since.split('-').reverse().join('-')) > new Date('2000-01-01')
-                  ? [{ name: 'after_2000_proof_submitted', label: 'After 2000 Proof', accept: 'image/*,.pdf', icon: 'FileCheck' }]
+                  ? [{ name: 'after_2000_proof_submitted', label: 'Hut Owner Document After 2000 Proof', accept: 'image/*,.pdf', icon: '' }]
                   : []
                 ),
-                { name: 'possession_doc_info', label: 'Possession Document', accept: 'image/*,.pdf', icon: '🏡' },
-                { name: 'Seldeclaration_letter', label: 'Self Declaration Letter', accept: 'image/*,.pdf', icon: '✍️' },
-                { name: 'Ration_card_info', label: 'Ration Card', accept: 'image/*,.pdf', icon: '📁' },
+                // { name: 'possession_doc_info', label: 'Possession Document', accept: 'image/*,.pdf', icon: '🏡' },
+                { name: 'Seldeclaration_letter', label: 'Self Declaration - A', accept: 'image/*,.pdf', icon: '✍️' },
+                { name: 'Ration_card_info', label: 'Self-Declaration Form for Self-Assessment - B', accept: 'image/*,.pdf', icon: '📁' },
                 // { name: 'document_upload', label: 'General Document', accept: 'image/*,.pdf,.doc,.docx', icon: 'Folder' },
                 { name: 'sale_agreement', label: 'Sale Agreement', accept: '.pdf,.doc,.docx,image/*', icon: '📜', multiple: true },
                 { name: 'biometric', label: 'Biometric Photo', accept: '.pdf,.doc,.docx,image/*', icon: '📜', multiple: true },
                 { name: 'video_self_declaration', label: 'Self Declaration Video', accept: 'video/*', icon: '🎥' },
-                { name: 'video_inside', label: 'Inside Video', accept: 'video/*', icon: '📹' }
+              
               ].map(({ name, label, accept, icon, multiple }) => (
                 <div key={name} className="border border-gray-200 rounded-lg p-4 bg-white shadow-sm hover:shadow-md transition-all">
                   <div className="flex items-center mb-3">

@@ -20,11 +20,11 @@ const TopNavbar = ({ user, onToggleSidebar,currentPage}) => {
           <div>
             {currentPage === "all-applications" ? (
               <div className="flex items-center justify-center space-x-4 mb-1">
-                <img 
-                  src="/images/logo.jpeg" 
+                {/* <img 
+                  src="/images/bmclogo.png" 
                   alt="Logo" 
                   className="w-7 h-7 object-cover"
-                />
+                /> */}
                 <h2 
                   style={{ color: "#4A5565", textTransform: "uppercase" }} 
                   className="text-xl font-bold text-center"
@@ -33,7 +33,7 @@ const TopNavbar = ({ user, onToggleSidebar,currentPage}) => {
                 </h2>
               </div>
             ) : (
-              <h1 className="text-lg font-semibold text-gray-900">MHADA</h1>
+              <h1 className="text-lg font-semibold text-gray-900">BMC</h1>
             )}
           </div>
         </div>

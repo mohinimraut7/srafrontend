@@ -113,7 +113,7 @@ const BASE_URL = import.meta.env.VITE_BASE_URL;
       <div className="flex items-center justify-center min-h-screen bg-gray-50">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-blue-600 mx-auto mb-4"></div>
-          <p className="text-gray-600 text-lg">Loading MHADA Analytics Dashboard...</p>
+          <p className="text-gray-600 text-lg">Loading BMC Analytics Dashboard...</p>
         </div>
       </div>
     );
@@ -151,13 +151,13 @@ const BASE_URL = import.meta.env.VITE_BASE_URL;
         {/* <h1 className="text-4xl font-bold text-gray-800 mb-2">📊 MHADA Dashboard</h1> */}
         <div className="flex items-center justify-center space-x-4 mb-2">
   <img 
-    src="/images/logo.jpeg" 
+    src="/images/bmclogo.png" 
     alt="Logo" 
     width={48} 
     height={48} 
     className="w-12 h-12 object-cover"
   />
-  <h1 className="text-4xl font-bold text-gray-800">MHADA Dashboard</h1>
+  <h1 className="text-4xl font-bold text-gray-800">BMC Dashboard</h1>
 </div>
 <hr className="my-4" />
 
@@ -169,13 +169,13 @@ const BASE_URL = import.meta.env.VITE_BASE_URL;
       <div className="bg-white rounded-lg shadow-md p-6 mb-8">
         {/* <h2 className="text-2xl font-semibold text-gray-800 mb-6 text-center">📊 Executive Summary</h2> */}
         <div className="flex items-center justify-center space-x-4 mb-6">
-  <img 
+  {/* <img 
     src="/images/logo.jpeg" 
     alt="Logo" 
    
     className="w-7 h-7 object-cover"
-  />
-  <h2 className="text-2xl font-semibold text-gray-800 text-center">Executive Summary</h2>
+  /> */}
+  <h2 className="text-2xl font-semibold text-gray-800 text-center"> 📄 Executive Summary</h2>
 </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">

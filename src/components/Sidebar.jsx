@@ -58,11 +58,13 @@ const Sidebar = ({ isCollapsed, currentPage, currentMode, onNavigate }) => {
         <div className="flex items-center space-x-3">
           {!isCollapsed && (
             <div className="flex items-center space-x-3">
-              <div className="w-12 h-12 rounded-xl overflow-hidden">
-                <img src="/images/logo.jpeg" alt="Logo" width={48} height={48} className="w-full h-full object-cover" />
+              <div className="w-30 h-30 rounded-xl overflow-hidden">
+                
+                {/* <img src="/images/logo.jpeg" alt="Logo" width={48} height={48} className="w-full h-full object-cover" /> */}
+               <img src="/images/bmclogo.png" alt="Logo" width={48} height={48} className="w-full h-full object-cover" />
               </div>
               <div>
-                <h2 className="text-sm font-bold text-gray-900">MHADA</h2>
+                <h2 className="text-lg font-bold text-gray-900">BMC</h2>
                 
               </div>
               {/* <div><button>X</button></div> */}
