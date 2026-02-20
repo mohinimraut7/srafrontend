@@ -106,9 +106,9 @@
         <div className="relative z-10 w-full max-w-md bg-white/95 backdrop-blur-md rounded-xl shadow-xl p-8">
           <div className="text-center mb-6">
             <div className="inline-block w-16 h-16 rounded-xl border border-gray-200 shadow overflow-hidden">
-              <img src="/images/logo.jpeg" alt="Logo" width={64} height={64} />
+              <img src="/images/bmclogo.png" alt="Logo" width={64} height={64} />
             </div>
-            <h2 className="text-xl font-bold mt-4">SRA</h2>
+            <h2 className="text-xl font-bold mt-4">BMC</h2>
             <p className="text-sm text-gray-500">Technology for Social Impact</p>
             <span className="inline-flex items-center mt-2 px-3 py-1 bg-orange-100 text-orange-700 rounded-full text-xs">
               <Shield className="h-3 w-3 mr-1" />
