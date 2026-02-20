@@ -126,6 +126,7 @@ const OwnershipOfHut = () => {
       </div>
     </div>
   );
+  
 };
 
 export default OwnershipOfHut;
