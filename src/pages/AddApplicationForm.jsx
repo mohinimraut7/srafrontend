@@ -7201,26 +7201,103 @@ const handleSaveDraft = async (values) => {
   //   form.setFieldValue("hut_name", "")
   // }
 
+// =============================================
+
+//   const capturePhoto = async (fieldName) => {
+//   const imageSrc = webcamRef.current?.getScreenshot()
+//   if (!imageSrc) return
+
+//   const blob = await (await fetch(imageSrc)).blob()
+//   const file = new File([blob], `${fieldName}.jpg`, {
+//     type: "image/jpeg"
+//   })
+
+//   setFiles(prev => ({
+//     ...prev,
+//     [fieldName]: file
+//   }))
+
+//   setActiveCamera(null)
+// }
 
 
-  const capturePhoto = async (fieldName) => {
+// const capturePhoto = async (fieldName) => {
+//   const imageSrc = webcamRef.current?.getScreenshot()
+//   if (!imageSrc) return
+
+//   const blob = await (await fetch(imageSrc)).blob()
+//   const file = new File([blob], `${fieldName}_${Date.now()}.jpg`, {
+//     type: "image/jpeg"
+//   })
+
+//   const multipleFields = [
+//     "sale_agreement",
+//     "after_2000_proof_submitted",
+//     "doc_before_2000"
+//   ]
+
+//   if (multipleFields.includes(fieldName)) {
+//     setFiles(prev => ({
+//       ...prev,
+//       [fieldName]: [
+//         ...(prev[fieldName] || []),
+//         file
+//       ]
+//     }))
+//   } else {
+//     setFiles(prev => ({
+//       ...prev,
+//       [fieldName]: file
+//     }))
+//   }
+
+//   setActiveCamera(null)
+// }
+
+
+const capturePhoto = async (fieldName) => {
   const imageSrc = webcamRef.current?.getScreenshot()
   if (!imageSrc) return
 
   const blob = await (await fetch(imageSrc)).blob()
-  const file = new File([blob], `${fieldName}.jpg`, {
+  const file = new File([blob], `${fieldName}_${Date.now()}.jpg`, {
     type: "image/jpeg"
   })
 
-  setFiles(prev => ({
-    ...prev,
-    [fieldName]: file
-  }))
+  const multipleFields = [
+    "sale_agreement",
+    "after_2000_proof_submitted",
+    "doc_before_2000"
+  ]
+
+  setFiles(prev => {
+    if (multipleFields.includes(fieldName)) {
+
+      // 🔥 SAFE CONVERSION
+      const existing = prev[fieldName]
+
+      let safeArray = []
+
+      if (Array.isArray(existing)) {
+        safeArray = existing
+      } else if (existing instanceof File) {
+        safeArray = [existing]
+      }
+
+      return {
+        ...prev,
+        [fieldName]: [...safeArray, file]
+      }
+    }
+
+    return {
+      ...prev,
+      [fieldName]: file
+    }
+  })
 
   setActiveCamera(null)
 }
-
-
 
   const handleSlumChange = (e, form) => {
   const slumId = e.target.value
@@ -7392,7 +7469,29 @@ const handleFileChange = (e) => {
   const removeMember = () => displayedMembers > 1 && setDisplayedMembers(displayedMembers - 1)
 
   const handleSubmit = async (values) => {
-    setLoading(true); setError(null); setSuccess(null)
+      setLoading(true); setError(null); setSuccess(null)
+
+// 🔥 Minimum 5 photos validation (not mandatory)
+// const checkMinFive = (field) => {
+//   if (files[field] && Array.isArray(files[field])) {
+//     if (files[field].length > 0 && files[field].length < 5) {
+//       setError(`${field} requires minimum 5 files if uploading`)
+//       setLoading(false)
+//       return false
+//     }
+//   }
+//   return true
+// }
+
+// if (
+//   !checkMinFive("sale_agreement") ||
+//   !checkMinFive("after_2000_proof_submitted") ||
+//   !checkMinFive("doc_before_2000")
+// ) {
+//   return
+// }
+
+  
 
     try {
       const token = getAuthToken()
