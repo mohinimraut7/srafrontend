@@ -7250,7 +7250,7 @@ const handleSaveDraft = async (values) => {
     family_member5_name: '', family_member5_age: '', family_member5_relation: '', family_member5_gender: '', family_member5_aadhaar: '',
     family_member6_name: '', family_member6_age: '', family_member6_relation: '', family_member6_gender: '', family_member6_aadhaar: '',
     self_declaration_letter: false, submitted_docs_before_2000: false,
-    doc_before_2000: false, after_2000_proof_submitted:[],
+    doc_before_2000:[], after_2000_proof_submitted:[],
     timestamp: '', created_date: '', submittedBy: '', sale_agreement: [],
     doc_front_view: null,
     biometric:null,
@@ -7294,6 +7294,7 @@ const handleFileChange = (e) => {
   const multipleFields = [
     "sale_agreement",
     "after_2000_proof_submitted",
+    "doc_before_2000",
     "biometric"
   ]
 
@@ -8355,7 +8356,7 @@ if (residency_since instanceof Date) {
   formik.values.residency_since <= new Date(2000, 0, 1)
   
                   ? [
-                      { name: 'doc_before_2000', label: 'Hut Owner Document Before 2000 Proof', accept: 'image/*,.pdf,.doc,.docx', icon: '' },
+                      { name: 'doc_before_2000', label: 'Hut Owner Document Before 2000 Proof', accept: 'image/*,.pdf,.doc,.docx', icon: '',multiple: true },
                       // { name: 'submitted_docs_before_2000', label: 'Hut Owner Document Before 2000 Proof', accept: 'image/*,.pdf', icon: '' }
                     ]
                   : []
@@ -8366,7 +8367,7 @@ if (residency_since instanceof Date) {
                   // ? [{ name: 'after_2000_proof_submitted', label: 'Hut Owner Document After 2000 Proof', accept: 'image/*,.pdf', icon: '' }]
                   ?[{
     name: 'after_2000_proof_submitted',
-    label: 'Hut Owner Document After 2000 Proof--->>>',
+    label: 'Hut Owner Document After 2000 Proof',
     accept: 'image/*,.pdf,.doc,.docx',
     icon: '📄',
     multiple: true   // ✅ ADD THIS
