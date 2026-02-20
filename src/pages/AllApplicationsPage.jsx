@@ -13026,6 +13026,30 @@ const AllApplicationsPage = () => {
   const [hutUseFilter, setHutUseFilter] = useState("")
   const [surveyStatusFilter, setSurveyStatusFilter] = useState("")
 
+
+//  let role = null
+
+// if (typeof window !== "undefined") {
+//   const userData = localStorage.getItem("user")
+//   if (userData) {
+//     const parsedUser = JSON.parse(userData)
+//     role = parsedUser?.role
+//   }
+// }
+
+
+ let role = null;
+let user_id = null;
+
+if (typeof window !== "undefined") {
+  const userData = localStorage.getItem("user");
+  if (userData) {
+    const parsedUser = JSON.parse(userData);
+    role = parsedUser?.role;
+    user_id = parsedUser?.id;   // ✅ ADD THIS
+  }
+}
+
   // Function to count applications by status
   const getStatusCounts = () => {
     const statusMappings = {
@@ -14247,52 +14271,82 @@ const generateJodpatra4 = async (data) => {
     fetchApplications()
   }, [])
 
-  const filteredApplications = applications.filter((app) => {
+//   const filteredApplications = applications.filter((app) => {
+//     const searchString = searchTerm.toLowerCase()
+
+//     const matchesSearch = searchTerm === "" || (
+//       (app.first_name && app.first_name.toLowerCase().includes(searchString)) ||
+//       (app.last_name && app.last_name.toLowerCase().includes(searchString)) ||
+//       (app.slum_id && app.slum_id.toLowerCase().includes(searchString)) ||
+//     //   (app.name_of_slum_area && app.name_of_slum_area.toLowerCase().includes(searchString)) ||
+//       (app.aadhaar_number && app.aadhaar_number.includes(searchString)) ||
+//       (app.cluster_number && app.cluster_number.toLowerCase().includes(searchString)) ||
+//       (app.slum_use && app.slum_use.toLowerCase().includes(searchString))
+//     )
+
+//     const matchesHutUse = hutUseFilter === "" || (
+//       app.slum_use && app.slum_use.toLowerCase().trim() === hutUseFilter.toLowerCase().trim()
+//     )
+
+//     const matchesSurveyStatus = surveyStatusFilter === "" || (() => {
+//       if (!app.survey_status || app.survey_status === null) {
+//         return surveyStatusFilter.toLowerCase().trim() === "pending"
+//       }
+
+//       const appStatus = app.survey_status.toLowerCase().trim()
+//       const filterStatus = surveyStatusFilter.toLowerCase().trim()
+
+//       if (appStatus === filterStatus) return true
+
+//       const statusMappings = {
+//         'pending': ['pending', 'pendding', 'panding'],
+//         'completed': ['completed', 'complete', 'complated'],
+//         'ready for survey': ['ready for survey', 'ready_for_survey', 'readyforsurvey', 'ready survey'],
+//         'hut appose': ['hut appose', 'hut_appose', 'hutappose', 'hut oppose']
+//       }
+
+//       for (const [key, variations] of Object.entries(statusMappings)) {
+//         if (variations.includes(filterStatus) && variations.includes(appStatus)) {
+//           return true
+//         }
+//       }
+
+//       return false
+//     })()
+
+//     return matchesSearch && matchesHutUse && matchesSurveyStatus
+//   })
+
+
+
+const filteredApplications = applications
+  .filter((app) => {
+    // ✅ If surveyor, show only his records
+    if (role === "surveyor") {
+      return Number(app.submittedBy) === Number(user_id)
+    }
+    return true
+  })
+  .filter((app) => {
     const searchString = searchTerm.toLowerCase()
 
-    const matchesSearch = searchTerm === "" || (
-      (app.first_name && app.first_name.toLowerCase().includes(searchString)) ||
-      (app.last_name && app.last_name.toLowerCase().includes(searchString)) ||
-      (app.slum_id && app.slum_id.toLowerCase().includes(searchString)) ||
-    //   (app.name_of_slum_area && app.name_of_slum_area.toLowerCase().includes(searchString)) ||
-      (app.aadhaar_number && app.aadhaar_number.includes(searchString)) ||
-      (app.cluster_number && app.cluster_number.toLowerCase().includes(searchString)) ||
-      (app.slum_use && app.slum_use.toLowerCase().includes(searchString))
-    )
+    const matchesSearch =
+      searchTerm === "" ||
+      (app.first_name &&
+        app.first_name.toLowerCase().includes(searchString)) ||
+      (app.last_name &&
+        app.last_name.toLowerCase().includes(searchString)) ||
+      (app.slum_id &&
+        app.slum_id.toLowerCase().includes(searchString)) ||
+      (app.aadhaar_number &&
+        app.aadhaar_number.includes(searchString)) ||
+      (app.cluster_number &&
+        app.cluster_number.toLowerCase().includes(searchString)) ||
+      (app.slum_use &&
+        app.slum_use.toLowerCase().includes(searchString))
 
-    const matchesHutUse = hutUseFilter === "" || (
-      app.slum_use && app.slum_use.toLowerCase().trim() === hutUseFilter.toLowerCase().trim()
-    )
-
-    const matchesSurveyStatus = surveyStatusFilter === "" || (() => {
-      if (!app.survey_status || app.survey_status === null) {
-        return surveyStatusFilter.toLowerCase().trim() === "pending"
-      }
-
-      const appStatus = app.survey_status.toLowerCase().trim()
-      const filterStatus = surveyStatusFilter.toLowerCase().trim()
-
-      if (appStatus === filterStatus) return true
-
-      const statusMappings = {
-        'pending': ['pending', 'pendding', 'panding'],
-        'completed': ['completed', 'complete', 'complated'],
-        'ready for survey': ['ready for survey', 'ready_for_survey', 'readyforsurvey', 'ready survey'],
-        'hut appose': ['hut appose', 'hut_appose', 'hutappose', 'hut oppose']
-      }
-
-      for (const [key, variations] of Object.entries(statusMappings)) {
-        if (variations.includes(filterStatus) && variations.includes(appStatus)) {
-          return true
-        }
-      }
-
-      return false
-    })()
-
-    return matchesSearch && matchesHutUse && matchesSurveyStatus
+    return matchesSearch
   })
-
   const getFamilyMembers = (app) => {
     const members = []
     for (let i = 1; i <= 6; i++) {
@@ -14842,9 +14896,11 @@ const generateJodpatra4 = async (data) => {
                 <th className="Alp-th">
                   Survey Status
                 </th>
+               {role !== "surveyor" && (
                 <th className="Alp-th">
                   Action
                 </th>
+                )}
               </tr>
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
@@ -14912,6 +14968,8 @@ const generateJodpatra4 = async (data) => {
                         {app.survey_status || "Pending"}
                       </span>
                     </td>
+
+                  {role !== "surveyor" && (
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                       <div className="flex items-center gap-2">
                         <button
@@ -14952,6 +15010,7 @@ const generateJodpatra4 = async (data) => {
                         </button>
                       </div>
                     </td>
+                     )}
                   </tr>
                 ))
               )}

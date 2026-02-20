@@ -6913,6 +6913,18 @@ const [activeCamera, setActiveCamera] = useState(null)
 const webcamRef = useRef(null)
 
 
+ let role = null;
+let user_id = null;
+
+if (typeof window !== "undefined") {
+  const userData = localStorage.getItem("user");
+  if (userData) {
+    const parsedUser = JSON.parse(userData);
+    role = parsedUser?.role;
+    user_id = parsedUser?.id;   // ✅ ADD THIS
+  }
+}
+
   useEffect(() => {
     fetchClusters()
     fetchSlums()
@@ -7387,6 +7399,7 @@ const handleFileChange = (e) => {
       if (!token) throw new Error("No authentication token found")
 
       let currentUser = getUser()
+      console.log("dndndndndndn",currentUser)
       if (!currentUser) currentUser = await fetchAndSetUserProfile()
 
       const formDataToSend = new FormData()
@@ -7405,7 +7418,7 @@ if (residency_since instanceof Date) {
   ).padStart(2, "0")}-${residency_since.getFullYear()}`
 }
 
-      const updatedValues = {...cleanValues,residency_since: formattedResidency,submittedBy: currentUser?.user_id || "N/A" }
+      const updatedValues = {...cleanValues,residency_since: formattedResidency,submittedBy:user_id || "N/A" }
 
       Object.keys(updatedValues).forEach(key => {
         if (updatedValues[key] !== null && updatedValues[key] !== undefined && updatedValues[key] !== '') {
