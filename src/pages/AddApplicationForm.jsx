@@ -7149,9 +7149,9 @@ const handleSaveDraft = async (values) => {
 
     setSuccess("Draft saved successfully ✅")
 
-    setTimeout(() => {
-      onSuccess?.("draft")
-    }, 1000)
+    // setTimeout(() => {
+    //   onSuccess?.("draft")
+    // }, 1000)
 
   } catch (err) {
     setError("Draft save failed")
@@ -7834,7 +7834,7 @@ if (residency_since instanceof Date) {
               </div>
             </div>
 
-            <div className="grid md:grid-cols-2 gap-6">
+            {/* <div className="grid md:grid-cols-2 gap-6">
               <div className="flex items-center space-x-3 p-4 bg-gray-50 rounded-lg">
                 <Field type="checkbox" name="plan_submitted" className="h-5 w-5 text-blue-600" />
                 <label className="text-sm font-medium text-gray-700">योजना सादर केली आहे का?</label>
@@ -7843,7 +7843,36 @@ if (residency_since instanceof Date) {
                 <Field type="checkbox" name="society_registered" className="h-5 w-5 text-blue-600" />
                 <label className="text-sm font-medium text-gray-700">सोसायटी नियोजित आहे का?</label>
               </div>
-            </div>
+            </div> */}
+
+            {formik.values.survey_status !== "Hut Appose" &&
+ formik.values.survey_status !== "Hut Denied" && (
+
+  <div className="grid md:grid-cols-2 gap-6">
+    <div className="flex items-center space-x-3 p-4 bg-gray-50 rounded-lg">
+      <Field
+        type="checkbox"
+        name="plan_submitted"
+        className="h-5 w-5 text-blue-600"
+      />
+      <label className="text-sm font-medium text-gray-700">
+        योजना सादर केली आहे का?
+      </label>
+    </div>
+
+    <div className="flex items-center space-x-3 p-4 bg-gray-50 rounded-lg">
+      <Field
+        type="checkbox"
+        name="society_registered"
+        className="h-5 w-5 text-blue-600"
+      />
+      <label className="text-sm font-medium text-gray-700">
+        सोसायटी नियोजित आहे का?
+      </label>
+    </div>
+  </div>
+
+)}
           </div>
         )
 

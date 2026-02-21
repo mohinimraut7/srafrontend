@@ -2,7 +2,7 @@
     { "value":"","label": "Select Role" },
     { "value":"admin","label":"Admin"},
     { "value":"surveyor","label":"Surveyor" },
-    { "value":"surveyor admin","label":"Surveyor admin" },
+    { "value":"Supervisor","label":"Supervisor" },
     { "value":"editor","label":"Editor" }
   ]
 

@@ -188,71 +188,160 @@ const Sidebar = ({ isCollapsed, currentPage, currentMode, onNavigate }) => {
     onNavigate(viewId, currentMode)
   }
 
-  return (
-    <div
-      className={`bg-white border-r border-gray-200 transition-all duration-300 ${
-        isCollapsed ? "w-16" : "w-64"
-      } flex flex-col h-full shadow-lg`}
-    >
-      <div className="p-4 border-b border-gray-200">
-        <div className="flex items-center space-x-3">
-          {!isCollapsed && (
-            <div className="flex items-center space-x-3">
-              <div className="w-30 h-30 rounded-xl overflow-hidden">
-                <img src="/images/bmclogo.png" alt="Logo" width={48} height={48} className="w-full h-full object-cover" />
-              </div>
-              <div>
-                <h2 className="text-lg font-bold text-gray-900">BMC</h2>
-              </div>
+  // return (
+  //   <div
+  //     className={`bg-white border-r border-gray-200 transition-all duration-300 ${
+  //       isCollapsed ? "w-16" : "w-64"
+  //     } flex flex-col h-full shadow-lg`}
+  //   >
+  //     <div className="p-4 border-b border-gray-200">
+  //       <div className="flex items-center space-x-3">
+  //         {!isCollapsed && (
+  //           <div className="flex items-center space-x-3">
+  //             <div className="w-30 h-30 rounded-xl overflow-hidden">
+  //               <img src="/images/bmclogo.png" alt="Logo" width={48} height={48} className="w-full h-full object-cover" />
+  //             </div>
+  //             <div>
+  //               <h2 className="text-lg font-bold text-gray-900">BMC</h2>
+  //             </div>
+  //           </div>
+  //         )}
+  //       </div>
+  //     </div>
+
+  //     <div className="p-4 border-b border-gray-200">
+  //       <button
+  //         onClick={() => onNavigate("scheme-selection")}
+  //         className="w-full flex items-center space-x-3 px-3 py-2 rounded-lg text-sm font-medium text-gray-600 hover:bg-gray-100 hover:text-gray-900 transition-colors"
+  //         title={isCollapsed ? "Back to Schemes" : undefined}
+  //       >
+  //         <ArrowLeft className="h-5 w-5 flex-shrink-0" />
+  //         {!isCollapsed && <span>Back</span>}
+  //       </button>
+  //     </div>
+
+  //     <nav className="flex-1 p-4">
+  //       <ul className="space-y-2">
+  //         {filteredNavigationItems.map((item) => (
+  //           <li key={item.id}>
+  //             <button
+  //               onClick={() => handleNavigation(item.id)}
+  //               className={`w-full flex items-center space-x-3 px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
+  //                 currentPage === item.id
+  //                   ? "bg-orange-100 text-orange-700 border-r-2 border-orange-500"
+  //                   : "text-gray-600 hover:bg-gray-100 hover:text-gray-900"
+  //               }`}
+  //               title={isCollapsed ? item.label : undefined}
+  //             >
+  //               <item.icon className="h-5 w-5 flex-shrink-0" />
+  //               {!isCollapsed && <span>{item.label}</span>}
+  //             </button>
+  //           </li>
+  //         ))}
+  //       </ul>
+  //     </nav>
+
+  //     <div className="p-4 border-t border-gray-200">
+  //       <button
+  //         onClick={handleLogout}
+  //         className="w-full flex items-center space-x-3 px-3 py-2 rounded-lg text-sm font-medium text-red-600 hover:bg-red-50 transition-colors"
+  //         title={isCollapsed ? "Logout" : undefined}
+  //       >
+  //         <LogOut className="h-5 w-5 flex-shrink-0" />
+  //         {!isCollapsed && <span>Logout</span>}
+  //       </button>
+  //     </div>
+  //   </div>
+  // )
+
+ return (
+  <div
+    className={`bg-white border-r border-gray-200 
+    text-gray-800 transition-all duration-300
+    ${isCollapsed ? "w-16" : "w-64"} 
+    flex flex-col h-full shadow-xl`}
+  >
+
+    {/* LOGO HEADER */}
+    <div className="p-4 border-b border-gray-200">
+      <div className="flex items-center space-x-3">
+        {!isCollapsed && (
+          <div className="flex items-center space-x-3">
+            <div className="w-12 h-12 rounded-xl overflow-hidden shadow-md ring-2 ring-orange-500">
+              <img
+                src="/images/bmclogo.png"
+                alt="Logo"
+                className="w-full h-full object-cover"
+              />
             </div>
-          )}
-        </div>
-      </div>
-
-      <div className="p-4 border-b border-gray-200">
-        <button
-          onClick={() => onNavigate("scheme-selection")}
-          className="w-full flex items-center space-x-3 px-3 py-2 rounded-lg text-sm font-medium text-gray-600 hover:bg-gray-100 hover:text-gray-900 transition-colors"
-          title={isCollapsed ? "Back to Schemes" : undefined}
-        >
-          <ArrowLeft className="h-5 w-5 flex-shrink-0" />
-          {!isCollapsed && <span>Back</span>}
-        </button>
-      </div>
-
-      <nav className="flex-1 p-4">
-        <ul className="space-y-2">
-          {filteredNavigationItems.map((item) => (
-            <li key={item.id}>
-              <button
-                onClick={() => handleNavigation(item.id)}
-                className={`w-full flex items-center space-x-3 px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
-                  currentPage === item.id
-                    ? "bg-orange-100 text-orange-700 border-r-2 border-orange-500"
-                    : "text-gray-600 hover:bg-gray-100 hover:text-gray-900"
-                }`}
-                title={isCollapsed ? item.label : undefined}
-              >
-                <item.icon className="h-5 w-5 flex-shrink-0" />
-                {!isCollapsed && <span>{item.label}</span>}
-              </button>
-            </li>
-          ))}
-        </ul>
-      </nav>
-
-      <div className="p-4 border-t border-gray-200">
-        <button
-          onClick={handleLogout}
-          className="w-full flex items-center space-x-3 px-3 py-2 rounded-lg text-sm font-medium text-red-600 hover:bg-red-50 transition-colors"
-          title={isCollapsed ? "Logout" : undefined}
-        >
-          <LogOut className="h-5 w-5 flex-shrink-0" />
-          {!isCollapsed && <span>Logout</span>}
-        </button>
+            <div>
+              <h2 className="text-lg font-bold tracking-wide text-orange-600">
+                BMC Portal
+              </h2>
+              <p className="text-xs text-gray-500">Survey Management</p>
+            </div>
+          </div>
+        )}
       </div>
     </div>
-  )
+
+    {/* BACK BUTTON */}
+    <div className="p-4 border-b border-gray-200">
+      <button
+        onClick={() => onNavigate("scheme-selection")}
+        className="w-full flex items-center space-x-3 px-3 py-2 rounded-lg text-sm font-medium 
+        text-gray-600 hover:bg-orange-50 hover:text-orange-600 transition-all duration-300"
+        title={isCollapsed ? "Back to Schemes" : undefined}
+      >
+        <ArrowLeft className="h-5 w-5 flex-shrink-0" />
+        {!isCollapsed && <span>Back</span>}
+      </button>
+    </div>
+
+    {/* NAVIGATION */}
+    <nav className="flex-1 p-4">
+      <ul className="space-y-2">
+        {filteredNavigationItems.map((item) => (
+          <li key={item.id}>
+            <button
+              onClick={() => handleNavigation(item.id)}
+              className={`group w-full flex items-center space-x-3 px-4 py-3 
+              rounded-xl text-sm font-medium transition-all duration-300 relative
+              ${
+                currentPage === item.id
+                  ? "bg-orange-100 text-orange-700 shadow-sm"
+                  : "text-gray-600 hover:bg-gray-100 hover:text-orange-600"
+              }`}
+              title={isCollapsed ? item.label : undefined}
+            >
+              <item.icon className="h-5 w-5 flex-shrink-0 transition-transform duration-300 group-hover:scale-110" />
+              {!isCollapsed && <span>{item.label}</span>}
+
+              {/* ACTIVE INDICATOR */}
+              {currentPage === item.id && (
+                <span className="absolute right-0 top-0 h-full w-1 bg-orange-500 rounded-l-lg"></span>
+              )}
+            </button>
+          </li>
+        ))}
+      </ul>
+    </nav>
+
+    {/* LOGOUT */}
+    <div className="p-4 border-t border-gray-200">
+      <button
+        onClick={handleLogout}
+        className="w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-sm font-medium
+        text-red-600 hover:bg-red-50 transition-all duration-300"
+        title={isCollapsed ? "Logout" : undefined}
+      >
+        <LogOut className="h-5 w-5 flex-shrink-0" />
+        {!isCollapsed && <span>Logout</span>}
+      </button>
+    </div>
+
+  </div>
+)
 }
 
 export default Sidebar

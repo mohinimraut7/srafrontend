@@ -14679,9 +14679,9 @@ const filteredApplications = applications
   }
 
   return (
-    <div style={{backgroundColor:'#F9FAFB'}} className="min-h-screen bg-gray-50 p-4">
-      {/* Status Count Cards */}
-      <div className="bg-white rounded-lg shadow-sm p-6 mb-8">
+    <div style={{backgroundColor:'#F9FAFB'}} className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-orange-50 p-4">
+   
+      {/* <div className="bg-white rounded-lg shadow-sm p-6 mb-8">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           <div className="text-center p-4 bg-blue-100 rounded-lg">
             <div className="text-2xl font-bold text-blue-600">{statusCounts.completed}</div>
@@ -14700,17 +14700,96 @@ const filteredApplications = applications
             <div className="text-purple-800 text-sm font-medium">Hut Denied</div>
           </div>
         </div>
+      </div> */}
+
+      <div className="bg-white rounded-3xl shadow-md border border-gray-100 p-6 mb-10">
+
+  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+
+   
+    <div className="relative overflow-hidden rounded-2xl p-6 
+      bg-gradient-to-br from-blue-50 to-blue-100
+      hover:shadow-xl hover:-translate-y-1
+      transition-all duration-300 group">
+
+      <div className="absolute -top-6 -right-6 w-20 h-20 bg-blue-200 rounded-full opacity-30 group-hover:scale-125 transition-all duration-500"></div>
+
+      <div className="relative">
+        <div className="text-3xl font-bold text-blue-700">
+          {statusCounts.completed}
+        </div>
+        <div className="text-blue-900 text-sm font-semibold mt-1">
+          Completed
+        </div>
       </div>
+    </div>
+
+ 
+    <div className="relative overflow-hidden rounded-2xl p-6 
+      bg-gradient-to-br from-green-50 to-green-100
+      hover:shadow-xl hover:-translate-y-1
+      transition-all duration-300 group">
+
+      <div className="absolute -top-6 -right-6 w-20 h-20 bg-green-200 rounded-full opacity-30 group-hover:scale-125 transition-all duration-500"></div>
+
+      <div className="relative">
+        <div className="text-3xl font-bold text-green-700">
+          {statusCounts.pending}
+        </div>
+        <div className="text-green-900 text-sm font-semibold mt-1">
+          Pending
+        </div>
+      </div>
+    </div>
+
+    
+    <div className="relative overflow-hidden rounded-2xl p-6 
+      bg-gradient-to-br from-orange-50 to-orange-100
+      hover:shadow-xl hover:-translate-y-1
+      transition-all duration-300 group">
+
+      <div className="absolute -top-6 -right-6 w-20 h-20 bg-orange-200 rounded-full opacity-30 group-hover:scale-125 transition-all duration-500"></div>
+
+      <div className="relative">
+        <div className="text-3xl font-bold text-orange-700">
+          {statusCounts.hutAppose}
+        </div>
+        <div className="text-orange-900 text-sm font-semibold mt-1">
+          Hut Appose
+        </div>
+      </div>
+    </div>
+
+    
+    <div className="relative overflow-hidden rounded-2xl p-6 
+      bg-gradient-to-br from-purple-50 to-purple-100
+      hover:shadow-xl hover:-translate-y-1
+      transition-all duration-300 group">
+
+      <div className="absolute -top-6 -right-6 w-20 h-20 bg-purple-200 rounded-full opacity-30 group-hover:scale-125 transition-all duration-500"></div>
+
+      <div className="relative">
+        <div className="text-3xl font-bold text-purple-700">
+          {statusCounts.hutDenied}
+        </div>
+        <div className="text-purple-900 text-sm font-semibold mt-1">
+          Hut Denied
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
 
       {/* Header */}
-      <div className="mb-9 flex justify-between items-center">
+      <div className="mb-9 flex flex-col sm:flex-row justify-between items-center gap-4">
         <div>
-          <h1 style={{color:'#4A5565',textTransform:'uppercase'}} className="text-xl font-bold mb-2">BMC Applications</h1>
-          <p className="text-gray-600 text-lg">
+          <h2 style={{color:'#4A5565',textTransform:'uppercase'}} className="text-2xl font-bold tracking-wide text-gray-800">BMC Applications</h2>
+          {/* <p className="text-gray-600 text-lg">
             Complete view of BMC applications ({applications.length} total records)
-          </p>
+          </p> */}
         </div>
-
+{/* 
         <button
           onClick={() => setShowAddForm(true)}
           className="text-white px-2 py-1.5 rounded-lg hover:bg-orange-700 flex items-center gap-1.5 font-medium"
@@ -14718,7 +14797,23 @@ const filteredApplications = applications
         >
           <Plus size={20} />
           Add Application
-        </button>
+        </button> */}
+        <button
+  onClick={() => setShowAddForm(true)}
+  className="group relative inline-flex items-center gap-2 
+  px-6 py-3 rounded-xl font-semibold text-white 
+  bg-gradient-to-r from-orange-500 to-orange-600
+  hover:from-orange-600 hover:to-orange-700
+  shadow-md hover:shadow-xl 
+  transition-all duration-300 
+  hover:-translate-y-1 active:scale-95"
+>
+  <Plus 
+    size={18} 
+    className="transition-transform duration-300 group-hover:rotate-90" 
+  />
+  Add Application
+</button>
       </div>
 
       {/* Success/Error Messages */}
@@ -14744,7 +14839,7 @@ const filteredApplications = applications
       )}
 
       {/* Search Bar and Filters */}
-      <div className="bg-white rounded-lg shadow-md p-6 mb-15">
+      {/* <div className="bg-white rounded-lg shadow-md p-6 mb-15">
         <div className="relative mb-4">
           <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
             <Search className="text-gray-800" size={20} />
@@ -14752,7 +14847,7 @@ const filteredApplications = applications
           <input
             type="text"
             placeholder="Search by name, slum ID, area, cluster number, or Aadhaar number..."
-            className="w-240 pl-10 pr-4 py-3 border border-[#4A5565] rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent text-lg"
+            className="w-full pl-10 pr-4 py-3 border border-[#4A5565] rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent text-base sm:text-lg"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />
@@ -14775,7 +14870,7 @@ const filteredApplications = applications
               <option value="Social">Social</option>
               <option value="Devotional">Devotional</option>
               <option value="Educational">Educational</option>
-              {/* <option value="Residential / Commercial">Residential / Commercial</option> */}
+             
             </select>
           </div>
 
@@ -14789,9 +14884,7 @@ const filteredApplications = applications
               className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent bg-white"
             >
               <option value="">All Statuses</option>
-              {/* <option value="Pending">Pending</option>
-              <option value="Completed">Completed</option> */}
-              {/* <option value="Ready For Survey">Ready For Survey</option> */}
+          
                <option value="readytosurvey">Ready To Survey</option>
               <option value="Hut Appose">Hut Appose</option>
                 <option value="Hut Denied">Hut Denied</option>
@@ -14856,10 +14949,171 @@ const filteredApplications = applications
             </p>
           </div>
         )}
+      </div> */}
+
+
+
+
+
+
+
+
+
+
+
+
+      <div className="bg-white rounded-2xl shadow-md border border-gray-200 p-6 mb-10">
+
+  <div className="relative mb-6">
+    <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+      <Search className="text-gray-500" size={18} />
+    </div>
+
+    <input
+      type="text"
+      placeholder="Search by name, slum ID, area, cluster number, or Aadhaar number..."
+      className="w-full pl-12 pr-4 py-3 border border-gray-300 rounded-xl 
+                 focus:ring-2 focus:ring-orange-500 focus:border-orange-400
+                 transition-all duration-200 text-sm sm:text-base bg-gray-50"
+      value={searchTerm}
+      onChange={(e) => setSearchTerm(e.target.value)}
+    />
+  </div>
+
+
+  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+
+   
+    <div>
+      <label className="block text-sm font-semibold text-gray-700 mb-2">
+        Filter by Use of Hut
+      </label>
+
+      <select
+        value={hutUseFilter}
+        onChange={(e) => setHutUseFilter(e.target.value)}
+        className="w-full px-4 py-3 border border-gray-300 rounded-xl 
+                   focus:ring-2 focus:ring-orange-500 focus:border-orange-400
+                   bg-gray-50 transition"
+      >
+        <option value="">All Uses</option>
+        <option value="Residential">Residential</option>
+        <option value="Commercial">Commercial</option>
+        <option value="combine">Combine</option>
+        <option value="Social">Social</option>
+        <option value="Devotional">Devotional</option>
+        <option value="Educational">Educational</option>
+      </select>
+    </div>
+
+
+    <div>
+      <label className="block text-sm font-semibold text-gray-700 mb-2">
+        Filter by Survey Status
+      </label>
+
+      <select
+        value={surveyStatusFilter}
+        onChange={(e) => setSurveyStatusFilter(e.target.value)}
+        className="w-full px-4 py-3 border border-gray-300 rounded-xl 
+                   focus:ring-2 focus:ring-orange-500 focus:border-orange-400
+                   bg-gray-50 transition"
+      >
+        <option value="">All Statuses</option>
+        <option value="readytosurvey">Ready To Survey</option>
+        <option value="Hut Appose">Hut Appose</option>
+        <option value="Hut Denied">Hut Denied</option>
+      </select>
+    </div>
+
+
+    <div className="flex items-end">
+      
+      <button
+  onClick={() => {
+    setHutUseFilter("")
+    setSurveyStatusFilter("")
+    setSearchTerm("")
+  }}
+  className="inline-flex items-center gap-2 
+  px-6 py-3 rounded-xl font-semibold
+  bg-white border border-gray-300
+  text-gray-700 
+  hover:bg-gray-100 hover:border-orange-400 hover:text-orange-600
+  shadow-sm hover:shadow-md
+  transition-all duration-300 active:scale-95"
+>
+  Clear Filters
+</button>
+    </div>
+
+  </div>
+
+  {/* ACTIVE FILTERS */}
+  {(hutUseFilter || surveyStatusFilter || searchTerm) && (
+    <div className="mt-6 p-4 bg-orange-50 border border-orange-100 rounded-xl">
+
+      <p className="text-sm font-semibold text-gray-700 mb-3">
+        Active Filters
+      </p>
+
+      <div className="flex flex-wrap gap-3">
+
+        {searchTerm && (
+          <span className="inline-flex items-center px-3 py-1 text-xs 
+                           bg-blue-100 text-blue-700 rounded-full shadow-sm">
+            Search: "{searchTerm}"
+            <button
+              onClick={() => setSearchTerm("")}
+              className="ml-2 text-blue-600 hover:text-blue-800"
+            >
+              <X size={12} />
+            </button>
+          </span>
+        )}
+
+        {hutUseFilter && (
+          <span className="inline-flex items-center px-3 py-1 text-xs 
+                           bg-green-100 text-green-700 rounded-full shadow-sm">
+            Use: {hutUseFilter}
+            <button
+              onClick={() => setHutUseFilter("")}
+              className="ml-2 text-green-600 hover:text-green-800"
+            >
+              <X size={12} />
+            </button>
+          </span>
+        )}
+
+        {surveyStatusFilter && (
+          <span className="inline-flex items-center px-3 py-1 text-xs 
+                           bg-orange-100 text-orange-700 rounded-full shadow-sm">
+            Status: {surveyStatusFilter}
+            <button
+              onClick={() => setSurveyStatusFilter("")}
+              className="ml-2 text-orange-600 hover:text-orange-800"
+            >
+              <X size={12} />
+            </button>
+          </span>
+        )}
+
       </div>
 
+      <p className="text-xs text-gray-600 mt-3">
+        Showing <span className="font-semibold text-orange-600">
+          {filteredApplications.length}
+        </span> of {applications.length} applications
+      </p>
+
+    </div>
+  )}
+
+</div>
+
       {/* Table */}
-      <div className="bg-white rounded-lg shadow-lg overflow-hidden">
+      
+      {/* <div className="bg-white rounded-lg shadow-lg overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full">
             <thead className="Alp-thead">
@@ -14932,9 +15186,7 @@ const filteredApplications = applications
                       </div>
                     </td>
                     <td className="Alp-td">
-                      {/* <div className="truncate">
-                        {app.current_address || app.name_of_slum_area}
-                      </div> */}
+                    
                       <div className="text-gray-500 text-xs">
                         {app.current_pincode && `PIN: ${app.current_pincode}`}
                       </div>
@@ -14981,14 +15233,7 @@ const filteredApplications = applications
                           <Eye size={20} />
                         </button>
 
-                         {/* <button
-                          onClick={() => openModal(app)}
-                          className="text-blue-600 hover:text-blue-900 transition-colors"
-                          title="View Details"
-                        >
-                            -----
-                          <Edit size={20} />
-                        </button> */}
+                         
 <button
   onClick={() => {
     setEditingApplication(app)
@@ -15018,7 +15263,167 @@ const filteredApplications = applications
             </tbody>
           </table>
         </div>
-      </div>
+      </div> */}
+
+      {/* Table */}
+<div className="bg-white rounded-2xl shadow-md border border-gray-200 overflow-hidden">
+
+  <div className="overflow-x-auto">
+    <table className="w-full text-sm text-left">
+
+      {/* HEADER */}
+      <thead className="bg-gradient-to-r from-orange-100 to-orange-50 
+text-[#2D3748] uppercase tracking-wider font-bold text-xs" >
+        <tr>
+          <th className="px-6 py-4">Serial No.</th>
+          <th className="px-6 py-4">Cluster Number</th>
+          <th className="px-6 py-4">Hut ID</th>
+          <th className="px-6 py-4">Name</th>
+          <th className="px-6 py-4">Address</th>
+          <th className="px-6 py-4 text-center">Slum Floor</th>
+          <th className="px-6 py-4">Use of Hut</th>
+          <th className="px-6 py-4">Hut Area (sq.m)</th>
+          <th className="px-6 py-4">Date of Survey</th>
+          <th className="px-6 py-4">Done By</th>
+          <th className="px-6 py-4">Survey Status</th>
+          {role !== "surveyor" && (
+            <th className="px-6 py-4 text-center">Action</th>
+          )}
+        </tr>
+      </thead>
+
+      {/* BODY */}
+      <tbody className="divide-y divide-gray-200">
+
+        {filteredApplications.length === 0 ? (
+          <tr>
+            <td colSpan="12" className="px-6 py-12 text-center text-gray-500">
+              No applications found matching your search criteria
+            </td>
+          </tr>
+        ) : (
+          filteredApplications.map((app, index) => (
+
+            <tr
+              key={app.id}
+              className="odd:bg-white even:bg-gray-50 hover:bg-orange-50 hover:scale-[1.002] transition-all duration-200"
+            >
+
+              <td className="px-6 py-4 font-medium text-gray-700">
+                {app.id || index + 1}
+              </td>
+
+              <td className="px-6 py-4 text-gray-700">
+                {app.cluster_number || "N/A"}
+              </td>
+
+              <td className="px-6 py-4 text-gray-700">
+                {app.slum_id || "N/A"}
+              </td>
+
+              {/* NAME COLUMN */}
+              <td className="px-6 py-4">
+                <div className="font-semibold text-gray-800 truncate">
+                  {app.first_name} {app.middle_name && `${app.middle_name} `}{app.last_name}
+                </div>
+                <div className="text-gray-500 text-xs truncate">
+                  {app.gender} • {app.aadhaar_number}
+                </div>
+              </td>
+
+              {/* ADDRESS */}
+              <td className="px-6 py-4 text-gray-600">
+                <div className="text-xs">
+                  {app.current_pincode && `PIN: ${app.current_pincode}`}
+                </div>
+              </td>
+
+              {/* FLOOR */}
+              <td className="px-6 py-4 text-center">
+                {app.slum_floor === "G" ? (
+                  <span className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-green-100 text-green-700 font-semibold shadow-sm">
+                    {app.slum_floor}
+                  </span>
+                ) : (
+                  <span className="text-gray-700">{app.slum_floor || "N/A"}</span>
+                )}
+              </td>
+
+              {/* USE */}
+              <td className="px-6 py-4 text-gray-700">
+                {app.slum_use || "N/A"}
+              </td>
+
+              {/* AREA */}
+              <td className="px-6 py-4">
+                <div className="font-medium text-gray-800">{app.area_sq_m}</div>
+                <div className="text-gray-500 text-xs">
+                  {app.length && app.width && `${app.length}×${app.width}m`}
+                </div>
+              </td>
+
+              {/* DATE */}
+              <td className="px-6 py-4 text-gray-700">
+                {app.created_date || "N/A"}
+              </td>
+
+              {/* DONE BY */}
+              <td className="px-6 py-4 text-gray-700">
+                {app.submittedBy || "-"}
+              </td>
+
+              {/* STATUS */}
+              <td className="px-6 py-4">
+                <span className={`inline-flex px-3 py-1 text-xs font-semibold rounded-full shadow-sm ${getStatusColor(app.survey_status)}`}>
+                  {app.survey_status || "Pending"}
+                </span>
+              </td>
+
+              {/* ACTION */}
+              {role !== "surveyor" && (
+                <td className="px-6 py-4 text-center">
+                  <div className="flex items-center justify-center gap-3">
+
+                    <button
+                      onClick={() => openModal(app)}
+                      className="p-2 rounded-lg bg-blue-50 text-blue-600 hover:bg-blue-100 transition"
+                      title="View Details"
+                    >
+                      <Eye size={18} />
+                    </button>
+
+                    <button
+                      onClick={() => {
+                        setEditingApplication(app)
+                        setShowEditForm(true)
+                      }}
+                      className="p-2 rounded-lg bg-orange-50 text-orange-600 hover:bg-orange-100 transition"
+                      title="Edit Application"
+                    >
+                      <Edit size={18} />
+                    </button>
+
+                    <button
+                      onClick={() => generateAndDownloadPdfs(app)}
+                      disabled={generatingPdfs}
+                      className="p-2 rounded-lg bg-green-50 text-green-600 hover:bg-green-100 transition disabled:opacity-50"
+                      title="Download Jodpatra"
+                    >
+                      <Download size={18} />
+                    </button>
+
+                  </div>
+                </td>
+              )}
+
+            </tr>
+          ))
+        )}
+
+      </tbody>
+    </table>
+  </div>
+</div>
 
       {/* Document Modal */}
       {showDocumentModal && selectedDocument && (

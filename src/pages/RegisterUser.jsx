@@ -13,6 +13,7 @@ const RegisterUser = ({onNavigate}) => {
     mobileNumber: "",
     password: '',
     role: '',
+    address: '', 
     district: '',
     taluka: ''
   });
@@ -62,13 +63,17 @@ const RegisterUser = ({onNavigate}) => {
       newErrors.role = 'Role is required';
     }
 
-    if (!formData.district) {
-      newErrors.district = 'District is required';
-    }
+    // if (!formData.district) {
+    //   newErrors.district = 'District is required';
+    // }
 
-    if (!formData.taluka) {
-      newErrors.taluka = 'Taluka is required';
-    }
+    // if (!formData.taluka) {
+    //   newErrors.taluka = 'Taluka is required';
+    // }
+
+    if (!formData.address.trim()) {
+  newErrors.address = 'Address is required';
+}
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -117,8 +122,9 @@ const BASE_URL = import.meta.env.VITE_BASE_URL || "https://sra.saavi.co.in"
         mobileNumber: formData.mobileNumber,
         password: formData.password,
         role: formData.role,
-        district: formData.district,
-        taluka: formData.taluka
+        address: formData.address,
+        // district: formData.district,
+        // taluka: formData.taluka
       })
     });
 
@@ -137,6 +143,7 @@ const BASE_URL = import.meta.env.VITE_BASE_URL || "https://sra.saavi.co.in"
       mobilNumber:"",
       password: "",
       role: "",
+      address: "", 
       district: "",
       taluka: ""
     });
@@ -158,8 +165,9 @@ const BASE_URL = import.meta.env.VITE_BASE_URL || "https://sra.saavi.co.in"
       email: '',
       password: '',
       role: '',
-      district: '',
-      taluka: ''
+      address: ''
+      // district: '',
+      // taluka: ''
     });
     setErrors({});
   };
@@ -333,62 +341,11 @@ const BASE_URL = import.meta.env.VITE_BASE_URL || "https://sra.saavi.co.in"
               )}
             </div>
 
-            {/* <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-         
-              <div>
-                <label className="block text-slate-700 font-medium mb-2">
-                  <Building className="inline w-4 h-4 mr-2" />
-                  District
-                </label>
-                <input
-                  type="text"
-                  name="district"
-                  value={formData.district}
-                  onChange={handleInputChange}
-                  className={`w-full px-4 py-3 rounded-lg border-2 transition-colors duration-200 focus:outline-none ${
-                    errors.district 
-                      ? 'border-red-300 focus:border-red-500' 
-                      : 'border-gray-200 focus:border-orange-400'
-                  }`}
-                  placeholder="Enter district"
-                />
-                {errors.district && (
-                  <p className="text-red-500 text-sm mt-1 flex items-center">
-                    <X className="w-4 h-4 mr-1" />
-                    {errors.district}
-                  </p>
-                )}
-              </div>
-           
-              <div>
-                <label className="block text-slate-700 font-medium mb-2">
-                  <MapPin className="inline w-4 h-4 mr-2" />
-                  Taluka
-                </label>
-                <input
-                  type="text"
-                  name="taluka"
-                  value={formData.taluka}
-                  onChange={handleInputChange}
-                  className={`w-full px-4 py-3 rounded-lg border-2 transition-colors duration-200 focus:outline-none ${
-                    errors.taluka 
-                      ? 'border-red-300 focus:border-red-500' 
-                      : 'border-gray-200 focus:border-orange-400'
-                  }`}
-                  placeholder="Enter taluka"
-                />
-                {errors.taluka && (
-                  <p className="text-red-500 text-sm mt-1 flex items-center">
-                    <X className="w-4 h-4 mr-1" />
-                    {errors.taluka}
-                  </p>
-                )}
-              </div>
-            </div> */}
+          
 
-<div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+{/* <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
 
-  {/* District Dropdown */}
+  
   <div>
     <label className="block text-slate-700 font-medium mb-2">
       <Building className="inline w-4 h-4 mr-2" />
@@ -432,7 +389,7 @@ const BASE_URL = import.meta.env.VITE_BASE_URL || "https://sra.saavi.co.in"
     )}
   </div>
 
-  {/* Taluka Dropdown */}
+  
   <div>
     <label className="block text-slate-700 font-medium mb-2">
       <MapPin className="inline w-4 h-4 mr-2" />
@@ -465,9 +422,35 @@ const BASE_URL = import.meta.env.VITE_BASE_URL || "https://sra.saavi.co.in"
       </p>
     )}
   </div>
+</div> */}
+
+{/* Address */}
+<div>
+  <label className="block text-slate-700 font-medium mb-2">
+    <MapPin className="inline w-4 h-4 mr-2" />
+    Address
+  </label>
+
+  <textarea
+    name="address"
+    value={formData.address}
+    onChange={handleInputChange}
+    rows="3"
+    className={`w-full px-4 py-3 rounded-lg border-2 transition-colors duration-200 focus:outline-none ${
+      errors.address
+        ? 'border-red-300 focus:border-red-500'
+        : 'border-gray-200 focus:border-orange-400'
+    }`}
+    placeholder="Enter full address"
+  />
+
+  {errors.address && (
+    <p className="text-red-500 text-sm mt-1 flex items-center">
+      <X className="w-4 h-4 mr-1" />
+      {errors.address}
+    </p>
+  )}
 </div>
-
-
 
 
             {/* Action Buttons */}
