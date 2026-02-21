@@ -6855,6 +6855,7 @@ const base64ToFile = (base64, filename, mimeType) => {
 
 
 
+
 // 🔥 ADD THESE FUNCTIONS HERE 🔥
 
 const fileToBase64Object = (file) => {
