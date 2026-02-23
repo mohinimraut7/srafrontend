@@ -116,11 +116,11 @@
   />
 </div>
             <h2 className="text-xl font-bold mt-4">BMC</h2>
-            <p className="text-sm text-gray-500">Technology for Social Impact</p>
+            {/* <p className="text-sm text-gray-500">Technology for Social Impact</p>
             <span className="inline-flex items-center mt-2 px-3 py-1 bg-orange-100 text-orange-700 rounded-full text-xs">
               <Shield className="h-3 w-3 mr-1" />
               WCD - Maharashtra Dashboard
-            </span>
+            </span> */}
           </div>
 
           {/* <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 mb-4">

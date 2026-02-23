@@ -1527,7 +1527,8 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 import toast, { Toaster } from "react-hot-toast";
 import './ClusterMasterPage.css';
-import wardsData from "../data/wardsData.json";
+// import wardsData from "../data/wardsData.json";
+import wardsData from "../data/wardsDataNew.json";
 import mumbaiDistrict from "../data/mumbaiDistrict.json";
 import mumbaiTalukas from "../data/mumbaiTalukas.json";
 import { Edit, Loader2, X, Plus } from "lucide-react";
@@ -1623,7 +1624,7 @@ const ClusterMasterPage = () => {
       cluster_number: Yup.string()
         .required("Cluster Number is required")
         .matches(/^[A-Za-z0-9_]+$/, "Only letters, numbers, and underscore allowed"),
-      cluster_name: Yup.string().required("Cluster Name is required"),
+      cluster_name: Yup.string().required("Society Name is required"),
       district: Yup.string().required("District is required"),
       taluka: Yup.string().required("Taluka is required"),
       ward: Yup.string().required("Ward is required"),
@@ -1674,7 +1675,7 @@ const ClusterMasterPage = () => {
       cluster_number: Yup.string()
         .required("Cluster Number is required")
         .matches(/^[A-Za-z0-9_]+$/, "Only letters, numbers, and underscore allowed"),
-      cluster_name: Yup.string().required("Cluster Name is required"),
+      cluster_name: Yup.string().required("Society Name is required"),
       district: Yup.string().required("District is required"),
       taluka: Yup.string().required("Taluka is required"),
       ward: Yup.string().required("Ward is required"),
@@ -1755,7 +1756,7 @@ const ClusterMasterPage = () => {
 
             {/* Cluster Name */}
             <div>
-              <label className="block text-medium font-medium text-gray-700 mb-1">Cluster Name</label>
+              <label className="block text-medium font-medium text-gray-700 mb-1">Society Name</label>
               <input
                 type="text"
                 name="cluster_name"
@@ -1763,7 +1764,7 @@ const ClusterMasterPage = () => {
                 onBlur={formik.handleBlur}
                 value={formik.values.cluster_name}
                 className={`w-full border ${formik.touched.cluster_name && formik.errors.cluster_name ? "border-red-500" : "border-gray-300"} rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-300`}
-                placeholder="Enter Cluster Name"
+                placeholder="Enter Society Name"
               />
               {formik.touched.cluster_name && formik.errors.cluster_name && (
                 <p className="text-red-500 text-sm mt-1">{formik.errors.cluster_name}</p>
@@ -1871,7 +1872,7 @@ const ClusterMasterPage = () => {
               <tr>
                 <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">SR. NO.</th>
                 <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">CLUSTER NUMBER</th>
-                <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">CLUSTER NAME</th>
+                <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">SOCIETY NAME</th>
                 <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">DISTRICT</th>
                 <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">TALUKA</th>
                 <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">WARD</th>
@@ -1959,7 +1960,7 @@ const ClusterMasterPage = () => {
 
                 {/* Cluster Name */}
                 <div>
-                  <label className="block text-medium font-medium text-gray-700 mb-1">Cluster Name</label>
+                  <label className="block text-medium font-medium text-gray-700 mb-1">Society Name ---1</label>
                   <input
                     type="text"
                     name="cluster_name"

@@ -1,0 +1,27 @@
+[
+  { "wardName": "A" },
+  { "wardName": "B" },
+  { "wardName": "C" },
+  { "wardName": "D" },
+  { "wardName": "E" },
+  { "wardName": "F North" },
+  { "wardName": "F South" },
+  { "wardName": "G North" },
+  { "wardName": "G South" },
+  { "wardName": "H East" },
+  { "wardName": "H West" },
+  { "wardName": "K East" },
+  { "wardName": "K West" },
+  { "wardName": "L" },
+  { "wardName": "M East" },
+  { "wardName": "M West" },
+  { "wardName": "N" },
+  { "wardName": "P North" },
+  { "wardName": "P South" },
+  { "wardName": "R North" },
+  { "wardName": "R South" },
+  { "wardName": "R Central" },
+  { "wardName": "S" },
+  { "wardName": "T" }
+]
+

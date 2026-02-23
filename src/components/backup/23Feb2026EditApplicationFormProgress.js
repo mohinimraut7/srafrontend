@@ -1,583 +1,3 @@
-// import { useState, useEffect } from 'react'
-// import { ChevronLeft, ChevronRight, Save, Upload, Download, Plus, Minus, MapPin, Crosshair, X } from 'lucide-react'
-// import { Formik, Form, Field, ErrorMessage } from 'formik'
-// import * as Yup from 'yup'
-// import isValidAadhaar from '../utils/aadhaarValidator';
-
-// const API_BASE_URL = import.meta.env.VITE_BASE_URL;
-
-// const getAuthToken = () => {
-//   if (typeof window === "undefined") return null
-//   return localStorage.getItem("authToken")
-// }
-
-// const validationSchemas = {
-//   // Reuse same validation as Add form
-//   1: Yup.object({
-//     slum_id: Yup.string().required('Slum ID is required'),
-//     municipal_corporation: Yup.string().required('Municipal Corporation is required'),
-//     ward: Yup.string().required('Ward is required'),
-//     district: Yup.string().required('District is required'),
-//     taluka: Yup.string().required('Taluka is required'),
-//   }),
-//   2: Yup.object({
-//     first_name: Yup.string().matches(/^[A-Za-z\s]+$/, "Only alphabets are allowed").required('First name is required'),
-//     middle_name: Yup.string().matches(/^[A-Za-z\s]+$/, "Only alphabets are allowed").required('Middle name is required'),
-//     last_name: Yup.string().matches(/^[A-Za-z\s]+$/, "Only alphabets are allowed").required('Last name is required'),
-//     gender: Yup.string().required('Gender is required'),
-//     aadhaar_number: Yup.string()
-//       .required('Aadhaar number is required')
-//       .test('is-valid-aadhaar', 'Enter a valid Aadhaar number', (value) => isValidAadhaar(value)),
-//     aadhaar_mobile_number: Yup.string()
-//       .matches(/^[6-9]\d{9}$/, 'Enter a valid 10-digit mobile number')
-//       .required('Mobile number is required'),
-//     user_email: Yup.string().email('Invalid email format'),
-//   }),
-//   3: Yup.object({
-//     current_address: Yup.string().required('Current address is required'),
-//     current_mobile_number: Yup.string()
-//       .matches(/^[6-9]\d{9}$/, 'Enter a valid 10-digit mobile number')
-//       .required('Mobile number is required'),
-//     current_pincode: Yup.string().matches(/^[0-9]{6}$/, 'Pincode must be exactly 6 digits'),
-//     aadhaar_pincode: Yup.string().matches(/^[0-9]{6}$/, 'Pincode must be exactly 6 digits'),
-//     voter_card_number: Yup.string().matches(/^[A-Z0-9]{10}$/, 'Voter card number must be exactly 10 digits'),
-//   }),
-//   4: Yup.object({
-//     residency_since: Yup.string().required('Residency since is required'),
-//   }),
-//   5: Yup.object({
-//     num_family_members: Yup.number()
-//       .min(1, 'At least 1 family member is required')
-//       .max(6, 'Maximum 6 family members allowed')
-//       .required('Number of family members is required'),
-//   }),
-//   6: Yup.object({}),
-//   7: Yup.object({}),
-// }
-
-// const EditApplicationForm = ({ formId, onClose, onSuccess }) => {
-//   const [currentStep, setCurrentStep] = useState(1)
-//   const [files, setFiles] = useState({}) // New files
-//   const [existingFiles, setExistingFiles] = useState({}) // URLs from DB
-//   const [loading, setLoading] = useState(false)
-//   const [fetching, setFetching] = useState(true)
-//   const [error, setError] = useState(null)
-//   const [success, setSuccess] = useState(null)
-//   const [displayedMembers, setDisplayedMembers] = useState(1)
-//   const [locationFetched, setLocationFetched] = useState(false)
-//   const [selectedCluster, setSelectedCluster] = useState("")
-//   const [slums, setSlums] = useState([])
-//   const [clusters, setClusters] = useState([])
-
-//   useEffect(() => {
-//     fetchClusters()
-//     fetchFormData()
-//   }, [formId])
-
-
-//   // EditApplicationForm.jsx (or .tsx)
-// // useEffect(() => {
-// //   const load = async () => {
-// //     setLoading(true);
-// //     try {
-// //       const token = localStorage.getItem('authToken');
-   
-// //       const r = await fetch(`${API_BASE_URL}/api/sra-logs/sra-form-logs/${formId}`, {
-// //         headers: { Authorization: `Bearer ${token}` },
-// //       });
-// //       if (!r.ok) throw new Error(await r.text());
-// //       setFormData(await r.json());
-// //     } catch (e) {
-// //       setError(e.message);
-// //     } finally {
-// //       setLoading(false);
-// //     }
-// //   };
-// //   load();
-// // }, [formId]);
-
-
-
-
-
-// useEffect(() => {
-//   const load = async () => {
-//     if (!formId) return;
-
-//     setLoading(true);
-//     try {
-//       const token = getAuthToken();
-//       if (!token) throw new Error("Authentication required");
-
-//       const response = await fetch(`${API_BASE_URL}/api/sra-logs/sra-form-logs/${formId}`, {
-//         headers: { Authorization: `Bearer ${token}` },
-//       });
-
-//       if (!response.ok) {
-//         const errText = await response.text();
-//         throw new Error(errText || "Failed to fetch form data");
-//       }
-
-//       const data = await response.json();
-
-//       // Parse family members count
-//       const numMembers = parseInt(data.num_family_members) || 1;
-//       setDisplayedMembers(Math.min(numMembers, 6));
-
-//       // Format residency_since: "DD-MM-YYYY" → "YYYY-MM-DD"
-//       if (data.residency_since && data.residency_since.includes('-')) {
-//         const [day, month, year] = data.residency_since.split('-');
-//         data.residency_since = `${year}-${month}-${day}`;
-//       }
-
-//       // Handle file paths (existing files from DB)
-//       const fileFields = [
-//         'photo_self_path', 'photo_family_path', 'biometric_path', 'doc_front_view',
-//         'side_photo_path', 'inside_video_path', 'declaration_video_path', 'adivashihutimage',
-//         'doc_before_2000', 'submitted_docs_before_2000', 'description_doc_before_2000',
-//         'after_2000_proof_submitted', 'possession_doc_info', 'Seldeclaration_letter',
-//         'Ration_card_info', 'Voter_card_info', 'Other_doc_info', 'sale_agreement'
-//       ];
-
-//       const existing = {};
-//       fileFields.forEach(field => {
-//         if (data[field]) {
-//           let paths = [];
-//           if (Array.isArray(data[field])) {
-//             paths = data[field];
-//           } else if (typeof data[field] === 'string') {
-//             try {
-//               paths = JSON.parse(data[field]);
-//             } catch {
-//               paths = [data[field]];
-//             }
-//           } else {
-//             paths = [data[field]];
-//           }
-//           existing[field] = paths.filter(Boolean); // Remove empty
-//         }
-//       });
-//       setExistingFiles(existing);
-
-//       // Update Formik initial values
-//       setInitialValues(prev => ({ ...prev, ...data }));
-
-//     } catch (e) {
-//       setError(e.message || "Failed to load form data");
-//     } finally {
-//       setLoading(false);
-//       setFetching(false); // In case you still use this
-//     }
-//   };
-
-//   load();
-// }, [formId]);
-
-
-
-
-//   const fetchClusters = async () => {
-//     const token = getAuthToken()
-//     if (!token) return
-
-//     try {
-//       const response = await fetch(`${API_BASE_URL}/api/clusters/all`, {
-//         headers: { Authorization: `Bearer ${token}` },
-//       })
-//       if (response.ok) {
-//         const data = await response.json()
-//         setClusters(data || [])
-//       }
-//     } catch (err) {
-//       console.error("Error fetching clusters:", err)
-//     }
-//   }
-
-//   const fetchFormData = async () => {
-//     const token = getAuthToken()
-//     if (!token || !formId) return
-
-//     try {
-//       setFetching(true)
-//       const response = await fetch(`${API_BASE_URL}/api/sra-logs/sra-form-logs/${formId}`, {
-//         headers: { Authorization: `Bearer ${token}` },
-//       })
-
-//       if (!response.ok) throw new Error("Failed to fetch form data")
-
-//       const data = await response.json()
-
-//       // Parse family members
-//       const numMembers = parseInt(data.num_family_members) || 1
-//       setDisplayedMembers(Math.min(numMembers, 6))
-
-//       // Format residency_since to YYYY-MM-DD
-//       if (data.residency_since) {
-//         const [day, month, year] = data.residency_since.split('-')
-//         data.residency_since = `${year}-${month}-${day}`
-//       }
-
-//       // Set existing file URLs
-//       const fileFields = [
-//         'photo_self_path', 'photo_family_path', 'biometric_path', 'doc_front_view',
-//         'side_photo_path', 'inside_video_path', 'declaration_video_path', 'adivashihutimage',
-//         'doc_before_2000', 'submitted_docs_before_2000', 'description_doc_before_2000',
-//         'after_2000_proof_submitted', 'possession_doc_info', 'Seldeclaration_letter',
-//         'Ration_card_info', 'Voter_card_info', 'Other_doc_info', 'sale_agreement'
-//       ]
-
-//       const existing = {}
-//       fileFields.forEach(field => {
-//         if (data[field]) {
-//           if (field === 'sale_agreement' && typeof data[field] === 'string') {
-//             try {
-//               existing[field] = JSON.parse(data[field])
-//             } catch {
-//               existing[field] = [data[field]]
-//             }
-//           } else {
-//             existing[field] = Array.isArray(data[field]) ? data[field] : [data[field]]
-//           }
-//         }
-//       })
-//       setExistingFiles(existing)
-
-//       // Initialize Formik after data is ready
-//       setInitialValues(prev => ({ ...prev, ...data }))
-//     } catch (err) {
-//       setError(err.message)
-//     } finally {
-//       setFetching(false)
-//     }
-//   }
-
-//   const [initialValues, setInitialValues] = useState({
-//     hut_id: '', hut_name: '', slum_id: '', slum_name: '', name_of_slum_area: '',
-//     municipal_corporation: "BMC", ward: '', district: '', taluka: '', village: '',
-//     cluster_number: '', slum_use: '', slum_floor: '', ownership_of_slum_land: '',
-//     survey_status: '', plan_submitted: false, society_registered: false,
-//     first_name: '', middle_name: '', last_name: '', gender: '', spouse_name: '',
-//     user_email: '', aadhaar_number: '', aadhaar_mobile_number: '',
-//     aadhaar_address: '', aadhaar_pincode: '', current_address: '', current_pincode: '',
-//     current_mobile_number: '', voter_card_type: '', voter_card_number: '',
-//     biometric_lat: '', biometric_long: '',
-//     bank_name: '', account_number: '', ifsc_code: '',
-//     length: '', width: '', area_sq_m: '', residency_since: '',
-//     num_family_members: 1,
-//     family_member1_name: '', family_member1_age: '', family_member1_relation: '', family_member1_gender: '', family_member1_aadhaar: '',
-//     family_member2_name: '', family_member2_age: '', family_member2_relation: '', family_member2_gender: '', family_member2_aadhaar: '',
-//     family_member3_name: '', family_member3_age: '', family_member3_relation: '', family_member3_gender: '', family_member3_aadhaar: '',
-//     family_member4_name: '', family_member4_age: '', family_member4_relation: '', family_member4_gender: '', family_member4_aadhaar: '',
-//     family_member5_name: '', family_member5_age: '', family_member5_relation: '', family_member5_gender: '', family_member5_aadhaar: '',
-//     family_member6_name: '', family_member6_age: '', family_member6_relation: '', family_member6_gender: '', family_member6_aadhaar: '',
-//     self_declaration_letter: false, submitted_docs_before_2000: false,
-//     doc_before_2000: false, after_2000_proof_submitted: false,
-//   })
-
-//   const steps = [
-//     { id: 1, title: 'Basic Information', icon: 'Building' },
-//     { id: 2, title: 'Personal Details', icon: 'User' },
-//     { id: 3, title: 'Address Contact', icon: 'MapPin' },
-//     { id: 4, title: 'Bank and Slum Details', icon: 'Bank' },
-//     { id: 5, title: 'Family Members', icon: 'Users' },
-//     { id: 6, title: 'Images', icon: 'Camera' },
-//     { id: 7, title: 'Metadata', icon: 'FileText' }
-//   ]
-
-//   const handleFileChange = (e, setFieldValue) => {
-//     const { name, files: selectedFiles } = e.target
-//     if (name === "sale_agreement") {
-//       setFiles(prev => ({
-//         ...prev,
-//         [name]: [...(prev[name] || []), ...Array.from(selectedFiles)]
-//       }))
-//     } else {
-//       setFiles(prev => ({ ...prev, [name]: selectedFiles[0] }))
-//     }
-//     setFieldValue(name, selectedFiles[0] || (name === "sale_agreement" ? selectedFiles : null))
-//   }
-
-//   const removeNewFile = (name, index) => {
-//     setFiles(prev => {
-//       const updated = [...(prev[name] || [])]
-//       updated.splice(index, 1)
-//       return { ...prev, [name]: updated.length > 0 ? updated : undefined }
-//     })
-//   }
-
-//   const nextStep = () => currentStep < steps.length && setCurrentStep(currentStep + 1)
-//   const prevStep = () => currentStep > 1 && setCurrentStep(currentStep - 1)
-//   const addMember = () => displayedMembers < 6 && setDisplayedMembers(displayedMembers + 1)
-//   const removeMember = () => displayedMembers > 1 && setDisplayedMembers(displayedMembers - 1)
-
-//   const handleSubmit = async (values, { setFieldError }) => {
-//     setLoading(true); setError(null); setSuccess(null)
-
-//     const token = getAuthToken()
-//     if (!token) {
-//       setError("Authentication required")
-//       setLoading(false)
-//       return
-//     }
-
-//     try {
-//       const formData = new FormData()
-
-//       // Only append changed text fields
-//       const original = initialValues
-//       Object.keys(values).forEach(key => {
-//         if (values[key] !== original[key] && values[key] !== '' && values[key] != null) {
-//           formData.append(key, values[key])
-//         }
-//       })
-
-//       // Append new files
-//       Object.keys(files).forEach(key => {
-//         if (files[key]) {
-//           if (Array.isArray(files[key])) {
-//             files[key].forEach(file => formData.append(key, file))
-//           } else {
-//             formData.append(key, files[key])
-//           }
-//         }
-//       })
-
-//       if (formData.entries().next().done) {
-//         setError("No changes detected")
-//         setLoading(false)
-//         return
-//       }
-
-//       const response = await fetch(`${API_BASE_URL}/api/sra-logs/sra-form-logs/${formId}`, {
-//         method: 'PUT',
-//         headers: { Authorization: `Bearer ${token}` },
-//         body: formData
-//       })
-
-//       if (!response.ok) {
-//         const err = await response.json()
-//         throw new Error(err.message || "Update failed")
-//       }
-
-//       setSuccess("Form updated successfully!")
-//       setTimeout(() => onSuccess?.(), 2000)
-//     } catch (err) {
-//       setError(err.message)
-//     } finally {
-//       setLoading(false)
-//     }
-//   }
-
-//   const renderFilePreview = (url, name, index) => {
-//     const isImage = url.match(/\.(jpg|jpeg|png|gif)$/i)
-//     const isVideo = url.match(/\.(mp4|webm|ogg)$/i)
-//     const isPDF = url.endsWith('.pdf')
-
-//     return (
-//       <div key={index} className="flex items-center justify-between p-2 bg-green-50 rounded mt-1 text-xs">
-//         <div className="flex items-center gap-2 truncate">
-//           {isImage ? 'Photo' : isVideo ? 'Video' : isPDF ? 'PDF' : 'File'}
-//           <a href={url} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline truncate max-w-[150px]">
-//             {name || url.split('/').pop()}
-//           </a>
-//         </div>
-//         <a href={url} download className="text-green-600 hover:text-green-800">
-//           <Download size={14} />
-//         </a>
-//       </div>
-//     )
-//   }
-
-//   if (fetching) {
-//     return <div className="flex justify-center items-center h-64"><div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div></div>
-//   }
-
-//   return (
-//     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-indigo-50 py-8">
-//       <div className="max-w-6xl mx-auto px-4">
-//         <div className="mb-8">
-//           <div className="flex items-center justify-between overflow-x-auto bg-white rounded-xl shadow-lg p-4">
-//             {steps.map((step, index) => (
-//               <div key={step.id} className="flex items-center min-w-0 flex-shrink-0">
-//                 <div className={`relative flex items-center justify-center w-14 h-14 rounded-full border-3 transition-all ${
-//                   currentStep >= step.id 
-//                     ? 'bg-gradient-to-r from-blue-500 to-indigo-600 border-blue-500 text-white shadow-lg' 
-//                     : 'bg-white border-gray-300 text-gray-500'
-//                 }`}>
-//                   <span className="text-xl">{step.icon}</span>
-//                 </div>
-//                 <div className="ml-4 min-w-0">
-//                   <p className={`text-sm font-semibold ${currentStep >= step.id ? 'text-blue-700' : 'text-gray-500'}`}>Step {step.id}</p>
-//                   <p className={`text-xs truncate ${currentStep >= step.id ? 'text-blue-600' : 'text-gray-400'}`}>{step.title}</p>
-//                 </div>
-//                 {index < steps.length - 1 && (
-//                   <div className={`flex-1 h-1 mx-6 min-w-8 rounded-full ${currentStep > step.id ? 'bg-gradient-to-r from-blue-500 to-indigo-600' : 'bg-gray-300'}`} />
-//                 )}
-//               </div>
-//             ))}
-//           </div>
-//         </div>
-
-//         <div className="bg-white rounded-xl shadow-xl p-8 mb-6">
-//           {success && (
-//             <div className="bg-gradient-to-r from-green-50 to-emerald-50 border border-green-300 text-green-800 px-6 py-4 rounded-lg mb-6 flex items-center">
-//               <span className="text-2xl mr-3">Success</span>
-//               <span className="font-medium">{success}</span>
-//             </div>
-//           )}
-//           {error && (
-//             <div className="bg-gradient-to-r from-red-50 to-pink-50 border border-red-300 text-red-800 px-6 py-4 rounded-lg mb-6 flex items-center">
-//               <span className="text-2xl mr-3">Error</span>
-//               <span className="font-medium">{error}</span>
-//             </div>
-//           )}
-
-//           <Formik
-//             initialValues={initialValues}
-//             validationSchema={validationSchemas[currentStep]}
-//             onSubmit={handleSubmit}
-//             enableReinitialize
-//           >
-//             {({ values, setFieldValue }) => (
-//               <Form>
-//                 {/* Same renderStepContent logic as Add form, but with existingFiles & file preview */}
-//                 {currentStep === 1 && (
-//                   <div className="space-y-6">
-//                     <h3 className="text-2xl font-bold text-gray-900 mb-6">Basic Information</h3>
-//                     <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-//                       {/* Reuse same fields as Add form */}
-//                       {/* ... (same as AddApplicationForm.jsx Step 1) ... */}
-//                     </div>
-//                   </div>
-//                 )}
-
-//                 {currentStep === 6 && (
-//                   <div className="space-y-6">
-//                     <h3 className="text-2xl font-bold text-gray-900 mb-6">Upload Documents & Images</h3>
-//                     <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-//                       {[
-//                         { name: 'photo_self', label: 'Self Photo', accept: 'image/*', icon: 'Photo', db: 'photo_self_path' },
-//                         { name: 'photo_family', label: 'Family Photo', accept: 'image/*', icon: 'Family', db: 'photo_family_path' },
-//                         { name: 'doc_side_view', label: 'Doc Side View', accept: 'image/*', icon: 'Side', db: 'side_photo_path' },
-//                         { name: 'doc_front_view', label: 'Doc Front View', accept: 'image/*', icon: 'Front', db: 'doc_front_view' },
-//                         { name: 'adivashihutimage', label: 'Hut Image', accept: 'image/*,.pdf', icon: 'Home', db: 'adivashihutimage' },
-//                         ...(values.residency_since && new Date(values.residency_since) <= new Date('2000-01-01')
-//                           ? [
-//                               { name: 'doc_before_2000', label: 'Docs before 2000', accept: 'image/*,.pdf', icon: 'File', db: 'doc_before_2000' },
-//                               { name: 'submitted_docs_before_2000', label: 'Submitted Docs Before 2000', accept: 'image/*,.pdf', icon: 'Check', db: 'submitted_docs_before_2000' }
-//                             ]
-//                           : []
-//                         ),
-//                         ...(values.residency_since && new Date(values.residency_since) > new Date('2000-01-01')
-//                           ? [{ name: 'after_2000_proof_submitted', label: 'After 2000 Proof', accept: 'image/*,.pdf', icon: 'Check', db: 'after_2000_proof_submitted' }]
-//                           : []
-//                         ),
-//                         { name: 'possession_doc_info', label: 'Possession Document', accept: 'image/*,.pdf', icon: 'Home', db: 'possession_doc_info' },
-//                         { name: 'Seldeclaration_letter', label: 'Self Declaration', accept: 'image/*,.pdf', icon: 'Write', db: 'Seldeclaration_letter' },
-//                         { name: 'Ration_card_info', label: 'Ration Card', accept: 'image/*,.pdf', icon: 'Card', db: 'Ration_card_info' },
-//                         { name: 'sale_agreement', label: 'Sale Agreement (Multi)', accept: '.pdf,.doc,.docx,image/*', icon: 'Agreement', db: 'sale_agreement', multiple: true },
-//                         { name: 'biometric', label: 'Biometric', accept: 'image/*', icon: 'Fingerprint', db: 'biometric_path' },
-//                         { name: 'video_self_declaration', label: 'Self Declaration Video', accept: 'video/*', icon: 'Video', db: 'declaration_video_path' },
-//                         { name: 'video_inside', label: 'Inside Video', accept: 'video/*', icon: 'Camera', db: 'inside_video_path' }
-//                       ].map(({ name, label, accept, icon, db, multiple }) => (
-//                         <div key={name} className="border border-gray-200 rounded-lg p-4 bg-white shadow-sm hover:shadow-md transition-all">
-//                           <div className="flex items-center mb-3">
-//                             <span className="text-2xl mr-2">{icon}</span>
-//                             <h4 className="font-semibold text-gray-800">{label}</h4>
-//                           </div>
-
-//                           {/* Existing Files */}
-//                           {existingFiles[db] && existingFiles[db].map((url, i) => renderFilePreview(url, `${label} #${i + 1}`, i))}
-
-//                           {/* New File Input */}
-//                           <input
-//                             type="file"
-//                             name={name}
-//                             onChange={(e) => handleFileChange(e, setFieldValue)}
-//                             accept={accept}
-//                             multiple={multiple}
-//                             className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm file:mr-4 file:py-1 file:px-3 file:rounded file:border-0 file:text-xs file:bg-blue-50 file:text-blue-700"
-//                           />
-
-//                           {/* New Files Preview */}
-//                           {files[name] && Array.isArray(files[name]) && files[name].map((file, i) => (
-//                             <div key={i} className="flex items-center justify-between p-2 bg-blue-50 rounded mt-1 text-xs">
-//                               <span className="truncate">{file.name}</span>
-//                               <button type="button" onClick={() => removeNewFile(name, i)} className="text-red-600">
-//                                 <X size={14} />
-//                               </button>
-//                             </div>
-//                           ))}
-//                           {files[name] && !Array.isArray(files[name]) && (
-//                             <div className="flex items-center justify-between p-2 bg-blue-50 rounded mt-1 text-xs">
-//                               <span className="truncate">{files[name].name}</span>
-//                               <button type="button" onClick={() => {
-//                                 setFiles(prev => ({ ...prev, [name]: null }))
-//                                 setFieldValue(name, null)
-//                               }} className="text-red-600">
-//                                 <X size={14} />
-//                               </ button>
-//                             </div>
-//                           )}
-//                         </div>
-//                       ))}
-//                     </div>
-//                   </div>
-//                 )}
-
-//                 {/* Other steps same as Add form... */}
-
-//                 <div className="flex justify-between items-center mt-10 pt-8 border-t border-gray-200">
-//                   <button
-//                     type="button"
-//                     onClick={prevStep}
-//                     disabled={currentStep === 1}
-//                     className={`flex items-center gap-3 px-8 py-3 rounded-xl font-semibold transition-all ${
-//                       currentStep === 1
-//                         ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
-//                         : 'bg-gradient-to-r from-gray-100 to-gray-200 text-gray-700 hover:from-gray-200 hover:to-gray-300'
-//                     }`}
-//                   >
-//                     <ChevronLeft size={20} /> Previous
-//                   </button>
-
-//                   {currentStep < steps.length ? (
-//                     <button
-//                       type="button"
-//                       onClick={nextStep}
-//                       className="flex items-center gap-3 px-8 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-xl hover:from-blue-700 hover:to-indigo-700 font-semibold shadow-lg"
-//                     >
-//                       Next <ChevronRight size={20} />
-//                     </button>
-//                   ) : (
-//                     <button
-//                       type="submit"
-//                       disabled={loading}
-//                       className={`flex items-center gap-3 px-10 py-4 rounded-xl font-semibold transition-all ${
-//                         loading
-//                           ? 'bg-gray-400 cursor-not-allowed'
-//                           : 'bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 shadow-lg'
-//                       } text-white`}
-//                     >
-//                       {loading ? 'Updating...' : <><Save size={20} /> Update Form</>}
-//                     </button>
-//                   )}
-//                 </div>
-//               </Form>
-//             )}
-//           </Formik>
-//         </div>
-//       </div>
-//     </div>
-//   )
-// }
-
-// export default EditApplicationForm
-
-
-// ===============================================
-
-
 /* EditApplicationForm.jsx */
 import { useState, useEffect } from "react";
 import {
@@ -594,6 +14,7 @@ import {
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import isValidAadhaar from "../utils/aadhaarValidator";
+import { useRef } from "react";
 
 const API_BASE_URL = import.meta.env.VITE_BASE_URL;
 
@@ -679,7 +100,11 @@ const EditApplicationForm = ({ formId, onClose, onSuccess }) => {
   const [selectedCluster, setSelectedCluster] = useState("");
 
 
-  
+  const [cameraStream, setCameraStream] = useState(null);
+const [mediaRecorder, setMediaRecorder] = useState(null);
+const [recording, setRecording] = useState(false);
+const videoRef = useRef(null);
+const canvasRef = useRef(null);
 
   const [initialValues, setInitialValues] = useState({
     // ---- basic ----
@@ -869,6 +294,108 @@ const EditApplicationForm = ({ formId, onClose, onSuccess }) => {
   const prevStep = () => currentStep > 1 && setCurrentStep(currentStep - 1);
   const addMember = () => displayedMembers < 6 && setDisplayedMembers(displayedMembers + 1);
   const removeMember = () => displayedMembers > 1 && setDisplayedMembers(displayedMembers - 1);
+
+  const startCamera = async () => {
+  try {
+    const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+    setCameraStream(stream);
+    if (videoRef.current) {
+      videoRef.current.srcObject = stream;
+    }
+  } catch (err) {
+    setError("Camera access denied");
+  }
+};
+
+const capturePhoto = (fieldName, setFieldValue) => {
+  const canvas = canvasRef.current;
+  const video = videoRef.current;
+
+  if (!video || !canvas) return;
+
+  canvas.width = video.videoWidth;
+  canvas.height = video.videoHeight;
+
+  const ctx = canvas.getContext("2d");
+  ctx.drawImage(video, 0, 0);
+
+  canvas.toBlob((blob) => {
+    const file = new File([blob], `${fieldName}.jpg`, {
+      type: "image/jpeg",
+    });
+
+    setFiles((prev) => ({
+      ...prev,
+      [fieldName]: file,
+    }));
+
+    setFieldValue(fieldName, file); // ✅ VERY IMPORTANT
+  }, "image/jpeg");
+};
+
+const stopCamera = () => {
+  if (cameraStream) {
+    cameraStream.getTracks().forEach((track) => track.stop());
+    setCameraStream(null);
+  }
+};
+
+const startRecording = async (fieldName, setFieldValue) => {
+  try {
+    const stream = await navigator.mediaDevices.getUserMedia({
+      video: true,
+      audio: true,
+    });
+
+    setCameraStream(stream);
+
+    if (videoRef.current) {
+      videoRef.current.srcObject = stream;
+    }
+
+    const recorder = new MediaRecorder(stream);
+    let chunks = [];
+
+    recorder.ondataavailable = (e) => {
+      if (e.data.size > 0) chunks.push(e.data);
+    };
+
+    recorder.onstop = () => {
+      const blob = new Blob(chunks, { type: "video/webm" });
+      const file = new File([blob], `${fieldName}.webm`, {
+        type: "video/webm",
+      });
+
+      setFiles((prev) => ({
+        ...prev,
+        [fieldName]: file,
+      }));
+
+      setFieldValue(fieldName, file);
+
+      chunks = [];
+      stopCamera();
+      setRecording(false);
+    };
+
+    recorder.start();
+    setMediaRecorder(recorder);
+    setRecording(true);
+
+    // ✅ AUTO STOP AFTER 15 SEC
+    setTimeout(() => {
+      recorder.stop();
+    }, 15000);
+  } catch (err) {
+    setError("Camera permission denied");
+  }
+};
+
+const stopRecording = () => {
+  if (mediaRecorder && recording) {
+    mediaRecorder.stop();
+  }
+};
 
   const handleFileChange = (e, setFieldValue) => {
     const { name, files: f } = e.target;
@@ -1545,6 +1072,80 @@ const EditApplicationForm = ({ formId, onClose, onSuccess }) => {
                 )}
 
                 {/* ───── STEP 6 (Documents) ───── */}
+                {/* 🔥 LIVE CAMERA SECTION */}
+<div className="p-4 border rounded-lg bg-gray-50">
+  <h4 className="font-semibold mb-3">Live Camera</h4>
+
+  <video
+    ref={videoRef}
+    autoPlay
+    playsInline
+    className="w-full max-w-md border rounded"
+  />
+
+  <canvas ref={canvasRef} className="hidden" />
+
+  <div className="flex flex-wrap gap-3 mt-3">
+    <button
+      type="button"
+      onClick={startCamera}
+      className="px-4 py-2 bg-blue-600 text-white rounded"
+    >
+      Start Camera
+    </button>
+
+    <button
+      type="button"
+      onClick={() =>
+        capturePhoto("photo_self", setFieldValue)
+      }
+      className="px-4 py-2 bg-green-600 text-white rounded"
+    >
+      Capture Self Photo
+    </button>
+
+    <button
+      type="button"
+      onClick={() =>
+        capturePhoto("photo_family", setFieldValue)
+      }
+      className="px-4 py-2 bg-green-700 text-white rounded"
+    >
+      Capture Family Photo
+    </button>
+
+    <button
+      type="button"
+      onClick={stopCamera}
+      className="px-4 py-2 bg-red-600 text-white rounded"
+    >
+      Stop Camera
+    </button>
+  </div>
+
+  <div className="flex gap-3 mt-3">
+    {!recording ? (
+      <button
+        type="button"
+        onClick={() =>
+          startRecording("video_self_declaration", setFieldValue)
+        }
+        className="px-4 py-2 bg-purple-600 text-white rounded"
+      >
+        Start Declaration Recording
+      </button>
+    ) : (
+      <button
+        type="button"
+        onClick={stopRecording}
+        className="px-4 py-2 bg-red-700 text-white rounded"
+      >
+        Stop Recording
+      </button>
+    )}
+  </div>
+</div>
+
                 {currentStep === 6 && (
                   <div className="space-y-6">
                     <h3 className="text-2xl font-bold text-gray-900 mb-6">Documents & Media</h3>
@@ -1578,11 +1179,11 @@ const EditApplicationForm = ({ formId, onClose, onSuccess }) => {
                             <h4 className="font-semibold">{label}</h4>
                           </div>
 
-                          {/* Existing files */}
+                    
                           {existingFiles[db] &&
                             existingFiles[db].map((url, i) => renderFile(url, `${label} #${i + 1}`, i))}
 
-                          {/* New file input */}
+                       
                           <input
                             type="file"
                             name={name}
@@ -1592,7 +1193,7 @@ const EditApplicationForm = ({ formId, onClose, onSuccess }) => {
                             className="w-full text-sm file:mr-3 file:py-1 file:px-2 file:rounded file:border-0 file:bg-indigo-50 file:text-indigo-700"
                           />
 
-                          {/* New files preview */}
+                       
                           {files[name] && Array.isArray(files[name]) && files[name].map((f, i) => (
                             <div key={i} className="flex items-center justify-between p-1 bg-blue-50 rounded mt-1 text-xs">
                               <span className="truncate">{f.name}</span>
@@ -1614,6 +1215,7 @@ const EditApplicationForm = ({ formId, onClose, onSuccess }) => {
                     </div>
                   </div>
                 )}
+                
 
                 {/* ───── STEP 7 (Review) ───── */}
                 {currentStep === 7 && (
