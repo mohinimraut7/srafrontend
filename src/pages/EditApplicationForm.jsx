@@ -1776,6 +1776,7 @@ const startVideoRecording = async (fieldName) => {
           >
             Capture
           </button>
+          
 
           <button
             type="button"
