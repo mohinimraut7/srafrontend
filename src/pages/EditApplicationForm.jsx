@@ -594,6 +594,8 @@ import {
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import isValidAadhaar from "../utils/aadhaarValidator";
+import Webcam from "react-webcam";
+import { useRef } from "react";
 
 const API_BASE_URL = import.meta.env.VITE_BASE_URL;
 
@@ -677,6 +679,12 @@ const EditApplicationForm = ({ formId, onClose, onSuccess }) => {
   const [clusters, setClusters] = useState([]);
   const [slums, setSlums] = useState([]);
   const [selectedCluster, setSelectedCluster] = useState("");
+  
+ const [activeCamera, setActiveCamera] = useState(null);
+const webcamRef = useRef(null);
+
+const [recordingField, setRecordingField] = useState(null);
+const videoRefs = useRef({});
 
 
   
@@ -984,6 +992,77 @@ const EditApplicationForm = ({ formId, onClose, onSuccess }) => {
       </div>
     );
   };
+
+  const capturePhoto = async (fieldName) => {
+  const imageSrc = webcamRef.current?.getScreenshot();
+  if (!imageSrc) return;
+
+  const blob = await (await fetch(imageSrc)).blob();
+  const file = new File([blob], `${fieldName}_${Date.now()}.jpg`, {
+    type: "image/jpeg",
+  });
+
+  setFiles((prev) => {
+    if (fieldName === "sale_agreement") {
+      return {
+        ...prev,
+        [fieldName]: [...(prev[fieldName] || []), file],
+      };
+    }
+    return {
+      ...prev,
+      [fieldName]: file,
+    };
+  });
+
+  setActiveCamera(null);
+};
+
+
+const startVideoRecording = async (fieldName) => {
+  try {
+    if (recordingField) return;
+
+    const stream = await navigator.mediaDevices.getUserMedia({
+      video: true,
+      audio: true,
+    });
+
+    videoRefs.current[fieldName].srcObject = stream;
+
+    const recorder = new MediaRecorder(stream);
+    let chunks = [];
+
+    recorder.ondataavailable = (e) => {
+      if (e.data.size > 0) chunks.push(e.data);
+    };
+
+    recorder.onstop = () => {
+      const blob = new Blob(chunks, { type: "video/webm" });
+      const file = new File([blob], `${fieldName}_${Date.now()}.webm`, {
+        type: "video/webm",
+      });
+
+      setFiles((prev) => ({
+        ...prev,
+        [fieldName]: file,
+      }));
+
+      stream.getTracks().forEach((track) => track.stop());
+      setRecordingField(null);
+    };
+
+    recorder.start();
+    setRecordingField(fieldName);
+
+    setTimeout(() => {
+      recorder.stop();
+    }, 15000);
+
+  } catch (err) {
+    alert("Camera permission denied");
+  }
+};
 
   /* ────────────────────── STEPS UI ────────────────────── */
   const steps = [
@@ -1549,7 +1628,8 @@ const EditApplicationForm = ({ formId, onClose, onSuccess }) => {
                   <div className="space-y-6">
                     <h3 className="text-2xl font-bold text-gray-900 mb-6">Documents & Media</h3>
                     <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-                      {[
+
+                      {/* {[
                         { name: "photo_self", label: "Self Photo", accept: "image/*", icon: "", db: "photo_self" },
                         { name: "photo_family", label: "Family Photo", accept: "image/*", icon: "", db: "photo_family" },
                         { name: "doc_front_view", label: "Front View", accept: "image/*", icon: "", db: "doc_front_view" },
@@ -1578,11 +1658,11 @@ const EditApplicationForm = ({ formId, onClose, onSuccess }) => {
                             <h4 className="font-semibold">{label}</h4>
                           </div>
 
-                          {/* Existing files */}
+                         
                           {existingFiles[db] &&
                             existingFiles[db].map((url, i) => renderFile(url, `${label} #${i + 1}`, i))}
 
-                          {/* New file input */}
+                       
                           <input
                             type="file"
                             name={name}
@@ -1592,7 +1672,7 @@ const EditApplicationForm = ({ formId, onClose, onSuccess }) => {
                             className="w-full text-sm file:mr-3 file:py-1 file:px-2 file:rounded file:border-0 file:bg-indigo-50 file:text-indigo-700"
                           />
 
-                          {/* New files preview */}
+                      
                           {files[name] && Array.isArray(files[name]) && files[name].map((f, i) => (
                             <div key={i} className="flex items-center justify-between p-1 bg-blue-50 rounded mt-1 text-xs">
                               <span className="truncate">{f.name}</span>
@@ -1610,7 +1690,115 @@ const EditApplicationForm = ({ formId, onClose, onSuccess }) => {
                             </div>
                           )}
                         </div>
-                      ))}
+                      ))} */}
+
+
+                      {[
+  { name: "photo_self", label: "Self Photo", type: "image" },
+  { name: "photo_family", label: "Family Photo", type: "image" },
+  { name: "doc_side_view", label: "Side View", type: "image" },
+  { name: "doc_front_view", label: "Front View", type: "image" },
+  { name: "Seldeclaration_letter", label: "Self Declaration - A", type: "image" },
+  { name: "Ration_card_info", label: "Self-Declaration Form - B", type: "image" },
+  { name: "sale_agreement", label: "Sale Agreement", type: "image", multiple: true },
+  { name: "biometric", label: "Biometric Photo", type: "image" },
+  { name: "video_inside", label: "Inside Video", type: "video" },
+  { name: "video_self_declaration", label: "Self Declaration Video", type: "video" },
+].map(({ name, label, type, multiple }) => (
+  <div key={name} className="border p-4 rounded-lg shadow-sm">
+
+    <h4 className="font-semibold mb-2">{label}</h4>
+
+    {/* FILE INPUT */}
+    <input
+      type="file"
+      name={name}
+      accept={type === "image" ? "image/*" : "video/*"}
+      multiple={multiple}
+      onChange={(e) => handleFileChange(e, setFieldValue)}
+      className="w-full mb-2"
+    />
+
+    {/* CAMERA BUTTON */}
+    {type === "image" && (
+      <button
+        type="button"
+        onClick={() => setActiveCamera(name)}
+        className="w-full bg-blue-600 text-white py-2 rounded-lg"
+      >
+        Open Camera
+      </button>
+    )}
+
+    {/* VIDEO BUTTON */}
+    {type === "video" && (
+      <>
+        <button
+          type="button"
+          onClick={() => startVideoRecording(name)}
+          disabled={recordingField !== null}
+          className="w-full bg-red-600 text-white py-2 rounded-lg"
+        >
+          {recordingField === name
+            ? "Recording... (Max 15 sec)"
+            : "Start Video Recording (Max 15 sec)"}
+        </button>
+
+        <video
+          ref={(el) => (videoRefs.current[name] = el)}
+          autoPlay
+          muted
+          className="mt-2 w-full rounded-lg border"
+        />
+      </>
+    )}
+
+    {/* WEBCAM MODAL */}
+    {activeCamera === name && (
+      <div className="mt-3 p-3 border rounded-lg bg-gray-100">
+        <Webcam
+          ref={webcamRef}
+          screenshotFormat="image/jpeg"
+          audio={false}
+          className="w-full rounded-lg"
+          videoConstraints={{
+            facingMode: /Mobi|Android/i.test(navigator.userAgent)
+              ? { exact: "environment" }
+              : "user",
+          }}
+        />
+
+        <div className="flex gap-3 mt-3">
+          <button
+            type="button"
+            onClick={() => capturePhoto(name)}
+            className="bg-green-600 text-white px-4 py-2 rounded"
+          >
+            Capture
+          </button>
+
+          <button
+            type="button"
+            onClick={() => setActiveCamera(null)}
+            className="bg-red-600 text-white px-4 py-2 rounded"
+          >
+            Cancel
+          </button>
+        </div>
+      </div>
+    )}
+
+    {/* NEW FILE PREVIEW */}
+    {files[name] && (
+      <div className="mt-2 text-sm text-green-700">
+        {Array.isArray(files[name])
+          ? files[name].map((f, i) => <div key={i}>{f.name}</div>)
+          : files[name].name}
+      </div>
+    )}
+  </div>
+))}
+
                     </div>
                   </div>
                 )}
