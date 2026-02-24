@@ -149,7 +149,6 @@ const validationSchemas = {
 
 
 
-
 const base64ToFile = (base64, filename, mimeType) => {
   const arr = base64.split(",");
   const bstr = atob(arr[1]);
