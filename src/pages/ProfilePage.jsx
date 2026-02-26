@@ -86,6 +86,10 @@ export default function ProfilePage({ onNavigate }) {
                 User ID: <span className="font-medium">{user?.user_id || "N/A"}</span>
               </span>
             </div>
+             <div className="flex items-center space-x-3">
+              <span className="font-semibold">Address :</span>
+              <span>{user?.address || "N/A"}</span>
+            </div>
             <div className="flex items-center space-x-3">
               <span className="font-semibold">District:</span>
               <span>{user?.district || "N/A"}</span>

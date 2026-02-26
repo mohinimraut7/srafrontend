@@ -12972,8 +12972,12 @@ import { useState, useEffect } from "react"
 import { Eye, Search, Download,X,ChevronLeft,ChevronRight,Plus,Edit } from "lucide-react"
 import AddApplicationForm from './AddApplicationForm';
 import EditApplicationForm from './EditApplicationForm';
+import * as XLSX from "xlsx";
+import jsPDF from "jspdf";
+import autoTable from "jspdf-autotable";
 import html2canvas from 'html2canvas'
-import jsPDF from 'jspdf'
+import html2pdf from "html2pdf.js";
+
 import './AllApplicationsPage.css';
 
 
@@ -13005,6 +13009,8 @@ const getAuthToken = () => {
   if (typeof window === "undefined") return null
   return localStorage.getItem("authToken")
 }
+
+
 
 const AllApplicationsPage = () => {
   const [searchTerm, setSearchTerm] = useState("")
@@ -13118,7 +13124,260 @@ if (typeof window !== "undefined") {
     return fullPath
   }
 
-  const getDocumentUrl = (documentPath) => {
+// const handleDownloadExcel = () => {
+
+//   if (filteredApplications.length === 0) {
+//     alert("No data available!");
+//     return;
+//   }
+
+//   const excelData = filteredApplications.map((app, index) => ({
+//     "Serial No": index + 1,
+//     "Cluster Number": app.cluster_number || "",
+//     "Hut ID": app.slum_id || "",
+//     "Name": `${app.first_name || ""} ${app.last_name || ""}`,
+//     "Use of Hut": app.slum_use || "",
+//     "Area": app.area_sq_m || "",
+//     "Status": app.survey_status || "Pending"
+//   }));
+
+//   const ws = XLSX.utils.json_to_sheet(excelData);
+//   const wb = XLSX.utils.book_new();
+//   XLSX.utils.book_append_sheet(wb, ws, "Applications");
+
+//   XLSX.writeFile(wb, "BMC_Applications.xlsx");
+// };
+
+
+// const handleDownloadPDF = () => {
+
+//   if (filteredApplications.length === 0) {
+//     alert("No data available!");
+//     return;
+//   }
+
+//   const doc = new jsPDF("landscape");
+
+//   doc.text("BMC Applications Report", 14, 15);
+
+//   const tableData = filteredApplications.map((app, i) => ([
+//     i + 1,
+//     app.cluster_number || "",
+//     app.slum_id || "",
+//     `${app.first_name || ""} ${app.last_name || ""}`,
+//     app.slum_use || "",
+//     app.area_sq_m || "",
+//     app.survey_status || "Pending"
+//   ]));
+
+//   doc.autoTable({
+//     head: [["Sr", "Cluster", "Hut ID", "Name", "Use", "Area", "Status"]],
+//     body: tableData,
+//     startY: 20
+//   });
+
+//   doc.save("BMC_Applications.pdf");
+// };
+
+const handleDownloadExcel = () => {
+
+  if (filteredApplications.length === 0) {
+    alert("No data available!");
+    return;
+  }
+
+  const excelData = filteredApplications.map((app, index) => ({
+    "Serial No": index + 1,
+    "Cluster Number": app.cluster_number || "",
+    "Hut ID": app.slum_id || "",
+    "Name": `${app.first_name || ""} ${app.last_name || ""}`,
+    "Use of Hut": app.slum_use || "",
+    "Area": app.area_sq_m || "",
+    "Status": app.survey_status || "Pending"
+  }));
+
+  // Create worksheet from data
+  const ws = XLSX.utils.json_to_sheet(excelData, { origin: "A4" });
+
+  // Add Title (Row 1)
+  XLSX.utils.sheet_add_aoa(ws, [
+    ["BMC Applications Report"]
+  ], { origin: "A1" });
+
+  // Add Total Records (Row 2)
+  XLSX.utils.sheet_add_aoa(ws, [
+    [`Total Records: ${filteredApplications.length}`]
+  ], { origin: "A2" });
+
+  // Optional: blank row (Row 3 automatically skipped because table starts A4)
+
+  const wb = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb, ws, "Applications");
+
+  XLSX.writeFile(wb, "BMC_Applications.xlsx");
+};
+
+const handleDownloadPDF = () => {
+
+  if (filteredApplications.length === 0) {
+    alert("No data available!");
+    return;
+  }
+
+  const doc = new jsPDF("landscape");
+
+  doc.setFontSize(16);
+  doc.text("BMC Applications Report", 14, 15);
+
+  doc.setFontSize(10);
+  doc.text(`Total Records: ${filteredApplications.length}`, 14, 22);
+
+  const tableData = filteredApplications.map((app, index) => ([
+    index + 1,
+    app.cluster_number || "",
+    app.slum_id || "",
+    `${app.first_name || ""} ${app.last_name || ""}`,
+    app.slum_use || "",
+    app.area_sq_m || "",
+    app.survey_status || "Pending"
+  ]));
+
+  // ✅ Correct way in Vite
+  autoTable(doc, {
+    head: [["Sr", "Cluster", "Hut ID", "Name", "Use", "Area", "Status"]],
+    body: tableData,
+    startY: 28,
+    styles: { fontSize: 8 },
+    headStyles: { fillColor: [249, 115, 22] }
+  });
+
+  doc.save("BMC_Applications.pdf");
+};
+
+
+const generateIndexPDF = (app) => {
+
+  const fullName = `${app.first_name || ""} ${app.middle_name || ""} ${app.last_name || ""}`;
+
+  const hutSurveyId =
+    app.hut_id ||
+    `${app.slum_id || "NA"}-${app.cluster_number || "NA"}-${app.id}`;
+
+  // ===== ONLY ONE SIDE TICK RULE =====
+  const hasBefore2000 = app.doc_before_2000 || app.submitted_docs_before_2000;
+  const hasAfter2000 = app.after_2000_proof_submitted;
+
+  const beforeTick = hasBefore2000 ? "✔" : "";
+  const afterTick = !hasBefore2000 && hasAfter2000 ? "✔" : "";
+
+  const htmlContent = `
+  <div style="padding:30px;font-family:Georgia, serif;font-size:13px;color:#000;">
+
+    <h2 style="text-align:center;margin-bottom:15px;
+               letter-spacing:1px;
+               border-bottom:2px solid #000;
+               padding-bottom:6px;">
+      INDEX
+    </h2>
+
+    <table style="width:100%;border-collapse:collapse;
+                  font-size:13px;margin-top:10px;">
+      ${createRow("Hut Survey ID", hutSurveyId)}
+      ${createRow("RFS ID", app.id)}
+      ${createRow("Cluster ID", app.cluster_number)}
+      ${createRow("Scheme", app.municipal_corporation)}
+      ${createRow("Use of Hut", app.slum_use)}
+      ${createRow("Village", app.village)}
+      ${createRow("Slum", app.slum_name)}
+      ${createRow("Hut Owner", fullName)}
+      ${createRow("Floor No", app.slum_floor)}
+      ${createRow("Hut Area", app.area_sq_m)}
+      ${createRow("UID No", app.aadhaar_number)}
+      ${createRow("Address", app.current_address)}
+    </table>
+
+    <br/><br/>
+
+    <table style="width:100%;border-collapse:collapse;font-size:12.5px;">
+      <tr style="background:#f2f2f2;font-weight:bold;text-align:center;">
+        <th style="border:1px solid #000;padding:6px;">Sr No</th>
+        <th style="border:1px solid #000;padding:6px;">Document Name</th>
+        <th style="border:1px solid #000;padding:6px;">
+          Document<br/>proof<br/>Before<br/>1/1/2000
+        </th>
+        <th style="border:1px solid #000;padding:6px;">
+          Document<br/>proof for<br/>current<br/>year
+        </th>
+        <th style="border:1px solid #000;padding:6px;">
+          Document Proof for If<br/>
+          user Residing<br/>
+          After 2000
+        </th>
+        <th style="border:1px solid #000;padding:6px;">Page No</th>
+      </tr>
+
+      ${createDocRow("A", "Before 1/1/2000 Proof Document", beforeTick, "", "", "")}
+      ${createDocRow("B", "After 2000 Proof Document", "", "", afterTick, "")}
+      ${createDocRow("C", "Possession Document", "", "", "", "")}
+      ${createDocRow("D", "Self Declaration", "", "", "", "")}
+      ${createDocRow("E", "Ration Card", "", "", "", "")}
+      ${createDocRow("F", "Sale Agreement", "", "", "", "")}
+
+    </table>
+
+    <div style="margin-top:70px;text-align:right;
+                font-weight:bold;
+                font-size:13px;">
+      Scrutiny Cell Officer
+    </div>
+
+  </div>
+  `;
+
+  const opt = {
+    margin: 0.4,
+    filename: `INDEX_${hutSurveyId}.pdf`,
+    image: { type: "jpeg", quality: 1 },
+    html2canvas: { scale: 2 },
+    jsPDF: { unit: "in", format: "a4", orientation: "portrait" },
+  };
+
+  html2pdf().set(opt).from(htmlContent).save();
+};
+
+
+// ===== Row Helpers =====
+
+const createRow = (label, value) => `
+<tr>
+  <td style="border:1px solid #000;
+             padding:6px;
+             width:40%;
+             font-weight:bold;
+             background:#fafafa;">
+    ${label}
+  </td>
+  <td style="border:1px solid #000;padding:6px;">
+    ${value || "-"}
+  </td>
+</tr>
+`;
+
+const createDocRow = (sr, name, before, current, after, page) => `
+<tr>
+  <td style="border:1px solid #000;padding:6px;text-align:center;">${sr}</td>
+  <td style="border:1px solid #000;padding:6px;">${name}</td>
+  <td style="border:1px solid #000;padding:6px;text-align:center;font-weight:bold;">${before}</td>
+  <td style="border:1px solid #000;padding:6px;text-align:center;">${current}</td>
+  <td style="border:1px solid #000;padding:6px;text-align:center;font-weight:bold;">${after}</td>
+  <td style="border:1px solid #000;padding:6px;text-align:center;">${page}</td>
+</tr>
+`;
+
+
+
+
+const getDocumentUrl = (documentPath) => {
     if (!documentPath) return null
     const cleanPath = extractDocumentPath(documentPath)
     return cleanPath ? `${DOCUMENT_BASE_URL}${cleanPath}` : null
@@ -14782,22 +15041,12 @@ const filteredApplications = applications
 </div>
 
       {/* Header */}
-      <div className="mb-9 flex flex-col sm:flex-row justify-between items-center gap-4">
+      {/* <div className="mb-9 flex flex-col sm:flex-row justify-between items-center gap-4">
         <div>
           <h2 style={{color:'#4A5565',textTransform:'uppercase'}} className="text-2xl font-bold tracking-wide text-gray-800">BMC Applications</h2>
-          {/* <p className="text-gray-600 text-lg">
-            Complete view of BMC applications ({applications.length} total records)
-          </p> */}
+       
         </div>
-{/* 
-        <button
-          onClick={() => setShowAddForm(true)}
-          className="text-white px-2 py-1.5 rounded-lg hover:bg-orange-700 flex items-center gap-1.5 font-medium"
-          style={{backgroundColor:'#4A5565'}}
-        >
-          <Plus size={20} />
-          Add Application
-        </button> */}
+
         <button
   onClick={() => setShowAddForm(true)}
   className="group relative inline-flex items-center gap-2 
@@ -14814,7 +15063,72 @@ const filteredApplications = applications
   />
   Add Application
 </button>
-      </div>
+      </div> */}
+
+      <div className="mb-9 flex flex-col sm:flex-row justify-between items-center gap-4">
+  
+  <div>
+    <h2 
+      style={{ color: '#4A5565', textTransform: 'uppercase' }} 
+      className="text-2xl font-bold tracking-wide text-gray-800"
+    >
+      BMC Applications
+    </h2>
+  </div>
+
+  {/* Right Side Buttons */}
+  <div className="flex flex-wrap gap-3">
+
+    {/* Download Excel */}
+    <button
+      onClick={handleDownloadExcel}
+      className="group relative inline-flex items-center gap-2 
+      px-5 py-3 rounded-xl font-semibold text-white 
+      bg-gradient-to-r from-green-500 to-green-600
+      hover:from-green-600 hover:to-green-700
+      shadow-md hover:shadow-xl 
+      transition-all duration-300 
+      hover:-translate-y-1 active:scale-95"
+    >
+      <Download size={18} />
+      Download Excel
+    </button>
+
+    {/* Download PDF */}
+    <button
+      onClick={handleDownloadPDF}
+      className="group relative inline-flex items-center gap-2 
+      px-5 py-3 rounded-xl font-semibold text-white 
+      bg-gradient-to-r from-blue-500 to-blue-600
+      hover:from-blue-600 hover:to-blue-700
+      shadow-md hover:shadow-xl 
+      transition-all duration-300 
+      hover:-translate-y-1 active:scale-95"
+    >
+      <Download size={18} />
+      Download PDF
+    </button>
+
+    {/* Add Application */}
+    <button
+      onClick={() => setShowAddForm(true)}
+      className="group relative inline-flex items-center gap-2 
+      px-6 py-3 rounded-xl font-semibold text-white 
+      bg-gradient-to-r from-orange-500 to-orange-600
+      hover:from-orange-600 hover:to-orange-700
+      shadow-md hover:shadow-xl 
+      transition-all duration-300 
+      hover:-translate-y-1 active:scale-95"
+    >
+      <Plus 
+        size={18} 
+        className="transition-transform duration-300 group-hover:rotate-90" 
+      />
+      Add Application
+    </button>
+
+  </div>
+</div>
 
       {/* Success/Error Messages */}
       {success && (
@@ -15411,6 +15725,21 @@ text-[#2D3748] uppercase tracking-wider font-bold text-xs" >
                     >
                       <Download size={18} />
                     </button>
+
+                    <button
+  onClick={() => generateIndexPDF(app)}
+  style={{
+    background: "#0d6efd",
+    color: "#fff",
+    border: "none",
+    padding: "6px 10px",
+    borderRadius: "5px",
+    marginLeft: "5px",
+    cursor: "pointer"
+  }}
+>
+  Index Download
+</button>
 
                   </div>
                 </td>
