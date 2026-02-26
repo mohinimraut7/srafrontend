@@ -15717,28 +15717,22 @@ text-[#2D3748] uppercase tracking-wider font-bold text-xs" >
                       <Edit size={18} />
                     </button>
 
-                    <button
+                    <button 
+                   
                       onClick={() => generateAndDownloadPdfs(app)}
                       disabled={generatingPdfs}
-                      className="p-2 rounded-lg bg-green-50 text-green-600 hover:bg-green-100 transition disabled:opacity-50"
+                      className="p-2 rounded-lg bg-green-50 text-green-600 hover:bg-green-100 transition disabled:opacity-50 cursor-pointer flex items-center justify-center flex-col"
                       title="Download Jodpatra"
                     >
-                      <Download size={18} />
+                      <Download size={18} />जोडपत्र
                     </button>
 
                     <button
+                    className="p-2 rounded-lg bg-blue-50 text-blue-600 hover:bg-blue-100 transition cursor-pointer flex items-center justify-center flex-col"
   onClick={() => generateIndexPDF(app)}
-  style={{
-    background: "#0d6efd",
-    color: "#fff",
-    border: "none",
-    padding: "6px 10px",
-    borderRadius: "5px",
-    marginLeft: "5px",
-    cursor: "pointer"
-  }}
+
 >
-  Index Download
+ <Download size={18} /><span>Index</span>
 </button>
 
                   </div>
