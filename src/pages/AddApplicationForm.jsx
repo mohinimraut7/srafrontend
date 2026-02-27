@@ -2269,6 +2269,11 @@ const convertFilesToBase64 = async (filesObj) => {
    VIDEO RECORDING MODAL  (scrollable fix applied – nothing else changed)
 ───────────────────────────────────────────────────────────────────────────── */
 const VideoRecordingModal = ({ fieldName, onClose, onSave }) => {
+
+  const streamRef = useRef(null)
+  const mediaRecorderRef = useRef(null)
+
+ 
   const [stream, setStream] = useState(null)
   const [mediaRecorder, setMediaRecorder] = useState(null)
   const [isRecording, setIsRecording] = useState(false)
@@ -2286,6 +2291,36 @@ const VideoRecordingModal = ({ fieldName, onClose, onSave }) => {
     }
   }, [])
 
+
+  useEffect(() => {
+  initCamera()
+  return () => cleanupStream()
+}, [])
+
+const initCamera = async () => {
+  try {
+    const stream = await navigator.mediaDevices.getUserMedia({
+      video: true,
+      audio: false // 🔴 preview only
+    })
+
+    streamRef.current = stream
+    if (liveVideoRef.current) {
+      liveVideoRef.current.srcObject = stream
+    }
+  } catch (err) {
+    console.error(err)
+    setErrorMsg("Camera permission denied")
+  }
+}
+
+
+const cleanupStream = () => {
+  if (streamRef.current) {
+    streamRef.current.getTracks().forEach(t => t.stop())
+    streamRef.current = null
+  }
+}
   const startStream = async () => {
     try {
       const s = await navigator.mediaDevices.getUserMedia({ video: true, audio: true })
@@ -2322,42 +2357,155 @@ const VideoRecordingModal = ({ fieldName, onClose, onSave }) => {
   //   setRecordedUrl(null)
   // }
 
+  // =================original
 
-  const startRecording = () => {
-  if (!stream) return
-  chunksRef.current = []
-  const recorder = new MediaRecorder(stream)
-  recorder.ondataavailable = (e) => {
-    if (e.data.size > 0) chunksRef.current.push(e.data)
-  }
-  recorder.onstop = () => {
-    const blob = new Blob(chunksRef.current, { type: "video/webm" })
-    const url = URL.createObjectURL(blob)
-    setRecordedBlob(blob)
-    setRecordedUrl(url)
-  }
-  recorder.start()
-  setMediaRecorder(recorder)
-  setIsRecording(true)
-  setRecordedBlob(null)
-  setRecordedUrl(null)
+  let previewStream = null;
+// // let mediaRecorder = null;
+// // let stream = null;
 
-  // ✅ 15 seconds नंतर auto-stop
-  setTimeout(() => {
-    if (recorder.state === "recording") {
-      recorder.stop()
+//   const startRecording = () => {
+//   if (!stream) return
+//   chunksRef.current = []
+//   const recorder = new MediaRecorder(stream)
+//   recorder.ondataavailable = (e) => {
+//     if (e.data.size > 0) chunksRef.current.push(e.data)
+//   }
+//   recorder.onstop = () => {
+//     const blob = new Blob(chunksRef.current, { type: "video/webm" })
+//     const url = URL.createObjectURL(blob)
+//     setRecordedBlob(blob)
+//     setRecordedUrl(url)
+//   }
+//   recorder.start()
+//   setMediaRecorder(recorder)
+//   setIsRecording(true)
+//   setRecordedBlob(null)
+//   setRecordedUrl(null)
+
+//   // ✅ 15 seconds नंतर auto-stop
+//   setTimeout(() => {
+//     if (recorder.state === "recording") {
+//       recorder.stop()
+//       setIsRecording(false)
+//     }
+//   }, 15000)
+// }
+
+//   const stopRecording = () => {
+//     if (mediaRecorder && isRecording) {
+//       mediaRecorder.stop()
+//       setIsRecording(false)
+//     }
+//   }
+
+
+
+
+// ++++++++++
+// const startRecording = async () => {
+//   try {
+//     setErrorMsg("")
+//     setRecordedBlob(null)
+//     setRecordedUrl(null)
+
+//     // 🎤 get mic only
+//     const audioStream = await navigator.mediaDevices.getUserMedia({
+//       audio: true
+//     })
+
+//     audioStream.getAudioTracks().forEach(track => {
+//       streamRef.current.addTrack(track)
+//     })
+
+//     chunksRef.current = []
+
+//     const recorder = new MediaRecorder(streamRef.current)
+//     recorder.ondataavailable = e => {
+//       if (e.data.size > 0) chunksRef.current.push(e.data)
+//     }
+
+//     recorder.onstop = () => {
+//       const blob = new Blob(chunksRef.current, { type: "video/webm" })
+//       setRecordedBlob(blob)
+//       setRecordedUrl(URL.createObjectURL(blob))
+//     }
+
+//     recorder.start()
+//     mediaRecorderRef.current = recorder
+//     setIsRecording(true)
+
+//   } catch (err) {
+//     console.error(err)
+//     setErrorMsg("Camera / Mic permission denied")
+//   }
+// }
+
+
+
+const startRecording = async () => {
+  try {
+    setErrorMsg("")
+    setRecordedBlob(null)
+    setRecordedUrl(null)
+
+    // 🎤 get mic only
+    const audioStream = await navigator.mediaDevices.getUserMedia({
+      audio: true
+    })
+
+    audioStream.getAudioTracks().forEach(track => {
+      streamRef.current.addTrack(track)
+    })
+
+    chunksRef.current = []
+
+    const recorder = new MediaRecorder(streamRef.current)
+
+    recorder.ondataavailable = e => {
+      if (e.data.size > 0) chunksRef.current.push(e.data)
+    }
+
+    recorder.onstop = () => {
+      const blob = new Blob(chunksRef.current, { type: "video/webm" })
+      setRecordedBlob(blob)
+      setRecordedUrl(URL.createObjectURL(blob))
       setIsRecording(false)
     }
-  }, 15000)
+
+    recorder.start()
+    mediaRecorderRef.current = recorder
+    setIsRecording(true)
+
+    // ✅ 15 seconds नंतर auto-stop
+    setTimeout(() => {
+      if (recorder.state === "recording") {
+        recorder.stop()
+      }
+    }, 15000)
+
+  } catch (err) {
+    console.error(err)
+    setErrorMsg("Camera / Mic permission denied")
+  }
 }
 
-  const stopRecording = () => {
-    if (mediaRecorder && isRecording) {
-      mediaRecorder.stop()
-      setIsRecording(false)
-    }
+const stopRecording = () => {
+  const recorder = mediaRecorderRef.current
+  if (recorder && recorder.state !== "inactive") {
+    recorder.stop()
   }
 
+  // 🔴 remove mic tracks
+  if (streamRef.current) {
+    streamRef.current.getAudioTracks().forEach(track => {
+      track.stop()
+      streamRef.current.removeTrack(track)
+    })
+  }
+
+  mediaRecorderRef.current = null
+  setIsRecording(false)
+}
   const handleSave = () => {
     if (!recordedBlob) return
     const file = new File([recordedBlob], `${fieldName}_${Date.now()}.webm`, { type: "video/webm" })
