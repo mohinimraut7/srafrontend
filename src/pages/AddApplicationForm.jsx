@@ -2273,6 +2273,10 @@ const VideoRecordingModal = ({ fieldName, onClose, onSave }) => {
   const streamRef = useRef(null)
   const mediaRecorderRef = useRef(null)
 
+    // preview stream (video only)
+const recordingStreamRef = useRef(null) // separate recording stream (video + audio)
+
+
  
   const [stream, setStream] = useState(null)
   const [mediaRecorder, setMediaRecorder] = useState(null)
@@ -2297,23 +2301,23 @@ const VideoRecordingModal = ({ fieldName, onClose, onSave }) => {
   return () => cleanupStream()
 }, [])
 
+// _________1
+// ─── Init camera preview (video only, no audio) ───────────────────────
 const initCamera = async () => {
   try {
     const stream = await navigator.mediaDevices.getUserMedia({
-      video: true,
-      audio: false // 🔴 preview only
+      video: { facingMode: "user", width: 1280, height: 720 },
+      audio: false
     })
-
     streamRef.current = stream
     if (liveVideoRef.current) {
       liveVideoRef.current.srcObject = stream
     }
   } catch (err) {
-    console.error(err)
+    console.error("initCamera failed:", err)
     setErrorMsg("Camera permission denied")
   }
 }
-
 
 const cleanupStream = () => {
   if (streamRef.current) {
@@ -2441,6 +2445,63 @@ const cleanupStream = () => {
 // }
 
 
+// const startRecording = async () => {
+//   try {
+//     setErrorMsg("")
+//     setRecordedBlob(null)
+//     setRecordedUrl(null)
+
+//     // Always acquire a FRESH combined stream for recording
+//     // Never reuse or mutate the preview stream
+//     const recordingStream = await navigator.mediaDevices.getUserMedia({
+//       video: { facingMode: "user", width: 1280, height: 720 },
+//       audio: {
+//         echoCancellation: false,  // reduces extra audio handles on WebView
+//         noiseSuppression: false,
+//         autoGainControl: false
+//       }
+//     })
+
+//     recordingStreamRef.current = recordingStream
+
+//     // Keep preview stream pointing to original video-only stream
+//     // (no mutation)
+
+//     chunksRef.current = []
+
+//     // Prefer mp4 on Android WebView, webm on desktop
+//     const mimeType = MediaRecorder.isTypeSupported("video/mp4")
+//       ? "video/mp4"
+//       : MediaRecorder.isTypeSupported("video/webm;codecs=vp8,opus")
+//       ? "video/webm;codecs=vp8,opus"
+//       : "video/webm"
+
+//     const recorder = new MediaRecorder(recordingStream, { mimeType })
+
+//     recorder.ondataavailable = e => {
+//       if (e.data && e.data.size > 0) chunksRef.current.push(e.data)
+//     }
+
+//     recorder.onstop = () => {
+//       const blob = new Blob(chunksRef.current, { type: mimeType })
+//       setRecordedBlob(blob)
+//       setRecordedUrl(URL.createObjectURL(blob))
+//       // Release recording stream tracks immediately after stop
+//       releaseRecordingStream()
+//     }
+
+//     recorder.start(100) // timeslice 100ms — more reliable on WebView than no timeslice
+//     mediaRecorderRef.current = recorder
+//     setIsRecording(true)
+
+//   } catch (err) {
+//     console.error("startRecording failed:", err)
+//     releaseRecordingStream() // clean up if partial init happened
+//     setErrorMsg("Camera / Mic permission denied: " + err.message)
+//   }
+// }
+
+
 
 const startRecording = async () => {
   try {
@@ -2448,65 +2509,99 @@ const startRecording = async () => {
     setRecordedBlob(null)
     setRecordedUrl(null)
 
-    // 🎤 get mic only
-    const audioStream = await navigator.mediaDevices.getUserMedia({
-      audio: true
+    const recordingStream = await navigator.mediaDevices.getUserMedia({
+      video: { facingMode: "user", width: 1280, height: 720 },
+      audio: {
+        echoCancellation: false,
+        noiseSuppression: false,
+        autoGainControl: false
+      }
     })
 
-    audioStream.getAudioTracks().forEach(track => {
-      streamRef.current.addTrack(track)
-    })
-
+    recordingStreamRef.current = recordingStream
     chunksRef.current = []
 
-    const recorder = new MediaRecorder(streamRef.current)
+    const mimeType = MediaRecorder.isTypeSupported("video/mp4")
+      ? "video/mp4"
+      : MediaRecorder.isTypeSupported("video/webm;codecs=vp8,opus")
+      ? "video/webm;codecs=vp8,opus"
+      : "video/webm"
+
+    const recorder = new MediaRecorder(recordingStream, { mimeType })
 
     recorder.ondataavailable = e => {
-      if (e.data.size > 0) chunksRef.current.push(e.data)
+      if (e.data && e.data.size > 0) chunksRef.current.push(e.data)
     }
 
     recorder.onstop = () => {
-      const blob = new Blob(chunksRef.current, { type: "video/webm" })
+      const blob = new Blob(chunksRef.current, { type: mimeType })
       setRecordedBlob(blob)
       setRecordedUrl(URL.createObjectURL(blob))
-      setIsRecording(false)
+      releaseRecordingStream()
     }
 
-    recorder.start()
+    recorder.start(100)
     mediaRecorderRef.current = recorder
     setIsRecording(true)
 
-    // ✅ 15 seconds नंतर auto-stop
+    // ✅ 15 seconds auto stop (added only this)
     setTimeout(() => {
-      if (recorder.state === "recording") {
+      if (recorder && recorder.state === "recording") {
         recorder.stop()
+        setIsRecording(false)
       }
     }, 15000)
 
   } catch (err) {
-    console.error(err)
-    setErrorMsg("Camera / Mic permission denied")
+    console.error("startRecording failed:", err)
+    releaseRecordingStream()
+    setErrorMsg("Camera / Mic permission denied: " + err.message)
   }
 }
 
 
+// ─── Stop recording ───────────────────────────────────────────────────
 const stopRecording = () => {
   const recorder = mediaRecorderRef.current
   if (recorder && recorder.state !== "inactive") {
-    recorder.stop()
+    recorder.stop() // onstop handler will call releaseRecordingStream
   }
-
-  // 🔴 remove mic tracks
-  if (streamRef.current) {
-    streamRef.current.getAudioTracks().forEach(track => {
-      track.stop()
-      streamRef.current.removeTrack(track)
-    })
-  }
-
   mediaRecorderRef.current = null
   setIsRecording(false)
 }
+
+// ─── Release ONLY the recording stream ───────────────────────────────
+const releaseRecordingStream = () => {
+  if (recordingStreamRef.current) {
+    recordingStreamRef.current.getTracks().forEach(track => {
+      track.enabled = false
+      track.stop()
+    })
+    recordingStreamRef.current = null
+  }
+}
+
+// ─── Full cleanup on unmount ──────────────────────────────────────────
+const cleanupAll = () => {
+  releaseRecordingStream()
+  if (streamRef.current) {
+    streamRef.current.getTracks().forEach(t => t.stop())
+    streamRef.current = null
+  }
+}
+
+// ─── Single useEffect — remove the duplicate ─────────────────────────
+useEffect(() => {
+  initCamera()
+  return () => cleanupAll()
+}, [])
+
+
+
+
+
+
+
   const handleSave = () => {
     if (!recordedBlob) return
     const file = new File([recordedBlob], `${fieldName}_${Date.now()}.webm`, { type: "video/webm" })
