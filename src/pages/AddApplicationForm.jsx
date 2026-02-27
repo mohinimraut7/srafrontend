@@ -2489,6 +2489,7 @@ const startRecording = async () => {
   }
 }
 
+
 const stopRecording = () => {
   const recorder = mediaRecorderRef.current
   if (recorder && recorder.state !== "inactive") {
