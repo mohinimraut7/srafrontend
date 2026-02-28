@@ -62,90 +62,90 @@ const fetchAndSetUserProfile = async () => {
 
 
 const validationSchemas = {
-//   1: Yup.object({
-//     // slum_id: Yup.string().required('Slum ID is required'),
-//     // name_of_slum_area: Yup.string().required('Hut name is required'),
-//     // municipal_corporation: Yup.string().required('Municipal Corporation is required'),
-//     // ward: Yup.string().required('Ward is required'),
-//     // district: Yup.string().required('District is required'),
-//     // taluka: Yup.string().required('Taluka is required'),
-//   }),
-//   2: Yup.object({
-//     first_name: Yup.string().matches(/^[A-Za-z\s]+$/, "Only alphabets are allowed").required('First name is required'),
-//     middle_name: Yup.string().matches(/^[A-Za-z\s]+$/, "Only alphabets are allowed").required('Middle name is required'),
-//     last_name: Yup.string().matches(/^[A-Za-z\s]+$/, "Only alphabets are allowed").required('Last name is required'),
-//     gender: Yup.string().required('Gender is required'),
+  1: Yup.object({
+    // slum_id: Yup.string().required('Slum ID is required'),
+    // name_of_slum_area: Yup.string().required('Hut name is required'),
+    // municipal_corporation: Yup.string().required('Municipal Corporation is required'),
+    // ward: Yup.string().required('Ward is required'),
+    // district: Yup.string().required('District is required'),
+    // taluka: Yup.string().required('Taluka is required'),
+  }),
+  2: Yup.object({
+    first_name: Yup.string().matches(/^[A-Za-z\s]+$/, "Only alphabets are allowed").required('First name is required'),
+    middle_name: Yup.string().matches(/^[A-Za-z\s]+$/, "Only alphabets are allowed").required('Middle name is required'),
+    last_name: Yup.string().matches(/^[A-Za-z\s]+$/, "Only alphabets are allowed").required('Last name is required'),
+    gender: Yup.string().required('Gender is required'),
     
-//       aadhaar_number: Yup.string(),
-//       // .required('Aadhaar number is required')
-//       // .test(
-//       //   'is-valid-aadhaar',
-//       //   'Enter a valid Aadhaar number',
-//       //   (value) => isValidAadhaar(value)
-//       // ),
-//     aadhaar_mobile_number: Yup.string()
-//     .matches(/^[6-9]\d{9}$/, 'Enter a valid 10-digit mobile number')
-//       .matches(/^[0-9]+$/, 'Only numbers are allowed') // ✅ फक्त numbers
-//       .matches(/^[0-9]{10}$/, 'Mobile number must be exactly 10 digits'),
-//       // .required('Mobile number is required'),
-//     user_email: Yup.string().email('Invalid email format'),
-//   }),
-//   3: Yup.object({
-//     current_address: Yup.string().required('Current address is required'),
-//     current_mobile_number: Yup.string()
-//      .matches(/^[6-9]\d{9}$/, 'Enter a valid 10-digit mobile number')
-//     .matches(/^[0-9]+$/, 'Only numbers are allowed') // ✅ फक्त numbers
-//       .matches(/^[0-9]{10}$/, 'Mobile number must be exactly 10 digits')
-//       .required('Mobile number is required'),
-//     current_pincode: Yup.string()
-//       .matches(/^[0-9]{6}$/, 'Pincode must be exactly 6 digits'),
-//     aadhaar_pincode: Yup.string()
-//       .matches(/^[0-9]{6}$/, 'Pincode must be exactly 6 digits'),
-//     // voter_card_number: Yup.string()
-//     //   .matches(/^[A-Z0-9]{10}$/, 'Voter card number must be exactly 10 digits'),
+      aadhaar_number: Yup.string(),
+      // .required('Aadhaar number is required')
+      // .test(
+      //   'is-valid-aadhaar',
+      //   'Enter a valid Aadhaar number',
+      //   (value) => isValidAadhaar(value)
+      // ),
+    aadhaar_mobile_number: Yup.string()
+    .matches(/^[6-9]\d{9}$/, 'Enter a valid 10-digit mobile number')
+      .matches(/^[0-9]+$/, 'Only numbers are allowed') // ✅ फक्त numbers
+      .matches(/^[0-9]{10}$/, 'Mobile number must be exactly 10 digits'),
+      // .required('Mobile number is required'),
+    user_email: Yup.string().email('Invalid email format'),
+  }),
+  3: Yup.object({
+    current_address: Yup.string().required('Current address is required'),
+    current_mobile_number: Yup.string()
+     .matches(/^[6-9]\d{9}$/, 'Enter a valid 10-digit mobile number')
+    .matches(/^[0-9]+$/, 'Only numbers are allowed') // ✅ फक्त numbers
+      .matches(/^[0-9]{10}$/, 'Mobile number must be exactly 10 digits')
+      .required('Mobile number is required'),
+    current_pincode: Yup.string()
+      .matches(/^[0-9]{6}$/, 'Pincode must be exactly 6 digits'),
+    aadhaar_pincode: Yup.string()
+      .matches(/^[0-9]{6}$/, 'Pincode must be exactly 6 digits'),
+    // voter_card_number: Yup.string()
+    //   .matches(/^[A-Z0-9]{10}$/, 'Voter card number must be exactly 10 digits'),
 
 
-//     voter_card_number: Yup.string().when("voter_card_type", (type, schema) => {
-//   if (type === "EPIC 10 Digit") {
-//     return schema
-//       .matches(/^[A-Z0-9]{10}$/, "Voter card number must be exactly 10 characters")
-//       // .required("Voter card number is required");
-//   }
+    voter_card_number: Yup.string().when("voter_card_type", (type, schema) => {
+  if (type === "EPIC 10 Digit") {
+    return schema
+      .matches(/^[A-Z0-9]{10}$/, "Voter card number must be exactly 10 characters")
+      // .required("Voter card number is required");
+  }
 
-//   if (type === "EPIC 14 Digit") {
-//     return schema
-//       .matches(/^[A-Z0-9]{14}$/, "Voter card number must be exactly 14 characters")
-//       // .required("Voter card number is required");
-//   }
+  if (type === "EPIC 14 Digit") {
+    return schema
+      .matches(/^[A-Z0-9]{14}$/, "Voter card number must be exactly 14 characters")
+      // .required("Voter card number is required");
+  }
 
-//   return schema;
-// })
+  return schema;
+})
 
 
 
-//   }),
-//   4: Yup.object({
-//     // residency_since: Yup.string()
-//       // .required('Residency since is required'),
-//   }),
-//   5: Yup.object({
-//     num_family_members: Yup.number(),
-//       // .min(1, 'At least 1 family member is required')
-//       // .max(6, 'Maximum 6 family members allowed'),
-//       // .required('Number of family members is required'),
-//  family_member1_aadhaar: Yup.string()
-//       // .required('Aadhaar number is required')
-//       // .test(
-//       //   'is-valid-aadhaar',
-//       //   'Enter a valid Aadhaar number',
-//       //   (value) => isValidAadhaar(value)
-//       // ),
+  }),
+  4: Yup.object({
+    // residency_since: Yup.string()
+      // .required('Residency since is required'),
+  }),
+  5: Yup.object({
+    num_family_members: Yup.number(),
+      // .min(1, 'At least 1 family member is required')
+      // .max(6, 'Maximum 6 family members allowed'),
+      // .required('Number of family members is required'),
+ family_member1_aadhaar: Yup.string()
+      // .required('Aadhaar number is required')
+      // .test(
+      //   'is-valid-aadhaar',
+      //   'Enter a valid Aadhaar number',
+      //   (value) => isValidAadhaar(value)
+      // ),
     
 
 
-//   }),
-//   6: Yup.object({}),
-//   7: Yup.object({}),
+  }),
+  6: Yup.object({}),
+  7: Yup.object({}),
 }
 
 
@@ -1745,36 +1745,45 @@ if (residency_since instanceof Date) {
                 { name: 'doc_side_view', label: 'Side View', accept: 'image/*', icon: '🏗️' },
                 { name: 'doc_front_view', label: 'Front View', accept: 'image/*', icon: '🏗️' },
 
-                  // { name: 'adivashihutimage', label: 'Hut Image', accept: 'image/*,.pdf', icon: 'Home' },
-                    
-
-                // ...(formik.values.residency_since && new Date(formik.values.residency_since.split('-').reverse().join('-')) <= new Date('2000-01-01')
-                ...(formik.values.residency_since &&
-  formik.values.residency_since <= new Date(2000, 0, 1)
+                 
+  //               ...(formik.values.residency_since &&
+  // formik.values.residency_since <= new Date(2000, 0, 1)
   
-                  ? [
-                      { name: 'doc_before_2000', label: 'Hut Owner Document Before 2000 Proof', accept: 'image/*,.pdf,.doc,.docx', icon: '',multiple: true },
-                      // { name: 'submitted_docs_before_2000', label: 'Hut Owner Document Before 2000 Proof', accept: 'image/*,.pdf', icon: '' }
-                    ]
-                  : []
-                ),
-                // ...(formik.values.residency_since && new Date(formik.values.residency_since.split('-').reverse().join('-')) > new Date('2000-01-01')
-                ...(formik.values.residency_since &&
-  formik.values.residency_since > new Date(2000, 0, 1)
-                  // ? [{ name: 'after_2000_proof_submitted', label: 'Hut Owner Document After 2000 Proof', accept: 'image/*,.pdf', icon: '' }]
-                  ?[{
-    name: 'after_2000_proof_submitted',
-    label: 'Hut Owner Document After 2000 Proof',
-    accept: 'image/*,.pdf,.doc,.docx',
-    icon: '📄',
-    multiple: true   // ✅ ADD THIS
-  }]
-                  : []
-                ),
-                // { name: 'possession_doc_info', label: 'Possession Document', accept: 'image/*,.pdf', icon: '🏡' },
+  //                 ? [
+  //                     { name: 'doc_before_2000', label: 'Hut Owner Document Before 2000 Proof', accept: 'image/*,.pdf,.doc,.docx', icon: '',multiple: true },
+  //                   ]
+  //                 : []
+  //               ),
+                
+  //               ...(formik.values.residency_since &&
+  // formik.values.residency_since > new Date(2000, 0, 1)
+               
+  //                 ?[{
+  //   name: 'after_2000_proof_submitted',
+  //   label: 'Hut Owner Document After 2000 Proof',
+  //   accept: 'image/*,.pdf,.doc,.docx',
+  //   icon: '📄',
+  //   multiple: true   // ✅ ADD THIS
+  // }]
+  //                 : []
+  //               ),
+
+
+  ...[
+  { name: 'doc_before_2000', label: 'Hut Owner Document Before 2000 Proof', accept: 'image/*,.pdf,.doc,.docx', icon: '', multiple: true },
+],
+
+...[{
+  name: 'after_2000_proof_submitted',
+  label: 'Hut Owner Document After 2000 Proof',
+  accept: 'image/*,.pdf,.doc,.docx',
+  icon: '📄',
+  multiple: true   // ✅ ADD THIS
+}],
+              
                 { name: 'Seldeclaration_letter', label: 'Self Declaration - A', accept: 'image/*,.pdf', icon: '✍️' },
                 { name: 'Ration_card_info', label: 'Self-Declaration Form for Self-Assessment - B', accept: 'image/*,.pdf', icon: '📁' },
-                // { name: 'document_upload', label: 'General Document', accept: 'image/*,.pdf,.doc,.docx', icon: 'Folder' },
+                
                 { name: 'sale_agreement', label: 'Sale Agreement', accept: '.pdf,.doc,.docx,image/*', icon: '📜', multiple: true },
                 { name: 'biometric', label: 'Biometric Photo', accept: '.pdf,.doc,.docx,image/*', icon: '📜', multiple: true },
                 { name: 'video_inside', label: 'Inside Video', accept: 'video/*', icon: '📹' },
@@ -2128,7 +2137,9 @@ return(
 
 
   {/* Next / Submit */}
-{isFinalBySurvey ? (
+
+
+{/* {isFinalBySurvey ? (
   <button
     type="submit"
     disabled={loading || !formik.isValid}
@@ -2151,6 +2162,56 @@ return(
     className="w-full sm:w-auto flex items-center justify-center gap-3 px-6 py-3 bg-green-600 text-white rounded-xl hover:bg-green-700"
   >
     <Save size={18} /> Submit
+  </button>
+)} */}
+
+
+{/* Next / Submit */}
+{isFinalBySurvey ? (
+  <button
+    type="button"
+    onClick={() => handleSubmit(formik.values)}
+    disabled={loading}
+    className="w-full sm:w-auto flex items-center justify-center gap-3 px-6 py-3 bg-green-600 text-white rounded-xl hover:bg-green-700 disabled:opacity-60 disabled:cursor-not-allowed"
+  >
+    {loading ? (
+      <>
+        <svg className="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"></path>
+        </svg>
+        Submitting...
+      </>
+    ) : (
+      <><Save size={18} /> Submit</>
+    )}
+  </button>
+) : currentStep < steps.length ? (
+  <button
+    type="button"
+    onClick={() => nextStep(formik)}
+    className="w-full sm:w-auto flex items-center justify-center gap-3 px-6 py-3 bg-blue-600 text-white rounded-xl hover:bg-blue-700"
+  >
+    Next <ChevronRight size={18} />
+  </button>
+) : (
+  <button
+    type="button"
+    onClick={() => handleSubmit(formik.values)}
+    disabled={loading}
+    className="w-full sm:w-auto flex items-center justify-center gap-3 px-6 py-3 bg-green-600 text-white rounded-xl hover:bg-green-700 disabled:opacity-60 disabled:cursor-not-allowed"
+  >
+    {loading ? (
+      <>
+        <svg className="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"></path>
+        </svg>
+        Submitting...
+      </>
+    ) : (
+      <><Save size={18} /> Submit</>
+    )}
   </button>
 )}
 
