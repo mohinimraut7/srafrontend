@@ -59,7 +59,6 @@ const fetchAndSetUserProfile = async () => {
   return null
 }
 
-
 const validationSchemas = {
   1: Yup.object({
     // slum_id: Yup.string().required('Slum ID is required'),
