@@ -64,90 +64,90 @@ const fetchAndSetUserProfile = async () => {
 
 
 const validationSchemas = {
-  1: Yup.object({
-    // slum_id: Yup.string().required('Slum ID is required'),
-    // name_of_slum_area: Yup.string().required('Hut name is required'),
-    // municipal_corporation: Yup.string().required('Municipal Corporation is required'),
-    // ward: Yup.string().required('Ward is required'),
-    // district: Yup.string().required('District is required'),
-    // taluka: Yup.string().required('Taluka is required'),
-  }),
-  2: Yup.object({
-    first_name: Yup.string().matches(/^[A-Za-z\s]+$/, "Only alphabets are allowed").required('First name is required'),
-    middle_name: Yup.string().matches(/^[A-Za-z\s]+$/, "Only alphabets are allowed").required('Middle name is required'),
-    last_name: Yup.string().matches(/^[A-Za-z\s]+$/, "Only alphabets are allowed").required('Last name is required'),
-    gender: Yup.string().required('Gender is required'),
+//   1: Yup.object({
+//     // slum_id: Yup.string().required('Slum ID is required'),
+//     // name_of_slum_area: Yup.string().required('Hut name is required'),
+//     // municipal_corporation: Yup.string().required('Municipal Corporation is required'),
+//     // ward: Yup.string().required('Ward is required'),
+//     // district: Yup.string().required('District is required'),
+//     // taluka: Yup.string().required('Taluka is required'),
+//   }),
+//   2: Yup.object({
+//     first_name: Yup.string().matches(/^[A-Za-z\s]+$/, "Only alphabets are allowed").required('First name is required'),
+//     middle_name: Yup.string().matches(/^[A-Za-z\s]+$/, "Only alphabets are allowed").required('Middle name is required'),
+//     last_name: Yup.string().matches(/^[A-Za-z\s]+$/, "Only alphabets are allowed").required('Last name is required'),
+//     gender: Yup.string().required('Gender is required'),
     
-      aadhaar_number: Yup.string(),
-      // .required('Aadhaar number is required')
-      // .test(
-      //   'is-valid-aadhaar',
-      //   'Enter a valid Aadhaar number',
-      //   (value) => isValidAadhaar(value)
-      // ),
-    aadhaar_mobile_number: Yup.string()
-    .matches(/^[6-9]\d{9}$/, 'Enter a valid 10-digit mobile number')
-      .matches(/^[0-9]+$/, 'Only numbers are allowed') // ✅ फक्त numbers
-      .matches(/^[0-9]{10}$/, 'Mobile number must be exactly 10 digits'),
-      // .required('Mobile number is required'),
-    user_email: Yup.string().email('Invalid email format'),
-  }),
-  3: Yup.object({
-    current_address: Yup.string().required('Current address is required'),
-    current_mobile_number: Yup.string()
-     .matches(/^[6-9]\d{9}$/, 'Enter a valid 10-digit mobile number')
-    .matches(/^[0-9]+$/, 'Only numbers are allowed') // ✅ फक्त numbers
-      .matches(/^[0-9]{10}$/, 'Mobile number must be exactly 10 digits')
-      .required('Mobile number is required'),
-    current_pincode: Yup.string()
-      .matches(/^[0-9]{6}$/, 'Pincode must be exactly 6 digits'),
-    aadhaar_pincode: Yup.string()
-      .matches(/^[0-9]{6}$/, 'Pincode must be exactly 6 digits'),
-    // voter_card_number: Yup.string()
-    //   .matches(/^[A-Z0-9]{10}$/, 'Voter card number must be exactly 10 digits'),
+//       aadhaar_number: Yup.string(),
+//       // .required('Aadhaar number is required')
+//       // .test(
+//       //   'is-valid-aadhaar',
+//       //   'Enter a valid Aadhaar number',
+//       //   (value) => isValidAadhaar(value)
+//       // ),
+//     aadhaar_mobile_number: Yup.string()
+//     .matches(/^[6-9]\d{9}$/, 'Enter a valid 10-digit mobile number')
+//       .matches(/^[0-9]+$/, 'Only numbers are allowed') // ✅ फक्त numbers
+//       .matches(/^[0-9]{10}$/, 'Mobile number must be exactly 10 digits'),
+//       // .required('Mobile number is required'),
+//     user_email: Yup.string().email('Invalid email format'),
+//   }),
+//   3: Yup.object({
+//     current_address: Yup.string().required('Current address is required'),
+//     current_mobile_number: Yup.string()
+//      .matches(/^[6-9]\d{9}$/, 'Enter a valid 10-digit mobile number')
+//     .matches(/^[0-9]+$/, 'Only numbers are allowed') // ✅ फक्त numbers
+//       .matches(/^[0-9]{10}$/, 'Mobile number must be exactly 10 digits')
+//       .required('Mobile number is required'),
+//     current_pincode: Yup.string()
+//       .matches(/^[0-9]{6}$/, 'Pincode must be exactly 6 digits'),
+//     aadhaar_pincode: Yup.string()
+//       .matches(/^[0-9]{6}$/, 'Pincode must be exactly 6 digits'),
+//     // voter_card_number: Yup.string()
+//     //   .matches(/^[A-Z0-9]{10}$/, 'Voter card number must be exactly 10 digits'),
 
 
-    voter_card_number: Yup.string().when("voter_card_type", (type, schema) => {
-  if (type === "EPIC 10 Digit") {
-    return schema
-      .matches(/^[A-Z0-9]{10}$/, "Voter card number must be exactly 10 characters")
-      // .required("Voter card number is required");
-  }
+//     voter_card_number: Yup.string().when("voter_card_type", (type, schema) => {
+//   if (type === "EPIC 10 Digit") {
+//     return schema
+//       .matches(/^[A-Z0-9]{10}$/, "Voter card number must be exactly 10 characters")
+//       // .required("Voter card number is required");
+//   }
 
-  if (type === "EPIC 14 Digit") {
-    return schema
-      .matches(/^[A-Z0-9]{14}$/, "Voter card number must be exactly 14 characters")
-      // .required("Voter card number is required");
-  }
+//   if (type === "EPIC 14 Digit") {
+//     return schema
+//       .matches(/^[A-Z0-9]{14}$/, "Voter card number must be exactly 14 characters")
+//       // .required("Voter card number is required");
+//   }
 
-  return schema;
-})
+//   return schema;
+// })
 
 
 
-  }),
-  4: Yup.object({
-    // residency_since: Yup.string()
-      // .required('Residency since is required'),
-  }),
-  5: Yup.object({
-    num_family_members: Yup.number(),
-      // .min(1, 'At least 1 family member is required')
-      // .max(6, 'Maximum 6 family members allowed'),
-      // .required('Number of family members is required'),
- family_member1_aadhaar: Yup.string()
-      // .required('Aadhaar number is required')
-      // .test(
-      //   'is-valid-aadhaar',
-      //   'Enter a valid Aadhaar number',
-      //   (value) => isValidAadhaar(value)
-      // ),
+//   }),
+//   4: Yup.object({
+//     // residency_since: Yup.string()
+//       // .required('Residency since is required'),
+//   }),
+//   5: Yup.object({
+//     num_family_members: Yup.number(),
+//       // .min(1, 'At least 1 family member is required')
+//       // .max(6, 'Maximum 6 family members allowed'),
+//       // .required('Number of family members is required'),
+//  family_member1_aadhaar: Yup.string()
+//       // .required('Aadhaar number is required')
+//       // .test(
+//       //   'is-valid-aadhaar',
+//       //   'Enter a valid Aadhaar number',
+//       //   (value) => isValidAadhaar(value)
+//       // ),
     
 
 
-  }),
-  6: Yup.object({}),
-  7: Yup.object({}),
+//   }),
+//   6: Yup.object({}),
+//   7: Yup.object({}),
 }
 
 
@@ -1888,7 +1888,7 @@ if (residency_since instanceof Date) {
 
 {/* VIDEO PREVIEW */}
 {/* VIDEO PREVIEW */}
-{accept?.includes("video") && !videoReady[name] && (
+{/* {accept?.includes("video") && !videoReady[name] && (
   <button
     type="button"
     onClick={() => setVideoReady(prev => ({ ...prev, [name]: true }))}
@@ -1918,9 +1918,33 @@ if (residency_since instanceof Date) {
     muted
     className="mt-3 w-full rounded-lg border"
   />
+)} */}
+
+{accept?.includes("video") && (
+  <button
+    type="button"
+    onClick={() => startVideoRecording(name)}
+    disabled={recordingField !== null}
+    className="mt-2 w-full bg-red-600 text-white py-2 rounded-lg hover:bg-red-700"
+  >
+    {/* {recordingField === name
+      ? `Recording... ${recordingTimer}s / 15s`
+      : "Record Vedio (Max 15 sec)"} */}
+
+      {recordingField === name
+  ? <><span className="font-bold text-lg">Recording... {recordingTimer}s / 15s</span></>
+  : "Record Vedio (Max 15 sec)"}
+  </button>
 )}
 
-
+{accept?.includes("video") && recordingField === name && (
+  <video
+    ref={(el) => (videoRefs.current[name] = el)}
+    autoPlay
+    muted
+    className="mt-3 w-full rounded-lg border"
+  />
+)}
 
 
 
