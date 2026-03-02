@@ -229,6 +229,7 @@ const videoRefs = useRef({})
 
  let role = null;
 let user_id = null;
+const webcamStreamRef = useRef(null)
 
 if (typeof window !== "undefined") {
   const userData = localStorage.getItem("user");
@@ -404,7 +405,24 @@ const handleSaveDraft = async (values) => {
   }
 
 
-
+const stopWebcamStream = () => {
+  // Stop via webcamRef internal stream
+  if (webcamRef.current?.stream) {
+    webcamRef.current.stream.getTracks().forEach(t => {
+      t.enabled = false
+      t.stop()
+    })
+  }
+  // Also stop via our own ref if captured
+  if (webcamStreamRef.current) {
+    webcamStreamRef.current.getTracks().forEach(t => {
+      t.enabled = false
+      t.stop()
+    })
+    webcamStreamRef.current = null
+  }
+  setActiveCamera(null)
+}
 
 const capturePhoto = async (fieldName) => {
   const imageSrc = webcamRef.current?.getScreenshot()
@@ -447,7 +465,8 @@ const capturePhoto = async (fieldName) => {
     }
   })
 
-  setActiveCamera(null)
+  // setActiveCamera(null)
+  stopWebcamStream()
 }
 
   const handleSlumChange = (e, form) => {
@@ -635,6 +654,13 @@ const capturePhoto = async (fieldName) => {
 const startVideoRecording = async (fieldName) => {
   try {
     if (recordingField) return;
+
+    // ✅ CRITICAL — release webcam stream before grabbing video+audio
+    stopWebcamStream()
+
+    // Small delay to let WebView release the camera hardware
+    await new Promise(resolve => setTimeout(resolve, 300))
+
 
     const stream = await navigator.mediaDevices.getUserMedia({
       video: { facingMode: "user" },
@@ -2086,7 +2112,9 @@ if (residency_since instanceof Date) {
 
       <button
         type="button"
-        onClick={() => setActiveCamera(null)}
+        // onClick={() => setActiveCamera(null)}
+          onClick={() => stopWebcamStream()} // ← was setActiveCamera(null)
+
         className="bg-red-500 text-white px-4 py-2 rounded-lg"
       >
         Cancel
