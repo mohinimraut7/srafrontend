@@ -707,6 +707,8 @@ const startVideoRecording = async (fieldName) => {
 };
 
 
+
+
 const handleFileChange = (e) => {
   const { name, files: selectedFiles } = e.target
 
