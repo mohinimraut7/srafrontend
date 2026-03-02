@@ -519,6 +519,7 @@ const capturePhoto = async (fieldName) => {
 
 
   }
+  
 
   const steps = [
     { id: 1, title: 'Basic Information', icon: 'Building' },
