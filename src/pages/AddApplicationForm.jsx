@@ -562,70 +562,150 @@ const capturePhoto = async (fieldName) => {
 // };
 
 
+
+
+
+// const startVideoRecording = async (fieldName) => {
+//   try {
+//     if (recordingField) return; // prevent multiple recording
+
+//     const stream = await navigator.mediaDevices.getUserMedia({
+//       video: true,
+//       audio: true
+//     });
+
+//     setRecordingField(fieldName);
+//     setRecordingTimer(0);
+
+//     // ✅ Video tag render होण्यासाठी थोडा वेळ द्या
+//     setTimeout(() => {
+//       if (videoRefs.current[fieldName]) {
+//         videoRefs.current[fieldName].srcObject = stream;
+//       }
+//     }, 100);
+
+//     const recorder = new MediaRecorder(stream);
+//     let chunks = [];
+
+//     // ✅ Timer interval
+//     let seconds = 0;
+//     const timerInterval = setInterval(() => {
+//       seconds += 1;
+//       setRecordingTimer(seconds);
+//     }, 1000);
+
+//     recorder.ondataavailable = (event) => {
+//       if (event.data.size > 0) {
+//         chunks.push(event.data);
+//       }
+//     };
+
+//     recorder.onstop = () => {
+//       const blob = new Blob(chunks, { type: "video/webm" });
+//       const file = new File([blob], `${fieldName}_${Date.now()}.webm`, {
+//         type: "video/webm"
+//       });
+
+//       setFiles(prev => ({
+//         ...prev,
+//         [fieldName]: file
+//       }));
+
+//       stream.getTracks().forEach(track => track.stop());
+//       setRecordingField(null);
+//       setRecordingTimer(0);
+//       clearInterval(timerInterval);
+//     };
+
+//     recorder.start();
+
+//     setTimeout(() => {
+//       recorder.stop();
+//       clearInterval(timerInterval);
+//     }, 15000);
+
+//   } catch (err) {
+//     alert("Camera permission denied or error occurred");
+//     console.error(err);
+//   }
+// };
+
+
+
 const startVideoRecording = async (fieldName) => {
   try {
-    if (recordingField) return; // prevent multiple recording
+    if (recordingField) return;
 
     const stream = await navigator.mediaDevices.getUserMedia({
-      video: true,
-      audio: true
+      video: { facingMode: "user" },
+      audio: {
+        echoCancellation: false,
+        noiseSuppression: false,
+        autoGainControl: false
+      }
     });
 
     setRecordingField(fieldName);
     setRecordingTimer(0);
 
-    // ✅ Video tag render होण्यासाठी थोडा वेळ द्या
     setTimeout(() => {
       if (videoRefs.current[fieldName]) {
         videoRefs.current[fieldName].srcObject = stream;
       }
     }, 100);
 
-    const recorder = new MediaRecorder(stream);
-    let chunks = [];
+    const mimeType = MediaRecorder.isTypeSupported("video/mp4")
+      ? "video/mp4"
+      : MediaRecorder.isTypeSupported("video/webm;codecs=vp8,opus")
+      ? "video/webm;codecs=vp8,opus"
+      : "video/webm";
 
-    // ✅ Timer interval
+    const recorder = new MediaRecorder(stream, { mimeType });
+    const chunks = [];
+
     let seconds = 0;
     const timerInterval = setInterval(() => {
       seconds += 1;
       setRecordingTimer(seconds);
     }, 1000);
 
-    recorder.ondataavailable = (event) => {
-      if (event.data.size > 0) {
-        chunks.push(event.data);
-      }
+    recorder.ondataavailable = (e) => {
+      if (e.data && e.data.size > 0) chunks.push(e.data);
     };
 
     recorder.onstop = () => {
-      const blob = new Blob(chunks, { type: "video/webm" });
-      const file = new File([blob], `${fieldName}_${Date.now()}.webm`, {
-        type: "video/webm"
+      clearInterval(timerInterval);
+      stream.getTracks().forEach(t => {
+        t.enabled = false;
+        t.stop();
       });
-
-      setFiles(prev => ({
-        ...prev,
-        [fieldName]: file
-      }));
-
-      stream.getTracks().forEach(track => track.stop());
+      const blob = new Blob(chunks, { type: mimeType });
+      const ext = mimeType.includes("mp4") ? "mp4" : "webm";
+      const file = new File(
+        [blob],
+        `${fieldName}_${Date.now()}.${ext}`,
+        { type: mimeType }
+      );
+      setFiles(prev => ({ ...prev, [fieldName]: file }));
       setRecordingField(null);
       setRecordingTimer(0);
-      clearInterval(timerInterval);
     };
 
-    recorder.start();
+    recorder.start(100);
 
     setTimeout(() => {
-      recorder.stop();
+      if (recorder.state === "recording") recorder.stop();
       clearInterval(timerInterval);
     }, 15000);
 
   } catch (err) {
-    alert("Camera permission denied or error occurred");
-    console.error(err);
+    console.error("startVideoRecording failed:", err);
+    setRecordingField(null);
+    setRecordingTimer(0);
+    alert("Camera / Mic error: " + err.message);
   }
 };
+
 
 const handleFileChange = (e) => {
   const { name, files: selectedFiles } = e.target
