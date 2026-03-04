@@ -1598,7 +1598,7 @@ if (residency_since instanceof Date) {
               </div>
             </div>
 
-            <div className="bg-gradient-to-r from-green-50 to-emerald-50 rounded-xl p-6 border border-green-100">
+            {/* <div className="bg-gradient-to-r from-green-50 to-emerald-50 rounded-xl p-6 border border-green-100">
               <h4 className="text-lg font-semibold text-gray-800 mb-4 flex items-center">
                 <div className="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center mr-3">
                   <MapPin className="w-5 h-5 text-white" />
@@ -1629,7 +1629,41 @@ if (residency_since instanceof Date) {
                   </div>
                 )}
               </div>
-            </div>
+            </div> */}
+
+
+            <div className="bg-gradient-to-r from-green-50 to-emerald-50 rounded-xl p-6 border border-green-100">
+  <h4 className="text-lg font-semibold text-gray-800 mb-4 flex items-center">
+    <div className="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center mr-3">
+      <MapPin className="w-5 h-5 text-white" />
+    </div>
+    Location Services
+  </h4>
+  <div className="flex flex-col sm:flex-row items-center gap-4">
+    <button
+      type="button"
+      onClick={() => fetchCurrentLocation(formik)}
+      disabled={fetchingLocation}
+      className={`w-full sm:w-auto flex items-center justify-center gap-3 px-6 py-3 rounded-lg font-semibold transition-all ${
+        fetchingLocation ? 'bg-gray-400 cursor-not-allowed' : 'bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 shadow-lg'
+      } text-white`}
+    >
+      {fetchingLocation ? (
+        <>Fetching...</>
+      ) : (
+        <><Crosshair size={20} /> Get Current Location</>
+      )}
+    </button>
+    {formik.values.biometric_lat && formik.values.biometric_long && (
+      <div className="w-full sm:w-auto flex items-center gap-2 px-4 py-2 bg-green-100 border border-green-300 rounded-lg">
+        <div className="w-3 h-3 bg-green-500 rounded-full animate-pulse"></div>
+        <span className="text-green-700 font-medium text-sm">
+          Location: {parseFloat(formik.values.biometric_lat).toFixed(4)}, {parseFloat(formik.values.biometric_long).toFixed(4)}
+        </span>
+      </div>
+    )}
+  </div>
+</div>
           </div>
         )
 
@@ -1986,7 +2020,7 @@ if (residency_since instanceof Date) {
                 { name: 'video_self_declaration', label: 'Self Declaration Video', accept: 'video/*', icon: '🎥' },
               
               ].map(({ name, label, accept, icon, multiple }) => (
-                <div key={name} className="border border-gray-200 rounded-lg p-4 bg-white shadow-sm hover:shadow-md transition-all">
+                <div key={name} className="border border-gray-200 rounded-lg p-4 bg-white shadow-sm hover:shadow-md transition-all overflow-hidden">
                   <div className="flex items-center mb-3">
                     <span className="text-2xl mr-2">{icon}</span>
                     <h4 className="font-semibold text-gray-800">{label}</h4>
@@ -2191,7 +2225,7 @@ if (residency_since instanceof Date) {
 
 
 
-    <div className="flex gap-4 mt-3">
+    {/* <div className="flex gap-4 mt-3">
       <button
         type="button"
         onClick={() => capturePhoto(name)}
@@ -2209,28 +2243,64 @@ if (residency_since instanceof Date) {
       >
         Cancel
       </button>
-    </div>
+    </div> */}
+    <div className="flex flex-col sm:flex-row gap-3 mt-3">
+  <button
+    type="button"
+    onClick={() => capturePhoto(name)}
+    className="w-full sm:w-auto bg-green-600 text-white px-4 py-2 rounded-lg"
+  >
+    Capture
+  </button>
+
+  <button
+    type="button"
+    onClick={() => stopWebcamStream()}
+    className="w-full sm:w-auto bg-red-500 text-white px-4 py-2 rounded-lg"
+  >
+    Cancel
+  </button>
+</div>
   </div>
 )}
 
 
-                  {files[name] && (
+                  {/* {files[name] && (
                     <div className="mt-2 p-2 bg-green-50 rounded">
                       {Array.isArray(files[name]) ? (
                         files[name].map((file, idx) => (
                           <div key={idx} className="flex items-center text-sm text-green-700 mb-1">
                             <span className="text-green-500 mr-2">Check</span>
-                            <p className="truncate">{file.name}</p>
+                            <p className="truncate min-w-0 max-w-full">{file.name}</p>
                           </div>
                         ))
                       ) : (
                         <div className="flex items-center text-sm text-green-700">
                           <span className="text-green-500 mr-2">Check</span>
-                          <p className="truncate">{files[name].name}</p>
+                          <p className="truncate min-w-0 max-w-full">{files[name].name}</p>
                         </div>
                       )}
                     </div>
-                  )}
+                  )} */}
+
+                  {files[name] && (
+  <div className="mt-2 p-2 bg-green-50 rounded overflow-hidden">
+    {Array.isArray(files[name]) ? (
+      files[name].map((file, idx) => (
+        <div key={idx} className="flex items-center text-sm text-green-700 mb-1 min-w-0">
+          <span className="text-green-500 mr-2 flex-shrink-0">✓</span>
+          <p className="truncate min-w-0 flex-1">{file.name}</p>
+        </div>
+      ))
+    ) : (
+      <div className="flex items-center text-sm text-green-700 min-w-0">
+        <span className="text-green-500 mr-2 flex-shrink-0">✓</span>
+        <p className="truncate min-w-0 flex-1">{files[name].name}</p>
+      </div>
+    )}
+  </div>
+)}
+
                 </div>
               ))}
             </div>
@@ -2274,7 +2344,7 @@ if (residency_since instanceof Date) {
         </div>
 
         <div className="bg-white rounded-xl shadow-xl p-8 mb-6">
-          {success && (
+          {/* {success && (
             <div className="bg-gradient-to-r from-green-50 to-emerald-50 border border-green-300 text-green-800 px-6 py-4 rounded-lg mb-6 flex items-center">
               <span className="text-2xl mr-3">Success</span>
               <span className="font-medium">{success}</span>
@@ -2285,7 +2355,21 @@ if (residency_since instanceof Date) {
               <span className="text-2xl mr-3">Error</span>
               <span className="font-medium">{error}</span>
             </div>
-          )}
+          )} */}
+
+{success && (
+  <div className="bg-gradient-to-r from-green-50 to-emerald-50 border border-green-300 text-green-800 px-4 py-4 rounded-lg mb-6 flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-3">
+    <span className="text-2xl flex-shrink-0">✅</span>
+    <span className="font-medium break-words min-w-0 w-full">{success}</span>
+  </div>
+)}
+{error && (
+  <div className="bg-gradient-to-r from-red-50 to-pink-50 border border-red-300 text-red-800 px-4 py-4 rounded-lg mb-6 flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-3">
+    <span className="text-2xl flex-shrink-0">❌</span>
+    <span className="font-medium break-words min-w-0 w-full">{error}</span>
+  </div>
+)}
+
 
           <Formik
           enableReinitialize

@@ -15065,7 +15065,13 @@ const filteredApplications = applications
 </button>
       </div> */}
 
-      <div className="mb-9 flex flex-col sm:flex-row justify-between items-center gap-4">
+
+
+
+
+
+
+{/* <div className="mb-9 flex flex-col sm:flex-row justify-between items-center gap-4">
   
   <div>
     <h2 
@@ -15076,13 +15082,13 @@ const filteredApplications = applications
     </h2>
   </div>
 
-  {/* Right Side Buttons */}
-  <div className="flex flex-wrap gap-3">
+<div className="flex flex-col sm:flex-row sm:flex-wrap gap-3">
 
-    {/* Download Excel */}
+  
     <button
       onClick={handleDownloadExcel}
-      className="group relative inline-flex items-center gap-2 
+      className="group relative flex items-center justify-center gap-2 
+      w-[95%] sm:w-auto mx-auto sm:mx-0
       px-5 py-3 rounded-xl font-semibold text-white 
       bg-gradient-to-r from-green-500 to-green-600
       hover:from-green-600 hover:to-green-700
@@ -15094,10 +15100,11 @@ const filteredApplications = applications
       Download Excel
     </button>
 
-    {/* Download PDF */}
+    
     <button
       onClick={handleDownloadPDF}
-      className="group relative inline-flex items-center gap-2 
+      className="group relative flex items-center justify-center gap-2 
+      w-[95%] sm:w-auto mx-auto sm:mx-0
       px-5 py-3 rounded-xl font-semibold text-white 
       bg-gradient-to-r from-blue-500 to-blue-600
       hover:from-blue-600 hover:to-blue-700
@@ -15109,10 +15116,11 @@ const filteredApplications = applications
       Download PDF
     </button>
 
-    {/* Add Application */}
+    
     <button
       onClick={() => setShowAddForm(true)}
-      className="group relative inline-flex items-center gap-2 
+      className="group relative flex items-center justify-center gap-2 
+      w-[95%] sm:w-auto mx-auto sm:mx-0
       px-6 py-3 rounded-xl font-semibold text-white 
       bg-gradient-to-r from-orange-500 to-orange-600
       hover:from-orange-600 hover:to-orange-700
@@ -15128,6 +15136,142 @@ const filteredApplications = applications
     </button>
 
   </div>
+  
+</div> */}
+
+
+
+{/* <div className="mb-9 flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
+  
+  <div>
+    <h2 
+      style={{ color: '#4A5565', textTransform: 'uppercase' }} 
+      className="text-2xl font-bold tracking-wide text-gray-800"
+    >
+      BMC Applications
+    </h2>
+  </div>
+
+  <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap">
+
+   
+    <button
+      onClick={handleDownloadExcel}
+      className="group relative flex w-full items-center justify-center gap-2 
+      sm:w-auto
+      px-5 py-3 rounded-xl font-semibold text-white 
+      bg-gradient-to-r from-green-500 to-green-600
+      hover:from-green-600 hover:to-green-700
+      shadow-md hover:shadow-xl 
+      transition-all duration-300 
+      hover:-translate-y-1 active:scale-95"
+    >
+      <Download size={18} />
+      Download Excel
+    </button>
+
+    
+    <button
+      onClick={handleDownloadPDF}
+      className="group relative flex w-full items-center justify-center gap-2 
+      sm:w-auto
+      px-5 py-3 rounded-xl font-semibold text-white 
+      bg-gradient-to-r from-blue-500 to-blue-600
+      hover:from-blue-600 hover:to-blue-700
+      shadow-md hover:shadow-xl 
+      transition-all duration-300 
+      hover:-translate-y-1 active:scale-95"
+    >
+      <Download size={18} />
+      Download PDF
+    </button>
+
+    
+    <button
+      onClick={() => setShowAddForm(true)}
+      className="group relative flex w-full items-center justify-center gap-2 
+      sm:w-auto
+      px-6 py-3 rounded-xl font-semibold text-white 
+      bg-gradient-to-r from-orange-500 to-orange-600
+      hover:from-orange-600 hover:to-orange-700
+      shadow-md hover:shadow-xl 
+      transition-all duration-300 
+      hover:-translate-y-1 active:scale-95"
+    >
+      <Plus 
+        size={18} 
+        className="transition-transform duration-300 group-hover:rotate-90" 
+      />
+      Add Application
+    </button>
+
+  </div>
+  
+</div> */}
+
+<div className="mb-9 flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
+  
+  <div>
+    <h2 
+      style={{ color: '#4A5565', textTransform: 'uppercase' }} 
+      className="text-2xl font-bold tracking-wide text-gray-800"
+    >
+      BMC Applications
+    </h2>
+  </div>
+
+  <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap">
+
+    <button
+      onClick={handleDownloadExcel}
+      className="group relative flex w-[90%] mx-auto items-center justify-center gap-2 
+      sm:w-auto sm:mx-0
+      px-5 py-3 rounded-xl font-semibold text-white 
+      bg-gradient-to-r from-green-500 to-green-600
+      hover:from-green-600 hover:to-green-700
+      shadow-md hover:shadow-xl 
+      transition-all duration-300 
+      hover:-translate-y-1 active:scale-95"
+    >
+      <Download size={18} />
+      Download Excel
+    </button>
+
+    <button
+      onClick={handleDownloadPDF}
+      className="group relative flex w-[90%] mx-auto items-center justify-center gap-2 
+      sm:w-auto sm:mx-0
+      px-5 py-3 rounded-xl font-semibold text-white 
+      bg-gradient-to-r from-blue-500 to-blue-600
+      hover:from-blue-600 hover:to-blue-700
+      shadow-md hover:shadow-xl 
+      transition-all duration-300 
+      hover:-translate-y-1 active:scale-95"
+    >
+      <Download size={18} />
+      Download PDF
+    </button>
+
+    <button
+      onClick={() => setShowAddForm(true)}
+      className="group relative flex w-[90%] mx-auto items-center justify-center gap-2 
+      sm:w-auto sm:mx-0
+      px-6 py-3 rounded-xl font-semibold text-white 
+      bg-gradient-to-r from-orange-500 to-orange-600
+      hover:from-orange-600 hover:to-orange-700
+      shadow-md hover:shadow-xl 
+      transition-all duration-300 
+      hover:-translate-y-1 active:scale-95"
+    >
+      <Plus 
+        size={18} 
+        className="transition-transform duration-300 group-hover:rotate-90" 
+      />
+      Add Application
+    </button>
+
+  </div>
+  
 </div>
 
       {/* Success/Error Messages */}

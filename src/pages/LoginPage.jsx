@@ -236,8 +236,8 @@
           </div>
 
           <div className="text-center mt-4 text-xs text-gray-400">
-            <p>© 2025 All rights reserved.</p>
-            <p>SRA</p>
+            <p>© 2026 rights reserve with</p>
+            <p>Saavi Infinet Pvt Ltd</p>
           </div>
         </div>
         {showRegisterModal && (
