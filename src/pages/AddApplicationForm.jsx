@@ -652,25 +652,112 @@ const capturePhoto = async (fieldName) => {
 
 
 
+// const startVideoRecording = async (fieldName) => {
+//   try {
+//     if (recordingField) return;
+
+//     // ✅ CRITICAL — release webcam stream before grabbing video+audio
+//     stopWebcamStream()
+
+//     // Small delay to let WebView release the camera hardware
+//     await new Promise(resolve => setTimeout(resolve, 300))
+
+
+//     const stream = await navigator.mediaDevices.getUserMedia({
+//       video: { facingMode: "user" },
+//       audio: {
+//         echoCancellation: false,
+//         noiseSuppression: false,
+//         autoGainControl: false
+//       }
+//     });
+
+//     setRecordingField(fieldName);
+//     setRecordingTimer(0);
+
+//     setTimeout(() => {
+//       if (videoRefs.current[fieldName]) {
+//         videoRefs.current[fieldName].srcObject = stream;
+//       }
+//     }, 100);
+
+//     const mimeType = MediaRecorder.isTypeSupported("video/mp4")
+//       ? "video/mp4"
+//       : MediaRecorder.isTypeSupported("video/webm;codecs=vp8,opus")
+//       ? "video/webm;codecs=vp8,opus"
+//       : "video/webm";
+
+//     const recorder = new MediaRecorder(stream, { mimeType });
+//     const chunks = [];
+
+//     let seconds = 0;
+//     const timerInterval = setInterval(() => {
+//       seconds += 1;
+//       setRecordingTimer(seconds);
+//     }, 1000);
+
+//     recorder.ondataavailable = (e) => {
+//       if (e.data && e.data.size > 0) chunks.push(e.data);
+//     };
+
+//     recorder.onstop = () => {
+//       clearInterval(timerInterval);
+//       stream.getTracks().forEach(t => {
+//         t.enabled = false;
+//         t.stop();
+//       });
+//       const blob = new Blob(chunks, { type: mimeType });
+//       const ext = mimeType.includes("mp4") ? "mp4" : "webm";
+//       const file = new File(
+//         [blob],
+//         `${fieldName}_${Date.now()}.${ext}`,
+//         { type: mimeType }
+//       );
+//       setFiles(prev => ({ ...prev, [fieldName]: file }));
+//       setRecordingField(null);
+//       setRecordingTimer(0);
+//     };
+
+//     recorder.start(100);
+
+//     setTimeout(() => {
+//       if (recorder.state === "recording") recorder.stop();
+//       clearInterval(timerInterval);
+//     }, 15000);
+
+//   } catch (err) {
+//     console.error("startVideoRecording failed:", err);
+//     setRecordingField(null);
+//     setRecordingTimer(0);
+//     alert("Camera / Mic error: " + err.message);
+//   }
+// };
+
 const startVideoRecording = async (fieldName) => {
   try {
     if (recordingField) return;
 
-    // ✅ CRITICAL — release webcam stream before grabbing video+audio
-    stopWebcamStream()
+    stopWebcamStream();
 
-    // Small delay to let WebView release the camera hardware
-    await new Promise(resolve => setTimeout(resolve, 300))
+    // Longer delay for Android WebView to fully release camera/mic hardware
+    await new Promise(resolve => setTimeout(resolve, 800));
 
-
-    const stream = await navigator.mediaDevices.getUserMedia({
-      video: { facingMode: "user" },
-      audio: {
-        echoCancellation: false,
-        noiseSuppression: false,
-        autoGainControl: false
-      }
-    });
+    let stream;
+    
+    try {
+      // First try: video + audio together
+      stream = await navigator.mediaDevices.getUserMedia({
+        video: { facingMode: "environment" }, // back camera for field survey
+        audio: true  // simple audio constraint - avoids "Could not start audio source"
+      });
+    } catch (audioErr) {
+      console.warn("Audio failed, trying video only:", audioErr);
+      // Fallback: video only if mic fails
+      stream = await navigator.mediaDevices.getUserMedia({
+        video: { facingMode: "environment" },
+        audio: false
+      });
+    }
 
     setRecordingField(fieldName);
     setRecordingTimer(0);
@@ -681,13 +768,15 @@ const startVideoRecording = async (fieldName) => {
       }
     }, 100);
 
-    const mimeType = MediaRecorder.isTypeSupported("video/mp4")
-      ? "video/mp4"
-      : MediaRecorder.isTypeSupported("video/webm;codecs=vp8,opus")
+    // Android WebView supports video/webm better than mp4
+    const mimeType = MediaRecorder.isTypeSupported("video/webm;codecs=vp8,opus")
       ? "video/webm;codecs=vp8,opus"
-      : "video/webm";
+      : MediaRecorder.isTypeSupported("video/webm")
+      ? "video/webm"
+      : "";
 
-    const recorder = new MediaRecorder(stream, { mimeType });
+    const recorderOptions = mimeType ? { mimeType } : {};
+    const recorder = new MediaRecorder(stream, recorderOptions);
     const chunks = [];
 
     let seconds = 0;
@@ -706,12 +795,13 @@ const startVideoRecording = async (fieldName) => {
         t.enabled = false;
         t.stop();
       });
-      const blob = new Blob(chunks, { type: mimeType });
-      const ext = mimeType.includes("mp4") ? "mp4" : "webm";
+      const actualMime = recorder.mimeType || "video/webm";
+      const ext = actualMime.includes("mp4") ? "mp4" : "webm";
+      const blob = new Blob(chunks, { type: actualMime });
       const file = new File(
         [blob],
         `${fieldName}_${Date.now()}.${ext}`,
-        { type: mimeType }
+        { type: actualMime }
       );
       setFiles(prev => ({ ...prev, [fieldName]: file }));
       setRecordingField(null);
@@ -732,8 +822,6 @@ const startVideoRecording = async (fieldName) => {
     alert("Camera / Mic error: " + err.message);
   }
 };
-
-
 
 
 const handleFileChange = (e) => {
@@ -2634,7 +2722,7 @@ export default ApplicationForm
 //       if (liveVideoRef.current) {
 //         liveVideoRef.current.srcObject = s
 //       }
-//     } catch (err) {
+//     } catch (err) { 
 //       setErrorMsg("Camera / Mic permission denied: " + err.message)
 //     }
 //   }
