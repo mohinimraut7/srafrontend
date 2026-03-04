@@ -733,6 +733,7 @@ const capturePhoto = async (fieldName) => {
 //   }
 // };
 
+
 const startVideoRecording = async (fieldName) => {
   try {
     if (recordingField) return;
