@@ -13756,9 +13756,19 @@ const generateJodpatra3 = async (data) => {
     const baseUrl = import.meta.env.VITE_BASE_URL || "https://sra.saavi.co.in";
 
     // ✅ Determine applicant image source
-    const imageSrc = data?.photo_self_path?.startsWith("http")
+    // const imageSrc = data?.photo_self_path?.startsWith("http")
+    //   ? data.photo_self_path
+    //   : `${baseUrl}/${data?.photo_self_path || "user2.png"}`;
+
+
+      // ✅ AFTER — proxy वापर:
+    const rawImageSrc = data?.photo_self_path?.startsWith("http")
       ? data.photo_self_path
       : `${baseUrl}/${data?.photo_self_path || "user2.png"}`;
+
+    const imageSrc = data?.photo_self_path
+      ? `${BASE_URL}/api/proxy-image?url=${encodeURIComponent(rawImageSrc)}`
+      : "/user2.png";
 
  const totalMembers = [1, 2, 3, 4, 5, 6].filter((n) => {
   return data[`family_member${n}_name`] ||
@@ -14458,9 +14468,21 @@ const generateJodpatra4 = async (data) => {
       });
     };
 
-    const imageSrc = data?.photo_self_path?.startsWith("http")
-      ? data.photo_self_path
-      : `${baseUrl}/${data?.photo_self_path || "user2.png"}`;
+    // const imageSrc = data?.photo_self_path?.startsWith("http")
+    //   ? data.photo_self_path
+    //   : `${baseUrl}/${data?.photo_self_path || "user2.png"}`;
+
+
+// AFTER — हे टाक: ✅
+const rawImageSrc = data?.photo_self_path?.startsWith("http")
+  ? data.photo_self_path
+  : `${baseUrl}/${data?.photo_self_path || "user2.png"}`;
+
+const imageSrc = data?.photo_self_path
+  ? `${BASE_URL}/api/proxy-image?url=${encodeURIComponent(rawImageSrc)}`
+  : "/user2.png";
+
+
 
     const totalMembers = [1, 2, 3, 4, 5, 6].filter((n) => {
       return data[`family_member${n}_name`] ||
