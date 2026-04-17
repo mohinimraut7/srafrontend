@@ -13334,13 +13334,27 @@ const generateIndexPDF = (app) => {
   </div>
   `;
 
-  const opt = {
+//   const opt = {
+//     margin: 0.4,
+//     filename: `INDEX_${hutSurveyId}.pdf`,
+//     image: { type: "jpeg", quality: 1 },
+//     html2canvas: { scale: 2 },
+//     jsPDF: { unit: "in", format: "a4", orientation: "portrait" },
+//   };
+
+const opt = {
     margin: 0.4,
     filename: `INDEX_${hutSurveyId}.pdf`,
-    image: { type: "jpeg", quality: 1 },
-    html2canvas: { scale: 2 },
+    image: { type: "jpeg", quality: 0.85 },  // ✅ 1 ऐवजी 0.85
+    html2canvas: { 
+      scale: 1,        // ✅ 2 ऐवजी 1
+      useCORS: true,
+      logging: false
+    },
     jsPDF: { unit: "in", format: "a4", orientation: "portrait" },
   };
+
+  html2pdf().set(opt).from(htmlContent).save();
 
   html2pdf().set(opt).from(htmlContent).save();
 };
@@ -13951,25 +13965,68 @@ const generateJodpatra3 = async (data) => {
 
         document.body.appendChild(pdfElement);
 
-        setTimeout(() => {
-          html2canvas(pdfElement, { scale: 2, useCORS: true })
-            .then((canvas) => {
-              const imgData = canvas.toDataURL("image/png");
-              const pdf = new jsPDF("p", "mm", "a4");
-              const pageWidth = pdf.internal.pageSize.getWidth();
-              const canvasHeight = (canvas.height * pageWidth) / canvas.width;
+        // setTimeout(() => {
+        //   html2canvas(pdfElement, { scale: 2, useCORS: true })
+        //     .then((canvas) => {
+        //       const imgData = canvas.toDataURL("image/png");
+        //       const pdf = new jsPDF("p", "mm", "a4");
+        //       const pageWidth = pdf.internal.pageSize.getWidth();
+        //       const canvasHeight = (canvas.height * pageWidth) / canvas.width;
 
-              pdf.addImage(imgData, "PNG", 0, 0, pageWidth, canvasHeight);
-              pdf.save(`Jodpatra-3_${data.first_name}_${data.last_name}_${Date.now()}.pdf`);
-              document.body.removeChild(pdfElement);
-              resolve(true);
-            })
-            .catch((err) => {
-              document.body.removeChild(pdfElement);
-              reject(err);
-            });
-        }, 500);
-      })
+        //       pdf.addImage(imgData, "PNG", 0, 0, pageWidth, canvasHeight);
+        //       pdf.save(`Jodpatra-3_${data.first_name}_${data.last_name}_${Date.now()}.pdf`);
+        //       document.body.removeChild(pdfElement);
+        //       resolve(true);
+        //     })
+        //     .catch((err) => {
+        //       document.body.removeChild(pdfElement);
+        //       reject(err);
+        //     });
+        // }, 500);
+    
+    setTimeout(() => {
+  html2canvas(pdfElement, { 
+    scale: 1.5, 
+    useCORS: true,
+    allowTaint: true,
+    logging: false,
+    windowWidth: 794,
+    windowHeight: 1123,
+    backgroundColor: '#ffffff'
+  })
+    .then((canvas) => {
+      const imgData = canvas.toDataURL("image/jpeg", 0.85);
+      const pdf = new jsPDF("p", "mm", "a4");
+      const pageWidth = pdf.internal.pageSize.getWidth();
+      const pageHeight = pdf.internal.pageSize.getHeight();
+      const canvasHeight = (canvas.height * pageWidth) / canvas.width;
+      
+      let heightLeft = canvasHeight;
+      let position = 0;
+      
+      pdf.addImage(imgData, "JPEG", 0, position, pageWidth, canvasHeight);
+      heightLeft -= pageHeight;
+      
+      while (heightLeft > 0) {
+        position = heightLeft - canvasHeight;
+        pdf.addPage();
+        pdf.addImage(imgData, "JPEG", 0, position, pageWidth, canvasHeight);
+        heightLeft -= pageHeight;
+      }
+      
+      pdf.save(`Jodpatra-3_${data.first_name}_${data.last_name}.pdf`);
+      document.body.removeChild(pdfElement);
+      resolve(true);
+    })
+    .catch((err) => {
+      document.body.removeChild(pdfElement);
+      reject(err);
+    });
+}, 1000);  // ✅ 500 ऐवजी 1000ms
+    
+    
+    
+    })
       .catch((err) => {
         console.error("Applicant image load failed:", err);
         const fallbackImg = `${baseUrl}/user2.png`;
@@ -14667,31 +14724,81 @@ const imageSrc = data?.photo_self_path
     `;
 
     // ✅ Common PDF save function
-    const savePDF = () => {
-      return new Promise((res, rej) => {
-        setTimeout(() => {
-          html2canvas(pdfElement, { scale: 2, useCORS: true })
-            .then((canvas) => {
-              const imgData = canvas.toDataURL("image/png");
-              const pdf = new jsPDF("p", "mm", "a4");
-              const pageWidth = pdf.internal.pageSize.getWidth();
-              const canvasHeight = (canvas.height * pageWidth) / canvas.width;
-              pdf.addImage(imgData, "PNG", 0, 0, pageWidth, canvasHeight);
-              pdf.save(`Jodpatra-4_${data.first_name}_${data.last_name}_${Date.now()}.pdf`);
-              if (document.body.contains(pdfElement)) {
-                document.body.removeChild(pdfElement);
-              }
-              res(true);
-            })
-            .catch((err) => {
-              if (document.body.contains(pdfElement)) {
-                document.body.removeChild(pdfElement);
-              }
-              rej(err);
-            });
-        }, 500);
-      });
-    };
+    // const savePDF = () => {
+    //   return new Promise((res, rej) => {
+    //     setTimeout(() => {
+    //       html2canvas(pdfElement, { scale: 2, useCORS: true })
+    //         .then((canvas) => {
+    //           const imgData = canvas.toDataURL("image/png");
+    //           const pdf = new jsPDF("p", "mm", "a4");
+    //           const pageWidth = pdf.internal.pageSize.getWidth();
+    //           const canvasHeight = (canvas.height * pageWidth) / canvas.width;
+    //           pdf.addImage(imgData, "PNG", 0, 0, pageWidth, canvasHeight);
+    //           pdf.save(`Jodpatra-4_${data.first_name}_${data.last_name}_${Date.now()}.pdf`);
+    //           if (document.body.contains(pdfElement)) {
+    //             document.body.removeChild(pdfElement);
+    //           }
+    //           res(true);
+    //         })
+    //         .catch((err) => {
+    //           if (document.body.contains(pdfElement)) {
+    //             document.body.removeChild(pdfElement);
+    //           }
+    //           rej(err);
+    //         });
+    //     }, 500);
+    //   });
+    // };
+
+const savePDF = () => {
+  return new Promise((res, rej) => {
+    setTimeout(() => {
+      html2canvas(pdfElement, { 
+        scale: 1.5, 
+        useCORS: true,
+        allowTaint: true,
+        logging: false,
+        windowWidth: 794,
+        windowHeight: 1123,
+        backgroundColor: '#ffffff'
+      })
+        .then((canvas) => {
+          const imgData = canvas.toDataURL("image/jpeg", 0.85);
+          const pdf = new jsPDF("p", "mm", "a4");
+          const pageWidth = pdf.internal.pageSize.getWidth();
+          const pageHeight = pdf.internal.pageSize.getHeight();
+          const canvasHeight = (canvas.height * pageWidth) / canvas.width;
+          
+          let heightLeft = canvasHeight;
+          let position = 0;
+          
+          pdf.addImage(imgData, "JPEG", 0, position, pageWidth, canvasHeight);
+          heightLeft -= pageHeight;
+          
+          while (heightLeft > 0) {
+            position = heightLeft - canvasHeight;
+            pdf.addPage();
+            pdf.addImage(imgData, "JPEG", 0, position, pageWidth, canvasHeight);
+            heightLeft -= pageHeight;
+          }
+          
+          pdf.save(`Jodpatra-4_${data.first_name}_${data.last_name}.pdf`);
+          if (document.body.contains(pdfElement)) {
+            document.body.removeChild(pdfElement);
+          }
+          res(true);
+        })
+        .catch((err) => {
+          if (document.body.contains(pdfElement)) {
+            document.body.removeChild(pdfElement);
+          }
+          rej(err);
+        });
+    }, 1000);  // ✅ 1000ms
+  });
+};
+
+
 
     // ✅ Image preload try करा — fail झाली तर fallback
     preloadImage(imageSrc)
