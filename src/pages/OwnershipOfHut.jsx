@@ -129,4 +129,5 @@ const OwnershipOfHut = () => {
   
 };
 
+
 export default OwnershipOfHut;
