@@ -2122,7 +2122,7 @@ const AllApplicationsPage = () => {
         (app.cluster_number && app.cluster_number.toLowerCase().includes(s)) ||
         (app.slum_use && app.slum_use.toLowerCase().includes(s))
     })
-
+ .sort((a, b) => Number(a.hut_id) - Number(b.hut_id))  // ← हे ADD करा
   const totalPages = Math.ceil(filteredApplications.length / itemsPerPage)
   const paginatedApplications = filteredApplications.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage)
   const getPaginationPages = () =>
@@ -2335,7 +2335,7 @@ const AllApplicationsPage = () => {
 
                     <td className="px-6 py-4">
                       <div className="font-semibold text-gray-800 truncate">{app.first_name} {app.middle_name && `${app.middle_name} `}{app.last_name}</div>
-                      <div className="text-gray-500 text-xs truncate">{app.gender} • {app.aadhaar_number}</div>
+                      {/* <div className="text-gray-500 text-xs truncate">{app.gender} • {app.aadhaar_number}</div> */}
                     </td>
                     <td className="px-6 py-4 text-gray-600"><div className="text-xs">{app.current_pincode && `PIN: ${app.current_pincode}`}</div></td>
                     <td className="px-6 py-4 text-center">
