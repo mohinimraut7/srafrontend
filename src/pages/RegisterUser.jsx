@@ -140,7 +140,7 @@ const BASE_URL = import.meta.env.VITE_BASE_URL || "https://sra.saavi.co.in"
     setFormData({
       name: "",
       email: "",
-      mobilNumber:"",
+      mobileNumber:"",
       password: "",
       role: "",
       address: "", 
