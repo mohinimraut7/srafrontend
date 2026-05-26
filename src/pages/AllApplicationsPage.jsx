@@ -2298,6 +2298,7 @@ const AllApplicationsPage = () => {
                 <th className="px-6 py-4">Serial No.</th>
                 <th className="px-6 py-4">Cluster Number</th>
                 <th className="px-6 py-4">Hut ID</th>
+                <th className="px-6 py-4">Hut Number</th>
                 <th className="px-6 py-4">Name</th>
                 <th className="px-6 py-4">Address</th>
                 <th className="px-6 py-4 text-center">Slum Floor</th>
@@ -2317,7 +2318,21 @@ const AllApplicationsPage = () => {
                   <tr key={app.id} className="odd:bg-white even:bg-gray-50 hover:bg-orange-50 transition-all duration-200">
                     <td className="px-6 py-4 font-medium text-gray-700">{(currentPage - 1) * itemsPerPage + index + 1}</td>
                     <td className="px-6 py-4 text-gray-700">{app.cluster_number || "N/A"}</td>
-                    <td className="px-6 py-4 text-gray-700">{app.slum_id || "N/A"}</td>
+                    {/* <td className="px-6 py-4 text-gray-700">{app.slum_id || "N/A"}</td> */}
+                    <td className="px-6 py-4 text-gray-700">
+  {app.cluster_number && app.hut_id
+    ? `${app.cluster_number}${String(app.hut_id).padStart(5, "0")}`
+    : app.hut_id || "N/A"}
+</td>
+
+
+{/* Hut Number — NEW — response मधला as-is hut_id */}
+<td className="px-6 py-4 text-gray-700">
+  {app.hut_id || "N/A"}
+</td>
+
+
+
                     <td className="px-6 py-4">
                       <div className="font-semibold text-gray-800 truncate">{app.first_name} {app.middle_name && `${app.middle_name} `}{app.last_name}</div>
                       <div className="text-gray-500 text-xs truncate">{app.gender} • {app.aadhaar_number}</div>
