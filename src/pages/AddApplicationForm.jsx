@@ -922,6 +922,31 @@ const handleFileChange = (e) => {
   const handleSubmit = async (values) => {
       setLoading(true); setError(null); setSuccess(null)
 
+ // ✅ Mandatory files validation — only when NOT Hut Appose/Denied
+  const isFinalBySurveyStatus = 
+    values.survey_status === "Hut Appose" || 
+    values.survey_status === "Hut Denied"
+
+
+ if (!isFinalBySurveyStatus) {
+      // ✅ Mandatory files validation
+  const mandatoryFiles = [
+    { key: 'photo_self', label: 'Self Photo' },
+    { key: 'photo_family', label: 'Family Photo' },
+    { key: 'doc_side_view', label: 'Side View' },
+    { key: 'doc_front_view', label: 'Front View' },
+    { key: 'video_inside', label: 'Inside Video' },
+    { key: 'video_self_declaration', label: 'Self Declaration Video' },
+  ]
+  const missing = mandatoryFiles.filter(({ key }) => !files[key])
+  if (missing.length > 0) {
+    setError(`Please upload mandatory files: ${missing.map(f => f.label).join(", ")}`)
+    setLoading(false)
+    return
+  }
+  // ✅ End validation
+}
+
 // 🔥 Minimum 5 photos validation (not mandatory)
 // const checkMinFive = (field) => {
 //   if (files[field] && Array.isArray(files[field])) {
@@ -1024,6 +1049,8 @@ if (residency_since instanceof Date) {
       setLoading(false)
     }
   }
+
+
 
   const renderStepContent = (formik) => {
     switch (currentStep) {
@@ -1970,10 +1997,10 @@ if (residency_since instanceof Date) {
             <h3 className="text-2xl font-bold text-gray-900 mb-6">Upload Documents & Images</h3>
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
               {[
-                { name: 'photo_self', label: 'Self Photo', accept: 'image/*', icon: '📷' },
-                { name: 'photo_family', label: 'Family Photo', accept: 'image/*', icon: '👨‍👩‍👧‍👦' },
-                { name: 'doc_side_view', label: 'Side View', accept: 'image/*', icon: '🏗️' },
-                { name: 'doc_front_view', label: 'Front View', accept: 'image/*', icon: '🏗️' },
+                { name: 'photo_self', label: 'Self Photo *', accept: 'image/*', icon: '📷' },
+                { name: 'photo_family', label: 'Family Photo *', accept: 'image/*', icon: '👨‍👩‍👧‍👦' },
+                { name: 'doc_side_view', label: 'Side View *', accept: 'image/*', icon: '🏗️' },
+                { name: 'doc_front_view', label: 'Front View *', accept: 'image/*', icon: '🏗️' },
 
                  
   //               ...(formik.values.residency_since &&
@@ -2016,8 +2043,8 @@ if (residency_since instanceof Date) {
                 
                 { name: 'sale_agreement', label: 'Sale Agreement', accept: '.pdf,.doc,.docx,image/*', icon: '📜', multiple: true },
                 { name: 'biometric', label: 'Biometric Photo', accept: '.pdf,.doc,.docx,image/*', icon: '📜', multiple: true },
-                { name: 'video_inside', label: 'Inside Video', accept: 'video/*', icon: '📹' },
-                { name: 'video_self_declaration', label: 'Self Declaration Video', accept: 'video/*', icon: '🎥' },
+                { name: 'video_inside', label: 'Inside Video *', accept: 'video/*', icon: '📹' },
+                { name: 'video_self_declaration', label: 'Self Declaration Video *', accept: 'video/*', icon: '🎥' },
               
               ].map(({ name, label, accept, icon, multiple }) => (
                 <div key={name} className="border border-gray-200 rounded-lg p-4 bg-white shadow-sm hover:shadow-md transition-all overflow-hidden">
