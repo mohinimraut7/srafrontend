@@ -5110,7 +5110,7 @@
 
 
 import { useState, useEffect, useRef } from "react"
-import { Eye, Search, Download, X, ChevronLeft, ChevronRight, Plus, Edit } from "lucide-react"
+import { Eye, Search, Download, X, ChevronLeft, ChevronRight, Plus, Edit,Trash2 } from "lucide-react"
 import AddApplicationForm from './AddApplicationForm'
 import EditApplicationForm from './EditApplicationForm'
 import * as XLSX from "xlsx"
@@ -5506,6 +5506,34 @@ const AllApplicationsPage = () => {
     }
   }
 
+   const handleDeleteApplication = async (app) => {
+    const hutIdDisplay = app.cluster_number && app.hut_id
+      ? `${app.cluster_number}${String(app.hut_id).padStart(5, "0")}`
+      : app.hut_id || "N/A"
+
+    const confirmed = window.confirm(
+      `⚠️ DELETE CONFIRMATION\n\nHut ID: ${hutIdDisplay}\nName: ${app.first_name || ""} ${app.last_name || ""}\nStatus: ${app.survey_status || "Pending"}\n\nही नोंद कायमची delete होईल. नक्की delete करायची आहे का?`
+    )
+    if (!confirmed) return
+
+    try {
+      const token = getAuthToken()
+      const response = await fetch(`${BASE_URL}/api/sra-logs/sra-form-logs/${app.id}`, {
+        method: "DELETE",
+        headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
+      })
+      const data = await response.json()
+      if (!response.ok) throw new Error(data.message || "Delete failed")
+
+      setApplications((prev) => prev.filter((a) => a.id !== app.id))
+      setSuccess(`✅ "${app.first_name} ${app.last_name}" यांची नोंद यशस्वीरीत्या delete झाली!`)
+      setTimeout(() => setSuccess(null), 3000)
+    } catch (err) {
+      setError("Delete error: " + err.message)
+      setTimeout(() => setError(null), 3000)
+    }
+  }
+
   useEffect(() => { fetchApplications(); fetchUsers() }, [])
 
   const filteredApplications = applications
@@ -5813,6 +5841,17 @@ const AllApplicationsPage = () => {
                             <button onClick={() => generateAndDownloadPdfs(app)} disabled={generatingPdfs} className="p-2 rounded-lg bg-green-50 text-green-600 hover:bg-green-100 transition disabled:opacity-50 flex items-center justify-center flex-col" title="Download Jodpatra"><Download size={18} /><span className="text-xs">जोडपत्र</span></button>
                             <button onClick={() => generateIndexPDF(app)} className="p-2 rounded-lg bg-blue-50 text-blue-600 hover:bg-blue-100 transition flex items-center justify-center flex-col" title="Download Index"><Download size={18} /><span className="text-xs">Index</span></button>
                             <button onClick={() => handleDownloadSingleExcel(app)} className="p-2 rounded-lg bg-emerald-50 text-emerald-700 hover:bg-emerald-100 transition flex items-center justify-center flex-col" title="Download Single Excel"><Download size={18} /><span className="text-xs">Excel</span></button>
+
+                           
+{/* <button
+  onClick={() => handleDeleteApplication(app)}
+  className="p-2 rounded-lg bg-red-50 text-red-600 hover:bg-red-100 transition flex items-center justify-center flex-col"
+  title="Delete Application"
+>
+  <Trash2 size={18} />
+  <span className="text-xs">Delete</span>
+</button> */}
+
                           </div>
                         </td>
                       )}
