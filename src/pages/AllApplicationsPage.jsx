@@ -5538,23 +5538,42 @@ const AllApplicationsPage = () => {
 
   const filteredApplications = applications
     .filter((app) => { if (role === "surveyor") return Number(app.submittedBy) === Number(user_id); return true })
+    // .filter((app) => {
+    //   const s = searchTerm.toLowerCase()
+    //   if (searchTerm === "") return true
+    //   const hutIdDisplay = app.cluster_number && app.hut_id
+    //     ? `${app.cluster_number}${String(app.hut_id).padStart(5, "0")}`
+    //     : String(app.hut_id || "")
+    //   return (
+    //     (app.first_name && app.first_name.toLowerCase().includes(s)) ||
+    //     (app.last_name && app.last_name.toLowerCase().includes(s)) ||
+    //     (app.slum_id && app.slum_id.toLowerCase().includes(s)) ||
+    //     (app.aadhaar_number && app.aadhaar_number.includes(s)) ||
+    //     (app.cluster_number && app.cluster_number.toLowerCase().includes(s)) ||
+    //     (app.slum_use && app.slum_use.toLowerCase().includes(s)) ||
+    //     (app.hut_id && String(app.hut_id).toLowerCase().includes(s)) ||
+    //     (hutIdDisplay && hutIdDisplay.toLowerCase().includes(s))
+    //   )
+    // })
     .filter((app) => {
-      const s = searchTerm.toLowerCase()
-      if (searchTerm === "") return true
-      const hutIdDisplay = app.cluster_number && app.hut_id
-        ? `${app.cluster_number}${String(app.hut_id).padStart(5, "0")}`
-        : String(app.hut_id || "")
-      return (
-        (app.first_name && app.first_name.toLowerCase().includes(s)) ||
-        (app.last_name && app.last_name.toLowerCase().includes(s)) ||
-        (app.slum_id && app.slum_id.toLowerCase().includes(s)) ||
-        (app.aadhaar_number && app.aadhaar_number.includes(s)) ||
-        (app.cluster_number && app.cluster_number.toLowerCase().includes(s)) ||
-        (app.slum_use && app.slum_use.toLowerCase().includes(s)) ||
-        (app.hut_id && String(app.hut_id).toLowerCase().includes(s)) ||
-        (hutIdDisplay && hutIdDisplay.toLowerCase().includes(s))
-      )
-    })
+  const s = searchTerm.toLowerCase()
+  if (searchTerm === "") return true
+  const hutIdDisplay = app.cluster_number && app.hut_id
+    ? `${app.cluster_number}${String(app.hut_id).padStart(5, "0")}`
+    : String(app.hut_id || "")
+  const fullName = [app.first_name, app.middle_name, app.last_name]
+    .filter(Boolean).join(" ").toLowerCase()
+  const searchTokens = s.trim().split(/\s+/).filter(Boolean)
+  return searchTokens.every(token =>
+    fullName.includes(token) ||
+    (app.slum_id && app.slum_id.toLowerCase().includes(token)) ||
+    (app.aadhaar_number && app.aadhaar_number.includes(token)) ||
+    (app.cluster_number && app.cluster_number.toLowerCase().includes(token)) ||
+    (app.slum_use && app.slum_use.toLowerCase().includes(token)) ||
+    (app.hut_id && String(app.hut_id).toLowerCase().includes(token)) ||
+    (hutIdDisplay && hutIdDisplay.toLowerCase().includes(token))
+  )
+})
     .filter((app) => {
       if (hutUseFilter && app.slum_use !== hutUseFilter) return false
       if (surveyStatusFilter) {
