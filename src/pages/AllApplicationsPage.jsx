@@ -5582,7 +5582,16 @@ const AllApplicationsPage = () => {
       }
       return true
     })
-    .sort((a, b) => Number(a.hut_id) - Number(b.hut_id))
+    // .sort((a, b) => Number(a.hut_id) - Number(b.hut_id))
+    .sort((a, b) => {
+  const aId = a.hut_id !== null && a.hut_id !== undefined && a.hut_id !== "" 
+    ? Number(a.hut_id) 
+    : Infinity
+  const bId = b.hut_id !== null && b.hut_id !== undefined && b.hut_id !== "" 
+    ? Number(b.hut_id) 
+    : Infinity
+  return aId - bId
+})
 
   const totalPages = Math.ceil(filteredApplications.length / itemsPerPage)
   const paginatedApplications = filteredApplications.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage)
